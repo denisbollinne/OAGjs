@@ -1,7 +1,9 @@
 var express = require('express')
+    , url = require('url')
     , resource = require('express-resource')
     , app = express.createServer();
 
+app.use(express.static(__dirname+'/public'));
 app.resource('characters', require('./resources/characters'));
 
 app.get('/', function (req, res) {
