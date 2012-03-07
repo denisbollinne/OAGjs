@@ -11,8 +11,7 @@ GAME.startGame = function(){
         "img/orbs/orb1.jpg",
         "img/orbs/orb2.jpg",
         "img/orbs/orb3.jpg",
-        "img/orbs/orb4.jpg",
-
+        "img/orbs/orb4.jpg"
     ],
         // when the sprites are loaded, create the world
         function() {

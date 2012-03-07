@@ -11,9 +11,9 @@ GAME.Orb = function Orb(gs){
     var vx = 0;
     var posx = 250;
     var p = new Sprite(["center", "bottom"], {
-        "roll_forward": [["/img/orbs/orb1.jpg", 4],["/img/orbs/orb2.jpg", 4],["/img/orbs/orb3.jpg", 4],["/img/orbs/orb4.jpg", 4],],
-        "roll_backward": [["/img/orbs/orb4.jpg", 4],["/img/orbs/orb3.jpg", 4],["/img/orbs/orb2.jpg", 4],["/img/orbs/orb1.jpg", 4],],
-        "normal": [["/img/orbs/orb1.jpg", 1],]
+        "roll_forward": [["/img/orbs/orb1.jpg", 4],["/img/orbs/orb2.jpg", 4],["/img/orbs/orb3.jpg", 4],["/img/orbs/orb4.jpg", 4]],
+        "roll_backward": [["/img/orbs/orb4.jpg", 4],["/img/orbs/orb3.jpg", 4],["/img/orbs/orb2.jpg", 4],["/img/orbs/orb1.jpg", 4]],
+        "normal": [["/img/orbs/orb1.jpg", 1]]
     }, function(){
         p.action("normal")
     });
