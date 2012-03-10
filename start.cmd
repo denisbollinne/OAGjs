@@ -1,1 +1,1 @@
-.\mongo\bin\mongod.exe --dbpath .\mongo\data\db
+.\mongo\bin\mongod.exe --dbpath .\mongo\data\db --rest

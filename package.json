@@ -1,9 +1,30 @@
 {
-    "name": "OurAwesomeGame",
-    "version": "0.0.1",
-    "dependencies": {
-        "express": "2.5.8",
-        "express-resource":"0.2",
-        "url":"0.4.9"
-    }
+  "name": "OurAwesomeGame",
+  "version": "0.0.1",
+  "author": "Maarten & Denis <maarten.dewilde@gmail.com> &  <denis.bollinne@gmail.com>",
+  "description": "HTML 5 / Nodejs 2D RPG Game",
+  "homepage": "https://github.com/denisbollinne/OAGjs",
+  "repository": {
+      "type": "git",
+      "url": "git@github.com:denisbollinne/OAGjs.git"
+  },
+
+  "dependencies": {
+    "express": "https://github.com/visionmedia/express/tarball/master",
+    "express-resource": ">=0.2",
+    "url": ">=0.4.9",
+    "mongoose": ">=0",
+    "connect-mongo": ">=0",
+    "jade": ">=0",
+    "stylus": ">=0",
+    "mongodb": ">=0",
+    "process": ">=0",
+    "connect-timeout": ">=0"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  },
+  "main": "main.js"
 }
