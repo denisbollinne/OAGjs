@@ -20,5 +20,10 @@
     "process": ">=0",
     "connect-timeout": ">=0"
   },
+    "engines": {
+        "node": "0.6.12",
+        "npm":  "1.1.4"
+    },
+
   "main": "main.js"
 }
