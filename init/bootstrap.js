@@ -1,6 +1,5 @@
 var express = require('express')
     , url = require('url')
-    , resource = require('express-resource')
     , stylus = require('stylus')
     , routes = require('./routes.js')
     , configure = require('./config.js')

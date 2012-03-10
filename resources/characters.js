@@ -11,17 +11,17 @@ exports.create = function(req, res){
 };
 
 exports.show = function(req, res){
-    res.send('show character ' + req.params.character);
+    res.send('show character ' + req.params.id);
 };
 
 exports.edit = function(req, res){
-    res.send('edit character ' + req.params.character);
+    res.send('edit character ' + req.params.id);
 };
 
 exports.update = function(req, res){
-    res.send('update character ' + req.params.character);
+    res.send('update character ' + req.params.id);
 };
 
 exports.destroy = function(req, res){
-    res.send('destroy character ' + req.params.character);
+    res.send('destroy character ' + req.params.id);
 };

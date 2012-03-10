@@ -1,12 +1,13 @@
 var express = require('express')
-    , url = require('url')
-    , resource = require('express-resource');
+    , appResource = require('./resource/app-resource.js')
+    , url = require('url');
 
 module.exports = function(app){
+    appResource(app);
 
     app.use(express.static(__dirname+'/public'));
 
-    app.resource('characters', require('./../resources/characters'));
+    app.resource('/characters', require('./../resources/characters'));
 
     app.get('/', function (req, res) {
         res.writeHead(200, {'Content-Type': 'text/plain'});
