@@ -23,8 +23,6 @@
   },
   "devDependencies": {},
   "optionalDependencies": {},
-  "engines": {
-    "node": "*"
-  },
+
   "main": "main.js"
 }
