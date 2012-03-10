@@ -5,13 +5,16 @@ var express = require('express')
 module.exports = function(app){
     appResource(app);
 
-    app.use(express.static(__dirname+'/public'));
 
     app.resource('/characters', require('./../resources/characters'));
 
     app.get('/', function (req, res) {
-        res.writeHead(200, {'Content-Type': 'text/plain'});
-        res.end('Hello World\n');
-    })
+        res.render('home');
+    });
+
+    app.get('/logout', function (req, res) {
+        req.logout();
+        res.redirect('/');
+    });
 
 }
