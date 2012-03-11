@@ -2,11 +2,10 @@ var express = require('express')
     , appResource = require('./resource/app-resource.js')
     , url = require('url');
 
-module.exports = function(app){
+module.exports = function(app,validateAuthentication){
     appResource(app);
 
-
-    app.resource('/characters', require('./../resources/characters'));
+    app.resource('/characters', require('./../resources/characters'), validateAuthentication);
 
     app.get('/', function (req, res) {
         res.render('home');

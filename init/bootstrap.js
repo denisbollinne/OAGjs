@@ -13,15 +13,15 @@ module.exports = function(app){
     everyauth(app);
     mongoose(app,mongooseAuth);
 
-    console.log(mongooseAuth)
+    console.log(mongooseAuth);
     app.use(mongooseAuth.middleware());
 
     mongooseAuth.helpExpress(app);
 
-    routes(app);
+    routes(app,everyauth.validateAuthenticated);
 
     onShutDown(app);
-    console.log('Server running at http://127.0.0.1:'+app.set('port')+'/');
 
+    console.log('Server running at http://127.0.0.1:'+app.set('port')+'/');
     app.listen(app.set('port'));
 }

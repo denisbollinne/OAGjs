@@ -9,24 +9,27 @@ module.exports = function(app, mongooseAuth){
 
     app.configure('development', function() {
         app.set('db-uri', 'mongodb://localhost:27017/oagjs');
-        app.set('port',3000)
+        app.set('port',3000);
         app.use(express.errorHandler({ dump: true, stack: true }));
         app.set('view options', {
             pretty: true
         });
+        app.set('debug',true);
     });
 
     app.configure('test', function() {
         app.set('db-uri', 'localhost:27017/oagjs-Test');
-        app.set('port',3000)
+        app.set('port',3000);
         app.set('view options', {
             pretty: true
         });
-    });
+        app.set('debug',true);
+  });
 
     app.configure('production', function() {
         app.set('db-uri', process.env.MONGOHQ_URL);
-        app.set('port',process.env.PORT)
+        app.set('port',process.env.PORT);
+        app.set('debug',false);
    });
 
     app.configure(function() {
