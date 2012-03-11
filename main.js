@@ -1,5 +1,7 @@
 var express = require('express')
     , bootstrapper = require('./init/bootstrap.js')
-    , app = module.exports =express();
+    , mongoose = require('mongoose')
+    , app = module.exports =express.createServer();
 
 bootstrapper(app);
+User = mongoose.model('User');
