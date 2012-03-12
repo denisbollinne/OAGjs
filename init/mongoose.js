@@ -74,7 +74,7 @@ module.exports = function(app,mongooseAuth){
                 , appId: conf.google.clientId
                 , appSecret: conf.google.clientSecret
                 , redirectPath: '/'
-                , scope: 'https://www.google.com/m8/feeds'
+                , scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'
             }
         }
     });
