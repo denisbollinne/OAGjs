@@ -42,8 +42,8 @@ module.exports = function(app, mongooseAuth){
         app.use(express.session({ store: new mongoStore({url:app.set('db-uri')}), secret:'topsecret'}));
       //  app.use(express.logger({ format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }))
         app.use(express.methodOverride());
-        app.use(stylus.middleware({ src: __dirname + '/public' }));
-        app.use(express.static(__dirname + '/public'));
+        app.use(stylus.middleware({ src: __dirname + '/../public' }));
+        app.use(express.static(__dirname + '/../public'));
         app.set('mailOptions', {
             host: 'localhost',
             port: '25',
