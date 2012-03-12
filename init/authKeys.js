@@ -20,7 +20,7 @@ module.exports = {
         , clientSecret: '0LVAGARGUN05DEDDRVWNIMH4RFIHEFV0CERU3OITAZW1CXGX'
     }
     , google: {
-        clientId: '224794776836-cp3a2v0elt955h9uqhgmskplhg85ljjm.apps.googleusercontent.com'
-        , clientSecret: 'rxGFo1mBG_H3DX2ifDFawiMZ'
+        clientId: '677176456453.apps.googleusercontent.com'
+        , clientSecret: 'KEeMtQJfgAg36f-Zy94oeYx7'
     }
 };

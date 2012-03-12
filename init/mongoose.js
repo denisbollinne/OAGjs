@@ -70,7 +70,7 @@ module.exports = function(app,mongooseAuth){
         }
         , google: {
             everyauth: {
-                myHostname: 'http://localhost:3000'
+                myHostname:  app.set('host')
                 , appId: conf.google.clientId
                 , appSecret: conf.google.clientSecret
                 , redirectPath: '/'
