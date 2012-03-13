@@ -5,14 +5,14 @@
  * Time: 19:19
  */
 GAME.AnimationFactory = function(){
-    this.createAnimations = function(name, frames){
+    this.createAnimations = function(name, frames, framsToShowEachImageFor){
         var arr =[];
         for(var i = 0; i<frames;i++){
             var pad = "";
             if(i<10 ){
                 pad = "0";
             }
-            arr.push(["/img/" + name + "00" + pad + i + ".bmp",frames])
+            arr.push(["/img/" + name + "00" + pad + i + ".jpg",framsToShowEachImageFor])
         }
         return arr;
     };
@@ -22,7 +22,7 @@ GAME.AnimationFactory = function(){
             if(i<10 ){
                 pad = "0";
             }
-            arr.push("/img/" + name + "00" + pad + i + ".bmp");
+            arr.push("/img/" + name + "00" + pad + i + ".jpg");
         }
     };
 };

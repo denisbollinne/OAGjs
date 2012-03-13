@@ -8,4 +8,11 @@
 GAME.Animations = function(){
     this.runEast = [];
     this.runWest = [];
+    this.runNorth = [];
+    this.runSouth = [];
+
+    this.runNorthEast = [];
+    this.runNorthWest = [];
+    this.runSouthEast = [];
+    this.runSouthWest = [];
 }
