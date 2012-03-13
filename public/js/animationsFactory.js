@@ -1,0 +1,28 @@
+/**
+ * Created by JetBrains WebStorm.
+ * User: Maarten De Wilde
+ * Date: 13/03/12
+ * Time: 19:19
+ */
+GAME.AnimationFactory = function(){
+    this.createAnimations = function(name, frames){
+        var arr =[];
+        for(var i = 0; i<frames;i++){
+            var pad = "";
+            if(i<10 ){
+                pad = "0";
+            }
+            arr.push(["/img/" + name + "00" + pad + i + ".bmp",frames])
+        }
+        return arr;
+    };
+    this.appendImages = function(arr, name, frames){
+        for(var i = 0; i<frames;i++){
+            var pad = "";
+            if(i<10 ){
+                pad = "0";
+            }
+            arr.push("/img/" + name + "00" + pad + i + ".bmp");
+        }
+    };
+};

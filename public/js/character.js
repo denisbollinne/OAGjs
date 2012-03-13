@@ -5,30 +5,16 @@
  * Time: 19:48
  */
 
-GAME.Animations = function(Sprite){
-    this.create = function(name, frames){
-        var arr =[];
-        for(var i = 0; i<frames;i++){
-            var pad = "";
-            if(i<10 ){
-                pad = "0";
-            }
-            arr.push(["/img/" + name + "00" + pad + i + ".bmp",frames])
-        }
-    }
-}
+GAME.Character = function Character(gs, animations){
 
-GAME.Knight = function Knight(gs){
-
-    var anim = new GAME.Animations(gs);
-
-    var WALK_VX = 15;
+    var anim = new GAME.AnimationFactory(gs);
+    var WALK_VX = 5;
     var vx = 0;
     var posx = 250;
     var p = new Sprite(["center", "bottom"], {
-        "run_right": anim.create("knight/running e",13),
-        "run_left": anim.create("knight/running w",13),
-        "normal": [["/img/knight/tipping over s0000.bmp", 1]]
+        "run_right": animations.runEast,
+        "run_left": animations.runWest,
+        "normal": [["/img/knight/tipping over s0000.bmp", 1],]
     }, function(){
         p.action("normal")
     });
