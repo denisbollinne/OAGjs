@@ -18,22 +18,48 @@ GAME.startGame = function(){
     animations.appendImages(imagesToPreload, "knight/running nw",12);
     animations.appendImages(imagesToPreload, "knight/running se",12);
     animations.appendImages(imagesToPreload, "knight/running sw",12);
-    imagesToPreload.push("/img/knight/tipping over s0000.jpg");
+    animations.appendImages(imagesToPreload, "knight/tipping over e",6);
+    animations.appendImages(imagesToPreload, "knight/tipping over w",6);
+    animations.appendImages(imagesToPreload, "knight/tipping over n",6);
+    animations.appendImages(imagesToPreload, "knight/tipping over s",6);
+    animations.appendImages(imagesToPreload, "knight/tipping over ne",6);
+    animations.appendImages(imagesToPreload, "knight/tipping over nw",6);
+    animations.appendImages(imagesToPreload, "knight/tipping over se",6);
+    animations.appendImages(imagesToPreload, "knight/tipping over sw",6);
+    animations.appendImages(imagesToPreload, "knight/attack e",12);
+    animations.appendImages(imagesToPreload, "knight/attack w",12);
+    animations.appendImages(imagesToPreload, "knight/attack n",12);
+    animations.appendImages(imagesToPreload, "knight/attack s",12);
+    animations.appendImages(imagesToPreload, "knight/attack ne",12);
+    animations.appendImages(imagesToPreload, "knight/attack nw",12);
+    animations.appendImages(imagesToPreload, "knight/attack se",12);
+    animations.appendImages(imagesToPreload, "knight/attack sw",12);
+    animations.appendImages(imagesToPreload, "skeleton/skel rennt e",9);
+    animations.appendImages(imagesToPreload, "skeleton/skel rennt w",9);
+    animations.appendImages(imagesToPreload, "skeleton/skel rennt n",9);
+    animations.appendImages(imagesToPreload, "skeleton/skel rennt s",9);
+    animations.appendImages(imagesToPreload, "skeleton/skel rennt ne",9);
+    animations.appendImages(imagesToPreload, "skeleton/skel rennt nw",9);
+    animations.appendImages(imagesToPreload, "skeleton/skel rennt se",9);
+    animations.appendImages(imagesToPreload, "skeleton/skel rennt sw",9);
+    animations.appendImages(imagesToPreload, "skeleton/macht faxen e",1);
+    animations.appendImages(imagesToPreload, "skeleton/macht faxen w",1);
+    animations.appendImages(imagesToPreload, "skeleton/macht faxen n",1);
+    animations.appendImages(imagesToPreload, "skeleton/macht faxen s",1);
+    animations.appendImages(imagesToPreload, "skeleton/macht faxen ne",1);
+    animations.appendImages(imagesToPreload, "skeleton/macht faxen nw",1);
+    animations.appendImages(imagesToPreload, "skeleton/macht faxen se",1);
+    animations.appendImages(imagesToPreload, "skeleton/macht faxen sw",1);
+
     Sprite.preload(imagesToPreload,
         // when the sprites are loaded, create the world
         function() {
 
-            var knightAnimations = new GAME.Animations();
-            knightAnimations.runWest = animations.createAnimations("knight/running w",12,2);
-            knightAnimations.runEast = animations.createAnimations("knight/running e",12,2);
-            knightAnimations.runNorth = animations.createAnimations("knight/running n",12,2);
-            knightAnimations.runSouth = animations.createAnimations("knight/running s",12,2);
-            knightAnimations.runNorthWest = animations.createAnimations("knight/running nw",12,2);
-            knightAnimations.runNorthEast = animations.createAnimations("knight/running ne",12,2);
-            knightAnimations.runSouthWest = animations.createAnimations("knight/running sw",12,2);
-            knightAnimations.runSouthEast = animations.createAnimations("knight/running se",12,2);
-            var knight = new GAME.Character(gs, knightAnimations);
-            gs.addEntity(knight);
+            var player = new GAME.player(gs);
+            var enemy = new GAME.skeleton(gs);
+
+            gs.addEntity(enemy.character);
+            gs.addEntity(player.character);
         }
     );
     var gs = new JSGameSoup("surface", 50);

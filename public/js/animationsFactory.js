@@ -12,7 +12,7 @@ GAME.AnimationFactory = function(){
             if(i<10 ){
                 pad = "0";
             }
-            arr.push(["/img/" + name + "00" + pad + i + ".jpg",framsToShowEachImageFor])
+            arr.push(["/img/" + name + "00" + pad + i + ".png",framsToShowEachImageFor])
         }
         return arr;
     };
@@ -22,7 +22,7 @@ GAME.AnimationFactory = function(){
             if(i<10 ){
                 pad = "0";
             }
-            arr.push("/img/" + name + "00" + pad + i + ".jpg");
+            arr.push("/img/" + name + "00" + pad + i + ".png");
         }
     };
 };

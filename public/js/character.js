@@ -5,33 +5,40 @@
  * Time: 19:48
  */
 
-GAME.Character = function Character(gs, animations){
+GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
 
-    var anim = new GAME.AnimationFactory(gs);
+    var anim = new GAME.AnimationFactory();
     var WALK_VX = 5;
     var WALK_VY = 5;
     var vx = 0;
     var vy = 0;
-    var posx = 250;
-    var posy = 250;
+    var posx = startPosition[0];
+    var posy = startPosition[1];
     var p = new Sprite(["center", "bottom"], {
-        "run_right": animations.runEast,
-        "run_left": animations.runWest,
-        "run_up": animations.runNorth,
-        "run_down": animations.runSouth,
-        "run_upRight": animations.runNorthEast,
-        "run_upLeft": animations.runNorthWest,
-        "run_downRight": animations.runSouthEast,
-        "run_downLeft": animations.runSouthWest,
-        "normal": [["/img/knight/tipping over s0000.jpg", 1],]
-    }, function(){
-        p.action("normal")
+        "run_right":animations.runEast,
+        "run_left":animations.runWest,
+        "run_up":animations.runNorth,
+        "run_down":animations.runSouth,
+        "run_upRight":animations.runNorthEast,
+        "run_upLeft":animations.runNorthWest,
+        "run_downRight":animations.runSouthEast,
+        "run_downLeft":animations.runSouthWest,
+        "stand_right":animations.standEast,
+        "stand_left":animations.standWest,
+        "stand_up":animations.standNorth,
+        "stand_down":animations.standSouth,
+        "stand_upRight":animations.standNorthEast,
+        "stand_upLeft":animations.standNorthWest,
+        "stand_downRight":animations.standSouthEast,
+        "stand_downLeft":animations.standSouthWest
+    }, function () {
+        p.action("stand_down")
     });
 
-    this.update = function(){
+    this.update = function () {
         this.updateanimation();
         p.update();
-        if(vx != 0 && vy != 0) {
+        if (vx != 0 && vy != 0) {
             posx += vx / 2;
             posy += vy / 2;
         }
@@ -41,79 +48,88 @@ GAME.Character = function Character(gs, animations){
         }
     };
 
-    this.updateanimation = function(){
-        if(vx>=WALK_VX){
-            if(vy>=WALK_VY) {
+
+    this.updateanimation = function () {
+        if (vx >= WALK_VX) {
+            if (vy >= WALK_VY) {
                 p.action("run_downRight");
             }
-            else if(vy<=-WALK_VY){
+            else if (vy <= -WALK_VY) {
                 p.action("run_upRight");
             }
-            else{
+            else {
                 p.action("run_right");
             }
         }
-        else if(vx<=-WALK_VX){
-            if(vy>=WALK_VY) {
+        else if (vx <= -WALK_VX) {
+            if (vy >= WALK_VY) {
                 p.action("run_downLeft");
             }
-            else if(vy<=-WALK_VY){
+            else if (vy <= -WALK_VY) {
                 p.action("run_upLeft");
             }
-            else{
+            else {
                 p.action("run_left");
             }
         }
-        else if(vy>=WALK_VY){
+        else if (vy >= WALK_VY) {
             p.action("run_down");
         }
-        else if(vy<=-WALK_VY){
+        else if (vy <= -WALK_VY) {
             p.action("run_up");
         }
         else {
-            p.action("normal");
+            var lastAction = p.get_action();
+            var newAction = lastAction.toString().replace("run", "stand");
+            p.action(newAction);
         }
+
+
     };
 
-    /*** input events stuff ***/
-    this.keyUp_37 = this.keyUp_39 = function() {
-
-        vx = 0;
-        this.updateanimation();
+    this.draw = function (c) {
+        p.draw(c, [posx, posy]);
     };
 
-    this.keyDown_37 = function () {
+    if (isPlayable) {
+        /*** input events stuff ***/
+        this.keyUp_37 = this.keyUp_39 = function () {
 
-        vx -= WALK_VX;
-        this.updateanimation();
-    };
+            vx = 0;
+            this.updateanimation();
+        };
 
-    this.keyDown_39 = function () {
+        this.keyDown_37 = function () {
 
-        vx += WALK_VX;
-        this.updateanimation();
-    };
+            vx -= WALK_VX;
+            this.updateanimation();
+        };
 
-    this.keyUp_38 = this.keyUp_40 = function() {
+        this.keyDown_39 = function () {
 
-        vy = 0;
-        this.updateanimation();
-    };
+            vx += WALK_VX;
+            this.updateanimation();
+        };
 
-    this.keyDown_38 = function () {
+        this.keyUp_38 = this.keyUp_40 = function () {
 
-        vy -= WALK_VY;
-        this.updateanimation();
-    };
+            vy = 0;
+            this.updateanimation();
+        };
 
-    this.keyDown_40 = function () {
+        this.keyDown_38 = function () {
 
-        vy += WALK_VY;
-        this.updateanimation();
-    };
+            vy -= WALK_VY;
+            this.updateanimation();
+        };
 
-    this.draw = function(c) {
-        p.draw(c, [posx,posy]);
+        this.keyDown_40 = function () {
+
+            vy += WALK_VY;
+            this.updateanimation();
+        };
     }
+
+
 };
 

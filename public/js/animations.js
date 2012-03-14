@@ -15,4 +15,14 @@ GAME.Animations = function(){
     this.runNorthWest = [];
     this.runSouthEast = [];
     this.runSouthWest = [];
+
+    this.standEast = [];
+    this.standWest = [];
+    this.standNorth = [];
+    this.standSouth = [];
+
+    this.standNorthEast = [];
+    this.standNorthWest = [];
+    this.standSouthEast = [];
+    this.standSouthWest = [];
 }
