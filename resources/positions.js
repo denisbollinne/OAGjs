@@ -1,10 +1,9 @@
 var mongoose = require('mongoose');
 
-var character = mongoose.model('Character');
-var position = mongoose.model('Position');
+var character = mongoose.model('Position');
 
 exports.index = function(req, res){
-   character.find({user:req.user._id}).populate('position').run(function(err,docs){
+   character.find({user:req.user._id},function(err,docs){
        res.send(docs);
    })
 };
@@ -17,17 +16,7 @@ exports.new = function(req, res){
     newChar.class = 'Barbarian';
     newChar.race = 'Skeletton';
 
-    var charPos = new position();
-    charPos.x = 150;
-    charPos.y = 150;
-    charPos.dateTime = new Date();
-    charPos.direction = 'none';
-
-    charPos.character = newChar;
-    newChar.position = charPos;
-
     newChar.save();
-    charPos.save();
 
     res.send(newChar);
 };
@@ -49,8 +38,7 @@ exports.update = function(req, res){
 };
 
 exports.destroy = function(req, res){
-    character.findOne({user:req.user._id, _id:req.param.id}).populate('position').run(function(err,docs){
-        docs.remove();
+    character.remove({user:req.user._id, _id:req.param.id}, function(err,docs){
         res.send('destroy character ' + req.params.id);
     });
 };
@@ -69,17 +57,6 @@ exports.select = function(req,res){
         }
         else{
             res.send('Character not found :' + req.params.name);
-        }
-    });
-};
-
-exports.position = function(req,res){
-    position.findOne({character:req.session.selectedChar._id},function(err,doc){
-        if(doc != null){
-            res.send(doc);
-        }
-        else{
-            res.send('No character selected')
         }
     });
 };

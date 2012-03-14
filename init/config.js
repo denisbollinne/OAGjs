@@ -4,7 +4,7 @@ var express = require('express'),
     connectTimeout = require('connect-timeout')
     ;
 
-module.exports = function(app, mongooseAuth){
+module.exports = function(app, validateAuthenticated){
 
 
     app.configure('development', function() {

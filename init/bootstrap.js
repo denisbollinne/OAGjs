@@ -9,7 +9,7 @@ var express = require('express')
     , onShutDown = require('./shutdown.js');
 
 module.exports = function(app){
-    configure(app);
+    configure(app,everyauth.validateAuthenticated);
     everyauth(app);
     mongoose(app,mongooseAuth);
 
@@ -19,7 +19,7 @@ module.exports = function(app){
     mongooseAuth.helpExpress(app);
 
     routes(app,everyauth.validateAuthenticated);
-
+    //app.use(express.static(__dirname + '/../public',{callback:everyauth.validateAuthenticated}));
     onShutDown(app);
 
     console.log('Server running at http://127.0.0.1:'+app.set('port')+'/');
