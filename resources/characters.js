@@ -62,7 +62,7 @@ exports.destroyAll = function(req, res){
 };
 
 exports.select = function(req,res){
-    character.findOne({user:req.user._id},function(err,docs){
+    character.findOne({user:req.user._id, name:req.params.name},function(err,docs){
         if(docs != null){
             req.session.selectedChar = docs;
             res.send('Selected character ' + req.params.name);
