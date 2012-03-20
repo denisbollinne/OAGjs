@@ -5,7 +5,7 @@
  * Time: 17:48
  */
 
-GAME.player = function(gs){
+GAME.player = function (gs,playable, currentPlayerInfo){
 
     var animations = new GAME.AnimationFactory();
 
@@ -28,8 +28,8 @@ GAME.player = function(gs){
     knightAnimations.standSouthWest = animations.createAnimations("knight/tipping over sw",1,2);
     knightAnimations.standSouthEast = animations.createAnimations("knight/tipping over se",1,2);
     var startPosition = new Array();
-    startPosition[0] = 200;
-    startPosition[1] = 200;
+    startPosition[0] = currentPlayerInfo.x;
+    startPosition[1] = currentPlayerInfo.y;
 
-    this.character = new GAME.Character(gs, knightAnimations, startPosition, true);
+    this.character = new GAME.Character(gs, knightAnimations, startPosition, playable);
 }

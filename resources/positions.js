@@ -9,11 +9,10 @@ exports.index = function(req, res){
 };
 
 exports.update = function(req, res){
-
-    req.on('data', function(newPosData){
+    if(req.session.selectedChar){
         position.findOne({character:req.session.selectedChar._id},function(err,existingPos){
             if(existingPos != null){
-                var newPos = JSON.parse(newPosData);
+                var newPos = req.body;
 
                 existingPos.x = newPos.x;
                 existingPos.y = newPos.y;
@@ -24,9 +23,11 @@ exports.update = function(req, res){
                 res.send(200)
             }
             else{
-                res.send(err,404)
+                res.send(404)
             }
         });
-    })
-
+    }
+    else{
+        res.send(404)
+    }
 };

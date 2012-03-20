@@ -51,15 +51,43 @@ GAME.startGame = function(){
     animations.appendImages(imagesToPreload, "skeleton/macht faxen se",1);
     animations.appendImages(imagesToPreload, "skeleton/macht faxen sw",1);
 
+    var currentCharId;
+    var allOtherChars = [];
+    var updateCharacters = function(){
+        jQuery.get('/positions',function(allPositions){
+           for(var i = 0; i<allPositions.length ;i+=1){
+               var newPos = allPositions[i];
+               if(newPos.character !==currentCharId){
+                   var doesNotExist = true;
+                    for(var j = 0; j<allOtherChars.length ; j+=1){
+                        var foundChar = allOtherChars[j];
+                        if(newPos.character === foundChar.id){
+                            doesNotExist = false;
+                            foundChar.character.setDirection(newPos.x,newPos.y, newPos.direction, newPos.dateTime)
+                        }
+                    }
+                   if(doesNotExist){
+                       var newPlayer = new GAME.player(gs,false,newPos).character;
+                       allOtherChars.push({character:newPlayer,id:newPos.character});
+                       gs.addEntity(newPlayer);
+                   }
+               }
+           }
+        });
+    }
     Sprite.preload(imagesToPreload,
         // when the sprites are loaded, create the world
         function() {
+            jQuery.get('/characters/current',function(currentPlayerInfo){
+                currentCharId = currentPlayerInfo._id;
+                var player = new GAME.player(gs,true,currentPlayerInfo.position);
+                var enemy = new GAME.skeleton(gs);
 
-            var player = new GAME.player(gs);
-            var enemy = new GAME.skeleton(gs);
+                gs.addEntity(enemy.character);
+                gs.addEntity(player.character);
 
-            gs.addEntity(enemy.character);
-            gs.addEntity(player.character);
+                setInterval(updateCharacters,200);
+            });
         }
     );
     var gs = new JSGameSoup("surface", 50);

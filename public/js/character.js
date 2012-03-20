@@ -6,7 +6,7 @@
  */
 
 GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
-
+    var updateUrl = "/positions"
     var anim = new GAME.AnimationFactory();
     var WALK_VX = 5;
     var WALK_VY = 5;
@@ -14,6 +14,7 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
     var vy = 0;
     var posx = startPosition[0];
     var posy = startPosition[1];
+
     var p = new Sprite(["center", "bottom"], {
         "run_right":animations.runEast,
         "run_left":animations.runWest,
@@ -36,7 +37,6 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
     });
 
     this.update = function () {
-        this.updateanimation();
         p.update();
         if (vx != 0 && vy != 0) {
             posx += vx / 2;
@@ -47,44 +47,96 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             posy += vy;
         }
     };
+    var currentDir;
+    this.setDirection = function(x,y,direction,datetime){
+      //  posx = x;
+      //  posy = y;
+        if(currentDir != direction){
+            currentDir = direction;
+            if(direction === 'n'){
+                vy = -WALK_VY;
+                vx = 0;
+            }else if(direction === 'ne'){
+                vy = -WALK_VY;
+                vx = WALK_VX;
+            }else if(direction === 'nw'){
+                vy = -WALK_VY;
+                vx = -WALK_VX;
+            }else if(direction === 's'){
+                vy = WALK_VY;
+                vx = 0;
+            }else if(direction === 'se'){
+                vy = WALK_VY;
+                vx = WALK_VX;
+            }else if(direction === 'sw'){
+                vy = WALK_VY;
+                vx = -WALK_VX;
+            }else if(direction === 'e'){
+                vx = WALK_VX;
+                vy = 0;
+            }else if(direction === 'w'){
+                vx = -WALK_VX;
+                vy = 0;
+            } else{
+                vx = vy=0;
+            }
 
+            this.updateanimation();
+        }
+    }
 
     this.updateanimation = function () {
+        var dir;
         if (vx >= WALK_VX) {
             if (vy >= WALK_VY) {
                 p.action("run_downRight");
+                dir = 'se'
             }
             else if (vy <= -WALK_VY) {
                 p.action("run_upRight");
+                dir = 'ne'
             }
             else {
                 p.action("run_right");
+                dir = 'e'
             }
         }
         else if (vx <= -WALK_VX) {
             if (vy >= WALK_VY) {
                 p.action("run_downLeft");
+                dir = 'sw'
             }
             else if (vy <= -WALK_VY) {
                 p.action("run_upLeft");
+                dir = 'nw'
             }
             else {
                 p.action("run_left");
+                dir = 'w'
             }
         }
         else if (vy >= WALK_VY) {
             p.action("run_down");
+            dir = 's'
         }
         else if (vy <= -WALK_VY) {
             p.action("run_up");
+            dir = 'n'
         }
         else {
             var lastAction = p.get_action();
             var newAction = lastAction.toString().replace("run", "stand");
             p.action(newAction);
+            dir = 'none'
         }
-
-
+        if(isPlayable){
+            jQuery.ajax({
+                type: 'PUT',
+                url: '/positions',
+                data: {x:posx,y:posy,direction:dir,dateTime:Date.now()},
+                dataType: 'json'
+            });
+        }
     };
 
     this.draw = function (c) {

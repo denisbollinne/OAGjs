@@ -4,9 +4,14 @@ var character = mongoose.model('Character');
 var position = mongoose.model('Position');
 
 exports.index = function(req, res){
-   character.find({user:req.user._id}).populate('position').run(function(err,docs){
-       res.send(docs);
-   })
+    character.find({user:req.user._id}).populate('position').run(function(err,docs){
+        res.send(docs);
+    })
+};
+exports.all = function(req, res){
+    character.find({}).populate('position').run(function(err,docs){
+        res.send(docs);
+    })
 };
 
 exports.new = function(req, res){
@@ -72,6 +77,19 @@ exports.select = function(req,res){
         }
     });
 };
+
+
+exports.current = function(req,res){
+    character.findOne({user:req.user._id, _id:req.session.selectedChar._id}).populate('position').run(function(err,docs){
+        if(!err){
+            res.send(docs);
+        }
+        else{
+            res.send(500);
+        }
+    });
+};
+
 
 exports.position = function(req,res){
     position.findOne({character:req.session.selectedChar._id},function(err,doc){
