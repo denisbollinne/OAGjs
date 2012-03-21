@@ -52,23 +52,21 @@ GAME.startGame = function(){
     animations.appendImages(imagesToPreload, "skeleton/macht faxen sw",1);
 
     var currentCharId;
-    var allOtherChars = [];
+    var allOtherChars = {};
     var updateCharacters = function(){
         jQuery.get('/positions',function(allPositions){
            for(var i = 0; i<allPositions.length ;i+=1){
                var newPos = allPositions[i];
                if(newPos.character !==currentCharId){
                    var doesNotExist = true;
-                    for(var j = 0; j<allOtherChars.length ; j+=1){
-                        var foundChar = allOtherChars[j];
-                        if(newPos.character === foundChar.id){
-                            doesNotExist = false;
-                            foundChar.character.setDirection(newPos.x,newPos.y, newPos.direction, newPos.dateTime)
-                        }
-                    }
-                   if(doesNotExist){
+                   var foundChar = allOtherChars[newPos.character]
+                   if(foundChar){
+                        doesNotExist = false;
+                        foundChar.setDirection(newPos.x,newPos.y, newPos.direction, newPos.dateTime)
+                   }
+                   else{
                        var newPlayer = new GAME.player(gs,false,newPos).character;
-                       allOtherChars.push({character:newPlayer,id:newPos.character});
+                       allOtherChars[newPos.character] = newPlayer;
                        gs.addEntity(newPlayer);
                    }
                }
