@@ -47,12 +47,14 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             posy += vy;
         }
     };
-    var currentDir;
+    var previousX,previousY, previousDir ;
     this.setDirection = function(x,y,direction,datetime){
-      //  posx = x;
-      //  posy = y;
-        if(currentDir != direction){
-            currentDir = direction;
+        if(direction != previousDir || x != previousX || y != previousY){
+            posx = x;
+            posy = y;
+            previousX = x;
+            previousY = y;
+            previousDir = direction;
             if(direction === 'n'){
                 vy = -WALK_VY;
                 vx = 0;
