@@ -1,6 +1,6 @@
 {
   "name": "OurAwesomeGame",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Maarten <maarten.dewilde@gmail.com> & Denis  <denis.bollinne@gmail.com>",
   "description": "HTML 5 / Nodejs 2D RPG Game",
   "homepage": "https://github.com/denisbollinne/OAGjs",
@@ -21,7 +21,7 @@
     "crypto": ">=0.0.1",
     "everyauth": ">=0.2.28",
     "mongoose-types": ">=1.0.3",
-     "connect-mongodb": ">=0"
+    "connect-heroku-redis": "0.1.5"
 
   },
     "engines": {
