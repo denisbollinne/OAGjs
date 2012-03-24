@@ -83,13 +83,15 @@ GAME.startGame = function(){
 
                 gs.addEntity(enemy);
                 gs.addEntity(player);
+
+                socket.on('updatedPosition', function (data) {
+                    updateCharacters(data);
+                });
             });
         }
     );
     var socket = io.connect('/');
-    socket.on('updatedPosition', function (data) {
-        updateCharacters(data);
-    });
+
     var gs = new JSGameSoup("surface", 50);
     gs.launch();
 };
