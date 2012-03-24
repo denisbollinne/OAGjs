@@ -1,7 +1,8 @@
 var express = require('express'),
     redisConnect =  require('connect-heroku-redis')(express),
     stylus = require('stylus'),
-    connectTimeout = require('connect-timeout')
+    connectTimeout = require('connect-timeout'),
+    sessionStore
     ;
 
 module.exports = function(app, validateAuthenticated){
@@ -36,14 +37,15 @@ module.exports = function(app, validateAuthenticated){
    });
 
     app.configure(function() {
+        app.set('cookieName','M&DSessionKey');
         app.set('views', __dirname + '/../views/users');
         app.set('view engine', 'jade');
         app.use(express.favicon());
         app.use(express.bodyParser());
         app.use(express.cookieParser());
         app.use(connectTimeout({ time: 10000 }));
-        app.use(express.session({ store: new redisConnect, secret:'M&DSessionKey'}));
-        app.use(express.logger({ format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }))
+        app.use(express.session({ store: sessionStore= new redisConnect, secret:'M&DSessionSecret'}));
+    //    app.use(express.logger({ format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }))
         app.use(express.methodOverride());
         app.use(stylus.middleware({ src: __dirname + '/../public' }));
         app.use(express.static(__dirname + '/../public'));
@@ -54,4 +56,5 @@ module.exports = function(app, validateAuthenticated){
         });
     });
 
+    return sessionStore;
 }

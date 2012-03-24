@@ -12,6 +12,7 @@ logs
 results
 mongo
 redis
+dump.rdb
 .idea
 
 node_modules

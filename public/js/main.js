@@ -53,41 +53,43 @@ GAME.startGame = function(){
 
     var currentCharId;
     var allOtherChars = {};
-    var updateCharacters = function(){
-        jQuery.get('/positions',function(allPositions){
-           for(var i = 0; i<allPositions.length ;i+=1){
-               var newPos = allPositions[i];
-               if(newPos.character !==currentCharId){
-                   var doesNotExist = true;
-                   var foundChar = allOtherChars[newPos.character]
-                   if(foundChar){
-                        doesNotExist = false;
-                        foundChar.setDirection(newPos.x,newPos.y, newPos.direction, newPos.dateTime)
-                   }
-                   else{
-                       var newPlayer = new GAME.player(gs,false,newPos).character;
-                       allOtherChars[newPos.character] = newPlayer;
-                       gs.addEntity(newPlayer);
-                   }
-               }
+    var updateCharacters = function(newPos){
+       if(newPos.character !==currentCharId){
+           var foundChar = allOtherChars[newPos.character]
+           if(foundChar){
+                foundChar.setDirection(newPos.x,newPos.y, newPos.direction, newPos.dateTime)
            }
-        });
+           else{
+               var newPlayer = new GAME.player(gs,false,newPos).character;
+               allOtherChars[newPos.character] = newPlayer;
+               gs.addEntity(newPlayer);
+           }
+       }
+    };
+
+    var onPositionChanged = function(data){
+        socket.emit('updatePosition',data);
     }
+
     Sprite.preload(imagesToPreload,
         // when the sprites are loaded, create the world
         function() {
             jQuery.get('/characters/current',function(currentPlayerInfo){
                 currentCharId = currentPlayerInfo._id;
-                var player = new GAME.player(gs,true,currentPlayerInfo.position);
-                var enemy = new GAME.skeleton(gs);
+                var player = new GAME.player(gs,true,currentPlayerInfo.position).character;
+                player.onPositionChanged = onPositionChanged;
 
-                gs.addEntity(enemy.character);
-                gs.addEntity(player.character);
+                var enemy = new GAME.skeleton(gs).character;
 
-                setInterval(updateCharacters,200);
+                gs.addEntity(enemy);
+                gs.addEntity(player);
             });
         }
     );
+    var socket = io.connect('/');
+    socket.on('updatedPosition', function (data) {
+        updateCharacters(data);
+    });
     var gs = new JSGameSoup("surface", 50);
     gs.launch();
 };
