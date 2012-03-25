@@ -2,15 +2,15 @@
  @class A sprite class with different image/animation sequences based upon defined 'actions'.
  @description Allows you to associate a set of animations with a particular entity. To do vector graphics, use the canvas tag methods instead.
  @param anchor selects which side of the sprite's rectangle to 'anchor' the animation to. e.g. ["center", "bottom"] will anchor the sprite to the ground (side view) whilst ["right", "center"] would anchor it to the right hand side.
- @param frames is a dictionary containing all actions and their associated set of images and the number of frames to show each image for. For instance: {"stand": [["img/stand.png", 0],], "walk": [["img/walk1.png", 3], ["img/walk2.png", 3],]} where each walk frame is shown for three frames.
+ @param animations is a dictionary containing all actions and their associated set of images and the number of frames to show each image for. For instance: {"stand": [["img/stand.png", 0],], "walk": [["img/walk1.png", 3], ["img/walk2.png", 3],]} where each walk frame is shown for three frames.
  @param loadedcallback is a function that is called once all of the frames in all action animations are successfully loaded.
  */
-function Sprite(anchor, frames, size, loadedcallback) {
+function Sprite(anchor, animations, size, loadedcallback) {
     var loadcount = 0;
     var action = "";
     var framecount = -1;
     var frame = 0;
-    var sprite = this;
+    var that = this;
     var numframes = 0;
     var loopcallback = null;
     this.loaded = false;
@@ -18,30 +18,30 @@ function Sprite(anchor, frames, size, loadedcallback) {
     this.height = 0;
 
     // load up all of the images
-    for (var a in frames) {
+    for (var animation in animations) {
         // replace string entries with Images, unless they already are
-            if (typeof(frames[a][0][0]) == "string") {
+            if (typeof(animations[animation][0][0]) == "string") {
                 loadcount += 1;
-                var img = new Image();
-                img.src = frames[a][0][0];
-                frames[a][0][0] = img;
-                img.onload = function () {
+                var imageBeingLoaded = new Image();
+                imageBeingLoaded.src = animations[animation][0][0];
+                animations[animation][0][0] = imageBeingLoaded;
+                imageBeingLoaded.onload = function () {
                     loadcount -= 1;
                     if (loadcount == 0) {
-                        sprite.width = size;
-                        sprite.height = size;
+                        that.width = size;
+                        that.height = size;
                         if (loadedcallback) {
-                            sprite.loaded = true;
+                            that.loaded = true;
                             loadedcallback();
                         }
                     }
                 }
         }
         if (loadcount == 0) {
-            sprite.width = frames[a][f][0].width;
-            sprite.height = frames[a][f][0].height;
+            that.width = size;
+            that.height = size;
             if (loadedcallback) {
-                sprite.loaded = true;
+                that.loaded = true;
                 loadedcallback();
             }
         }
@@ -58,7 +58,7 @@ function Sprite(anchor, frames, size, loadedcallback) {
         "center": function(frame) {
             return frame.width / 2;
         }
-    }
+    };
 
     var calc_y = {
         "top": function(frame) {
@@ -70,77 +70,96 @@ function Sprite(anchor, frames, size, loadedcallback) {
         "center": function(frame) {
             return frame.height / 2;
         }
-    }
+    };
 
     /**
      Sets which named animation/action to play.
-     @param a is the name of the animation/action you defined on initialisation.
+     @param newActionValue is the name of the animation/action you defined on initialisation.
      @param reset indicates whether the frame number should be reset to the start of the animation.
      @param callback is called when the animation has completed one loop - receives parameter "action".
      **/
-    this.action = function(a, reset, callback) {
+    this.action = function(newActionValue, reset, callback) {
         if (typeof(callback) == "undefined") {
             loopcallback = null;
         } else {
             loopcallback = callback;
         }
-        action = a;
-        numframes = frames[a][0][2];
+        action = newActionValue;
+        numframes = animations[newActionValue][0][2];
         if (reset) {
-            framecount = frames[a][0][1];
+            framecount = animations[newActionValue][0][1];
             frame = 0
         } else {
-            frame = frame % frames[a][0][2];
+            frame = frame % animations[newActionValue][0][2];
         }
-        sprite.update = sprite._update;
-        sprite.draw = sprite._draw;
-        sprite.aabb = sprite._aabb;
+        that.update = that._update;
+        that.draw = that._draw;
+        that.aabb = that._aabb;
         return this;
-    }
+    };
 
     /** Returns the current action being played. **/
     this.get_action = function() {
         return action;
-    }
+    };
 
     /** Returns the current frame number being played. **/
     this.get_frame = function() {
         return frame;
-    }
+    };
 
     /** Returns the total number of frames. **/
     this.get_num_frames = function() {
         return numframes;
-    }
+    };
 
     /** Sets the animation frame to play **/
     this.set_frame = function(newframe) {
         frame = newframe;
-    }
+    };
 
     // increment frame counter etc.
     this._update = function() {
         framecount -= 1;
         if (framecount <= 0) {
-            if (loopcallback && (frame + 1 >= frames[action][0][2])) {
+            if (loopcallback && (frame + 1 >= animations[action][0][2])) {
                 loopcallback(action);
             }
-            frame = (frame + 1) % frames[action][0][2];
-            framecount = frames[action][frame][1];
+            frame = (frame + 1) % animations[action][0][2];
+            framecount = animations[action][frame][1];
         }
-    }
+    };
 
     // draw this sprite on canvas c at position with respect to the anchor specified
     this._draw = function(c, pos) {
-        var i = frames[action][0][0];
-        c.drawImage(i, pos[0] - calc_x[anchor[0]](i), pos[1] - calc_y[anchor[1]](i));
-    }
+        var imageStoredInFramesCollection = animations[action][0][0];
+
+        var columns =  imageStoredInFramesCollection.width / that.width;
+        var rows = imageStoredInFramesCollection.height / that.height;
+
+        var rowOfFrame = Math.floor(frame / columns);
+        var columnOfFrame = frame - (columns * rowOfFrame);
+
+        var verticalOffSet = rowOfFrame * that.height;
+        var horizontalOffSet = columnOfFrame * that.width;
+
+        //context.drawImage(image, srcX, srcY, srcW, srcH, dstX, dstY, dstW, dstH);
+
+        c.drawImage(imageStoredInFramesCollection,
+            horizontalOffSet,
+            verticalOffSet,
+            that.width,
+            that.height, pos[0] - calc_x[anchor[0]](imageStoredInFramesCollection),
+            pos[1] - calc_y[anchor[1]](imageStoredInFramesCollection),
+            that.width,
+            that.height);
+    };
 
     // returns the axis-aligned bounding-box of this sprite	for the current frame
     this._aabb = function(pos) {
-        var i = frames[action][frame][0];
+        var i = animations[action][frame][0];
         return [pos[0] - calc_x[anchor[0]](i), pos[1] - calc_y[anchor[1]](i), i.width, i.height];
-    }
+    };
 
     /** Call this method from inside the owner entity's update() method. */
     this.update = function() {};
@@ -178,7 +197,7 @@ Sprite.preload = function(images, completedcallback, progresscallback) {
             if (loadcount == 0 && completedcallback) {
                 completedcallback();
             }
-        }
+        };
         img[i].src = images[i];
     }
-}
+};
