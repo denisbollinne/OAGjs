@@ -136,16 +136,21 @@ function Sprite(anchor, animations, size, loadedcallback) {
         var rowOfFrame = Math.floor(frame / columns);
         var columnOfFrame = frame - (columns * rowOfFrame);
 
-        var verticalOffSet = rowOfFrame * that.height;
-        var horizontalOffSet = columnOfFrame * that.width;
+        var verticalOffSetInSpriteSheet = rowOfFrame * that.height;
+        var horizontalOffSetInSpriteSheet = columnOfFrame * that.width;
 
         //context.drawImage(image, srcX, srcY, srcW, srcH, dstX, dstY, dstW, dstH);
+
+        var xPosOnScreen = pos[0] - calc_x[anchor[0]]();
+        var yPosOnScreen = pos[1] - calc_y[anchor[1]]();
+
         c.drawImage(imageStoredInFramesCollection,
-            horizontalOffSet,
-            verticalOffSet,
+            horizontalOffSetInSpriteSheet,
+            verticalOffSetInSpriteSheet,
             that.width,
-            that.height, pos[0] - calc_x[anchor[0]](),
-            pos[1] - calc_y[anchor[1]](),
+            that.height,
+            xPosOnScreen,
+            yPosOnScreen,
             that.width,
             that.height);
     };
