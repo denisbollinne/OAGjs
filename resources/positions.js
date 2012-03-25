@@ -31,3 +31,27 @@ exports.update = function(req, res){
         res.send(404)
     }
 };
+
+exports.updateSio = function(session, data,callback){
+    if(session.selectedChar){
+        position.findOne({character:session.selectedChar._id},function(err,existingPos){
+            if(existingPos != null){
+
+                var newPos = data;
+                existingPos.x = newPos.x;
+                existingPos.y = newPos.y;
+                existingPos.direction = newPos.direction;
+                existingPos.dateTime = newPos.dateTime;
+
+                existingPos.save();
+                callback(true,existingPos);
+            }
+            else{
+                callback(false);
+            }
+        });
+    }
+    else{
+        callback(false);
+    }
+};

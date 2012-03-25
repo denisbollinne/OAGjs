@@ -6,7 +6,6 @@
  */
 
 GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
-    var updateUrl = "/positions"
     var anim = new GAME.AnimationFactory();
     var WALK_VX = 5;
     var WALK_VY = 5;
@@ -132,15 +131,10 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             dir = 'none'
         }
         if(isPlayable){
-            jQuery.ajax({
-                type: 'PUT',
-                url: '/positions',
-                data: {x:posx,y:posy,direction:dir,dateTime:Date.now()},
-                dataType: 'json'
-            });
+            this.onPositionChanged({x:posx,y:posy,direction:dir,dateTime:Date.now()})
         }
     };
-
+    this.onPositionChanged;
     this.draw = function (c) {
         p.draw(c, [posx, posy]);
     };

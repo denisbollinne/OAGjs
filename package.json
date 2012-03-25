@@ -21,7 +21,8 @@
     "crypto": ">=0.0.1",
     "everyauth": ">=0.2.28",
     "mongoose-types": ">=1.0.3",
-    "connect-heroku-redis": "0.1.5"
+    "connect-heroku-redis": "0.1.5",
+    "socket.io":">=0"
 
   },
     "engines": {
