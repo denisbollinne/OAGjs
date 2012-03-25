@@ -49,7 +49,7 @@ function Sprite(anchor, animations, size, loadedcallback) {
 
     // calculate offsets (center, right, left, top, bottom)
     var calc_x = {
-        "left": function(frame) {
+        "left": function() {
             return 0;
         },
         "right": function(frame) {
@@ -61,7 +61,7 @@ function Sprite(anchor, animations, size, loadedcallback) {
     };
 
     var calc_y = {
-        "top": function(frame) {
+        "top": function() {
             return 0;
         },
         "bottom": function(frame) {
@@ -103,21 +103,6 @@ function Sprite(anchor, animations, size, loadedcallback) {
         return action;
     };
 
-    /** Returns the current frame number being played. **/
-    this.get_frame = function() {
-        return frame;
-    };
-
-    /** Returns the total number of frames. **/
-    this.get_num_frames = function() {
-        return numframes;
-    };
-
-    /** Sets the animation frame to play **/
-    this.set_frame = function(newframe) {
-        frame = newframe;
-    };
-
     // increment frame counter etc.
     this._update = function() {
         framecount -= 1;
@@ -135,7 +120,6 @@ function Sprite(anchor, animations, size, loadedcallback) {
         var imageStoredInFramesCollection = animations[action][0][0];
 
         var columns =  imageStoredInFramesCollection.width / that.width;
-        var rows = imageStoredInFramesCollection.height / that.height;
 
         var rowOfFrame = Math.floor(frame / columns);
         var columnOfFrame = frame - (columns * rowOfFrame);
@@ -144,7 +128,6 @@ function Sprite(anchor, animations, size, loadedcallback) {
         var horizontalOffSet = columnOfFrame * that.width;
 
         //context.drawImage(image, srcX, srcY, srcW, srcH, dstX, dstY, dstW, dstH);
-
         c.drawImage(imageStoredInFramesCollection,
             horizontalOffSet,
             verticalOffSet,
@@ -153,12 +136,6 @@ function Sprite(anchor, animations, size, loadedcallback) {
             pos[1] - calc_y[anchor[1]](imageStoredInFramesCollection),
             that.width,
             that.height);
-    };
-
-    // returns the axis-aligned bounding-box of this sprite	for the current frame
-    this._aabb = function(pos) {
-        var i = animations[action][frame][0];
-        return [pos[0] - calc_x[anchor[0]](i), pos[1] - calc_y[anchor[1]](i), i.width, i.height];
     };
 
     /** Call this method from inside the owner entity's update() method. */
@@ -170,12 +147,6 @@ function Sprite(anchor, animations, size, loadedcallback) {
      @param pos is the position to draw at relative to the anchor point.
      **/
     this.draw = function() {};
-
-    /**
-     Returns the axis aligned bounding box of this sprite at its current frame.
-     @param pos is the position to get the aabb relative to (factors the anchor point in too).
-     **/
-    this.aabb = function() { return [0, 0, 0, 0]; };
 }
 
 /**
