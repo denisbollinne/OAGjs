@@ -5,6 +5,18 @@
  @param animations is a dictionary containing all actions and their associated set of images and the number of frames to show each image for. For instance: {"stand": [["img/stand.png", 0],], "walk": [["img/walk1.png", 3], ["img/walk2.png", 3],]} where each walk frame is shown for three frames.
  @param loadedcallback is a function that is called once all of the frames in all action animations are successfully loaded.
  */
+
+
+
+/*
+New object model :
+
+{
+    image: theImage : image string ( will be replaced with the actual image object ) ,
+    duration: draws that a frame will be drawn
+    tiles: number of tiles
+}
+ */
 function Sprite(anchor, animations, size, loadedcallback) {
     var loadcount = 0;
     var action = "";
@@ -20,11 +32,11 @@ function Sprite(anchor, animations, size, loadedcallback) {
     // load up all of the images
     for (var animation in animations) {
         // replace string entries with Images, unless they already are
-            if (typeof(animations[animation][0][0]) == "string") {
+            if (typeof(animations[animation].image) == "string") {
                 loadcount += 1;
                 var imageBeingLoaded = new Image();
-                imageBeingLoaded.src = animations[animation][0][0];
-                animations[animation][0][0] = imageBeingLoaded;
+                imageBeingLoaded.src = animations[animation].image;
+                animations[animation].image = imageBeingLoaded;
                 imageBeingLoaded.onload = function () {
                     loadcount -= 1;
                     if (loadcount == 0) {
@@ -52,11 +64,11 @@ function Sprite(anchor, animations, size, loadedcallback) {
         "left": function() {
             return 0;
         },
-        "right": function(frame) {
-            return frame.width;
+        "right": function() {
+            return that.width;
         },
-        "center": function(frame) {
-            return frame.width / 2;
+        "center": function() {
+            return that.width / 2;
         }
     };
 
@@ -64,11 +76,11 @@ function Sprite(anchor, animations, size, loadedcallback) {
         "top": function() {
             return 0;
         },
-        "bottom": function(frame) {
-            return frame.height;
+        "bottom": function() {
+            return that.height;
         },
-        "center": function(frame) {
-            return frame.height / 2;
+        "center": function() {
+            return that.height / 2;
         }
     };
 
@@ -85,12 +97,12 @@ function Sprite(anchor, animations, size, loadedcallback) {
             loopcallback = callback;
         }
         action = newActionValue;
-        numframes = animations[newActionValue][0][2];
+        numframes = animations[newActionValue].tiles;
         if (reset) {
-            framecount = animations[newActionValue][0][1];
+            framecount = animations[newActionValue].duration;
             frame = 0
         } else {
-            frame = frame % animations[newActionValue][0][2];
+            frame = frame % animations[newActionValue].tiles;
         }
         that.update = that._update;
         that.draw = that._draw;
@@ -107,17 +119,17 @@ function Sprite(anchor, animations, size, loadedcallback) {
     this._update = function() {
         framecount -= 1;
         if (framecount <= 0) {
-            if (loopcallback && (frame + 1 >= animations[action][0][2])) {
+            if (loopcallback && (frame + 1 >= animations[action].tiles)) {
                 loopcallback(action);
             }
-            frame = (frame + 1) % animations[action][0][2];
-            framecount = animations[action][frame][1];
+            frame = (frame + 1) % animations[action].tiles;
+            framecount = animations[action][frame].duration;
         }
     };
 
     // draw this sprite on canvas c at position with respect to the anchor specified
     this._draw = function(c, pos) {
-        var imageStoredInFramesCollection = animations[action][0][0];
+        var imageStoredInFramesCollection = animations[action].image;
 
         var columns =  imageStoredInFramesCollection.width / that.width;
 
@@ -132,8 +144,8 @@ function Sprite(anchor, animations, size, loadedcallback) {
             horizontalOffSet,
             verticalOffSet,
             that.width,
-            that.height, pos[0] - calc_x[anchor[0]](imageStoredInFramesCollection),
-            pos[1] - calc_y[anchor[1]](imageStoredInFramesCollection),
+            that.height, pos[0] - calc_x[anchor[0]](),
+            pos[1] - calc_y[anchor[1]](),
             that.width,
             that.height);
     };
