@@ -6,18 +6,34 @@
  @param loadedcallback is a function that is called once all of the frames in all action animations are successfully loaded.
  */
 
+GAMEFW = {};
 
+GAMEFW.AnimDef = function AnimDef(image, duration, tiles, offset){
+    this.image = image;
 
-/*
-New object model :
+    if(duration){
+        this.duration = duration;
+    }
+    else{
+        this.duration = 1;
+    }
 
-{
-    image: theImage : image string ( will be replaced with the actual image object ) ,
-    duration: draws that a frame will be drawn
-    tiles: number of tiles
-}
- */
-function Sprite(anchor, animations, size, loadedcallback) {
+    if(tiles){
+        this.tiles = tiles;
+    }
+    else{
+        this.tiles = 1;
+    }
+
+    if(tiles.offset){
+        this.offset = offset;
+    }
+    else{
+        this.offset =  0;
+    }
+};
+
+GAMEFW.Sprite = function Sprite(anchor, animations, size, loadedcallback) {
     var loadcount = 0;
     var action = "";
     var framecount = -1;
@@ -100,9 +116,9 @@ function Sprite(anchor, animations, size, loadedcallback) {
         numframes = animations[newActionValue].tiles;
         if (reset) {
             framecount = animations[newActionValue].duration;
-            frame = 0
+            frame = animations[newActionValue].offset;
         } else {
-            frame = frame % animations[newActionValue].tiles;
+            frame = (frame % animations[newActionValue].tiles) + animations[newActionValue].offset;
         }
         that.update = that._update;
         that.draw = that._draw;
@@ -122,8 +138,8 @@ function Sprite(anchor, animations, size, loadedcallback) {
             if (loopcallback && (frame + 1 >= animations[action].tiles)) {
                 loopcallback(action);
             }
-            frame = (frame + 1) % animations[action].tiles;
-            framecount = animations[action][frame].duration;
+            frame = ((frame + 1) % animations[action].tiles) + animation[action].offset;
+            framecount = animations[action].duration;
         }
     };
 
@@ -164,7 +180,7 @@ function Sprite(anchor, animations, size, loadedcallback) {
      @param pos is the position to draw at relative to the anchor point.
      **/
     this.draw = function() {};
-}
+};
 
 /**
  @method preload

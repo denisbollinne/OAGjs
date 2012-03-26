@@ -31,4 +31,4 @@ GAME.skeleton = function(gs){
     startPosition[1] = 600;
 
     this.character = new GAME.Character(gs, skeletonAnimations, startPosition, false);
-}
+};

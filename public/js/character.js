@@ -6,7 +6,6 @@
  */
 
 GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
-    var anim = new GAME.AnimationFactory();
     var WALK_VX = 5;
     var WALK_VY = 5;
     var vx = 0;
@@ -32,7 +31,7 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         "stand_downRight":animations.standSouthEast,
         "stand_downLeft":animations.standSouthWest
     }, function () {
-        p.action("stand_down")
+        p.action("stand_down");
     });
 
     this.update = function () {
@@ -177,7 +176,5 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             this.updateanimation();
         };
     }
-
-
 };
 

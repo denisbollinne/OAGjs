@@ -5,7 +5,7 @@
  * Time: 21:59
  */
 
-GAME.Orb = function Orb(gs){
+GAME.Orb = function Orb(){
 
     var WALK_VX = 15;
     var vx = 0;

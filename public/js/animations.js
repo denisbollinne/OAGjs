@@ -25,4 +25,4 @@ GAME.Animations = function(){
     this.standNorthWest = [];
     this.standSouthEast = [];
     this.standSouthWest = [];
-}
+};

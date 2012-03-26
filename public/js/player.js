@@ -32,4 +32,4 @@ GAME.player = function (gs,playable, currentPlayerInfo){
     startPosition[1] = currentPlayerInfo.y;
 
     this.character = new GAME.Character(gs, knightAnimations, startPosition, playable);
-}
+};
