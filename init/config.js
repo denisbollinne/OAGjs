@@ -1,12 +1,11 @@
 var express = require('express'),
-    redisConnect =  require('connect-heroku-redis')(express),
     stylus = require('stylus'),
     connectTimeout = require('connect-timeout'),
+    redisFactory = require('./redisFactory.js')(express),
     sessionStore
     ;
 
 module.exports = function(app, validateAuthenticated){
-
 
     app.configure('development', function() {
         app.set('db-uri', 'mongodb://localhost:27017/oagjs');
@@ -44,7 +43,7 @@ module.exports = function(app, validateAuthenticated){
         app.use(express.bodyParser());
         app.use(express.cookieParser());
         app.use(connectTimeout({ time: 10000 }));
-        app.use(express.session({ store: sessionStore= new redisConnect, secret:'M&DSessionSecret'}));
+        app.use(express.session({ store: sessionStore = new redisFactory.CreateSessionStore(), secret:'M&DSessionSecret'}));
     //    app.use(express.logger({ format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }))
         app.use(express.methodOverride());
         app.use(stylus.middleware({ src: __dirname + '/../public' }));

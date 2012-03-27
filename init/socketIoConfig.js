@@ -1,9 +1,12 @@
 var sioModule = require('socket.io'),
- parseCookie = require('connect').utils.parseCookie
- ;
+    parseCookie = require('connect').utils.parseCookie,
+    redisIoStore = require('socket.io').RedisStore,
+    express = require('express'),
+    redisFactory = require('./redisFactory.js')(express) ;
 
-module.exports = function(app,sessionStore){
+module.exports = function(app){
    var sio =  sioModule.listen(app);
+    var sessionStore = new redisFactory.CreateSessionStore();
 
     sio.configure('production', function(){
 
@@ -26,7 +29,11 @@ module.exports = function(app,sessionStore){
             , 'jsonp-polling'
         ]);
     });
-
+    sio.set('store', new redisIoStore({
+        redisPub: new redisFactory.CreateClient(),
+        redisSub: new redisFactory.CreateClient(),
+        redisClient: new redisFactory.CreateClient()
+    }));
     sio.set('authorization', function (data, accept) {
         // check if there's a cookie header
         if (!data.headers.cookie)
