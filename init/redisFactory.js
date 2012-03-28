@@ -50,7 +50,7 @@ module.exports = function(express) {
         }
         console.log("RedisStore options", options);
 
-        var client=  new redis.createClient(options.port || options.socket, options.host, options)
+       return new redis.createClient(options.port || options.socket, options.host, options)
     }
 
     // Inherit from Connect Redis

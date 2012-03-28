@@ -30,9 +30,9 @@ module.exports = function(app){
         ]);
     });
     sio.set('store', new redisIoStore({
-        redisPub: new redisFactory.CreateClient(),
-        redisSub: new redisFactory.CreateClient(),
-        redisClient: new redisFactory.CreateClient()
+        redisPub: redisFactory.CreateClient(),
+        redisSub: redisFactory.CreateClient(),
+        redisClient: redisFactory.CreateClient()
     }));
     sio.set('authorization', function (data, accept) {
         // check if there's a cookie header
