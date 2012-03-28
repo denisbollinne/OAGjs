@@ -21,7 +21,8 @@ module.exports = function(app){
     mongooseAuth.helpExpress(app);
 
     routes(app,everyauth.validateAuthenticated);
-   var socketIo = socketIoConfig(app,sessionStore);
+
+    var socketIo = socketIoConfig(app);
     socketIoRoutes(socketIo);
 
     onShutDown(app);
