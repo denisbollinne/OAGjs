@@ -2,6 +2,7 @@ var sioModule = require('socket.io'),
     parseCookie = require('connect').utils.parseCookie,
     redisIoStore = require('socket.io').RedisStore,
     express = require('express'),
+    redisClient = require('redis').RedisClient;
     redisFactory = require('./redisFactory.js')(express) ;
 
 module.exports = function(app){
@@ -35,6 +36,12 @@ module.exports = function(app){
         redisClient: redisFactory.CreateClient()
     });
 
+    if (redisStore.redisPub instanceof redisClient){
+        console.log('O----------K')
+    }
+    else{
+        console.log('-------NOK-------------');
+    }
 
     sio.set('store', redisStore);
     sio.set('authorization', function (data, accept) {

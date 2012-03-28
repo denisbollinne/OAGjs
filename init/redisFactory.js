@@ -51,10 +51,10 @@ module.exports = function(express) {
                 options.pass =  redisToGo.auth.split(":")[1];
             }
         }
-        console.log("IN CreateClient", options);
 
-       var client =  redis.createClient(options.port || options.socket, options.host, options);
-        console.log("AFTER  CreateClient", client);
+       var client =  redis.createClient(options.port || options.socket, options.host);
+        client.auth(options.pass, function (err) { if (err) {console.log("AUTH ERROR : ",err)}});
+
        return client;
     }
 
