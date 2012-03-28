@@ -34,6 +34,9 @@ module.exports = function(express) {
         RedisStore.call(this, options);
     }
 
+    // Inherit from Connect Redis
+    ConnectHerokuRedis.prototype = new RedisStore;
+
 
     function CreateClient(options) {
         var redisToGo = process.env.REDISTOGO_URL ? parse(process.env.REDISTOGO_URL) : false;
@@ -48,13 +51,12 @@ module.exports = function(express) {
                 options.pass =  redisToGo.auth.split(":")[1];
             }
         }
-        console.log("RedisStore options", options);
+        console.log("IN CreateClient", options);
 
-       return new redis.createClient(options.port || options.socket, options.host, options)
+       var client =  redis.createClient(options.port || options.socket, options.host, options);
+        console.log("AFTER  CreateClient", client);
+       return client;
     }
-
-    // Inherit from Connect Redis
-    ConnectHerokuRedis.prototype = new RedisStore;
 
     return {CreateClient : CreateClient, CreateSessionStore: ConnectHerokuRedis};
 

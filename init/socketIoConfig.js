@@ -29,11 +29,14 @@ module.exports = function(app){
             , 'jsonp-polling'
         ]);
     });
-    sio.set('store', new redisIoStore({
+    var redisStore = new redisIoStore({
         redisPub: redisFactory.CreateClient(),
         redisSub: redisFactory.CreateClient(),
         redisClient: redisFactory.CreateClient()
-    }));
+    });
+
+
+    sio.set('store', redisStore);
     sio.set('authorization', function (data, accept) {
         // check if there's a cookie header
         if (!data.headers.cookie)
