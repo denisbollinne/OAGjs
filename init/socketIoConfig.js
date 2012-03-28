@@ -32,22 +32,22 @@ module.exports = function(app){
     });
 
 
-    var options = {
-        redisPub: redisFactory.CreateClient(),
-        redisSub: redisFactory.CreateClient(),
-        redisClient: redisFactory.CreateClient()
-    };
-    var redisStore = new redisIoStore(options);
+//    var options = {
+//        redisPub: redisFactory.CreateClient(),
+//        redisSub: redisFactory.CreateClient(),
+//        redisClient: redisFactory.CreateClient()
+//    };
+//    var redisStore = new redisIoStore(options);
 
-    console.log('redis Options : ' + (options.redisPub))
-    if (options.redisPub instanceof redisClient){
-        console.log('O----------K')
-    }
-    else{
-        console.log('-------NOK-------------');
-    }
+//    console.log('redis Options : ' + (options.redisPub))
+//    if (options.redisPub instanceof redisClient){
+//        console.log('O----------K')
+//    }
+//    else{
+//        console.log('-------NOK-------------');
+//    }
 
-    sio.set('store', redisStore);
+//    sio.set('store', redisStore);
     sio.set('authorization', function (data, accept) {
         // check if there's a cookie header
         if (!data.headers.cookie)
