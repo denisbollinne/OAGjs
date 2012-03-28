@@ -30,13 +30,17 @@ module.exports = function(app){
             , 'jsonp-polling'
         ]);
     });
-    var redisStore = new redisIoStore({
+
+
+    var options = {
         redisPub: redisFactory.CreateClient(),
         redisSub: redisFactory.CreateClient(),
         redisClient: redisFactory.CreateClient()
-    });
+    };
+    var redisStore = new redisIoStore(options);
 
-    if (redisStore.redisPub instanceof redisClient){
+    console.log('redis Options : ' + (options.redisPub))
+    if (options.redisPub instanceof redisClient){
         console.log('O----------K')
     }
     else{
