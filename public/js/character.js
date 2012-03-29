@@ -10,6 +10,7 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
     var WALK_VY = 5;
     var vx = 0;
     var vy = 0;
+    var isAttacking = false;
     var posx = startPosition[0];
     var posy = startPosition[1];
 
@@ -84,10 +85,14 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
 
             this.updateanimation();
         }
-    }
+    };
 
     this.updateanimation = function () {
         var dir;
+        if(isAttacking){
+
+        }
+
         if (vx >= WALK_VX) {
             if (vy >= WALK_VY) {
                 p.action("run_downRight");
@@ -176,6 +181,14 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             vy += WALK_VY;
             this.updateanimation();
         };
+
+        this.keyDown_32 = function(){
+            isAttacking = true;
+        }
+
+
+
+
     }
 };
 
