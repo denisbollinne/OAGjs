@@ -24,12 +24,9 @@ GAMEFW.AnimDef = function AnimDef( image, duration, tiles, offset){
         this.tiles = 1;
     }
 
-    if(offset){
-        this.offset = offset;
-    }
-    else{
-        this.offset =  0;
-    }
+
+    this.offset = offset;
+
 };
 
 GAMEFW.Sprite = function Sprite(anchor, animations, size, loadedcallback) {
@@ -134,7 +131,7 @@ GAMEFW.Sprite = function Sprite(anchor, animations, size, loadedcallback) {
     this._update = function() {
         framecount -= 1;
         if (framecount <= 0) {
-            if (loopcallback && (frame + 1 >= animations[action].tiles)) {
+            if (loopcallback && (frame + 1 >= (animations[action].tiles + animations[action].offset ))) {
                 loopcallback(action);
             }
             frame = ((frame + 1) % animations[action].tiles) + animations[action].offset;

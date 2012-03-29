@@ -25,6 +25,14 @@ GAME.Animations = function(){
     this.standNorthWest = {};
     this.standSouthEast = {};
     this.standSouthWest = {};
-    
-    this.a
+
+    this.attackEast = {};
+    this.attackWest = {};
+    this.attackNorth = {};
+    this.attackSouth = {};
+
+    this.attackNorthEast = {};
+    this.attackNorthWest = {};
+    this.attackSouthEast = {};
+    this.attackSouthWest = {};
 };
