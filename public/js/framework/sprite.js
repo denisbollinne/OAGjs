@@ -8,9 +8,8 @@
 
 GAMEFW = {};
 
-GAMEFW.AnimDef = function AnimDef(image, duration, tiles, offset){
+GAMEFW.AnimDef = function AnimDef( image, duration, tiles, offset){
     this.image = image;
-
     if(duration){
         this.duration = duration;
     }
@@ -25,7 +24,7 @@ GAMEFW.AnimDef = function AnimDef(image, duration, tiles, offset){
         this.tiles = 1;
     }
 
-    if(tiles.offset){
+    if(offset){
         this.offset = offset;
     }
     else{
@@ -138,7 +137,7 @@ GAMEFW.Sprite = function Sprite(anchor, animations, size, loadedcallback) {
             if (loopcallback && (frame + 1 >= animations[action].tiles)) {
                 loopcallback(action);
             }
-            frame = ((frame + 1) % animations[action].tiles) + animation[action].offset;
+            frame = ((frame + 1) % animations[action].tiles) + animations[action].offset;
             framecount = animations[action].duration;
         }
     };
@@ -189,7 +188,7 @@ GAMEFW.Sprite = function Sprite(anchor, animations, size, loadedcallback) {
  @param completedcallback is a function which is called when all images are loaded
  @param progresscallback is a function accepting an integer, which is the count of images left to load
  */
-Sprite.preload = function(images, completedcallback, progresscallback) {
+GAMEFW.Sprite.preload = function(images, completedcallback, progresscallback) {
     var loadcount = images.length;
     var img = [];
     for (var i=0; i<images.length; i++) {

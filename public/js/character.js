@@ -13,7 +13,7 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
     var posx = startPosition[0];
     var posy = startPosition[1];
 
-    var p = new Sprite(["center", "bottom"], {
+    var p = new GAMEFW.Sprite(["center", "bottom"], {
         "run_right":animations.runEast,
         "run_left":animations.runWest,
         "run_up":animations.runNorth,
@@ -30,7 +30,8 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         "stand_upLeft":animations.standNorthWest,
         "stand_downRight":animations.standSouthEast,
         "stand_downLeft":animations.standSouthWest
-    }, function () {
+    },128
+        , function () {
         p.action("stand_down");
     });
 
