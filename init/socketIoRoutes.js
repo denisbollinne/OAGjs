@@ -12,9 +12,7 @@ module.exports = function(sio){
             , socket.handshake.sessionID
             , 'connected'
         );
-        socket.on('error',function(){
-            console.log('ERROR CAUGHT');
-        });
+
         socket.on('updatePosition', function (data) {
             sess.reload(function () {
                 positionsController.updateSio(sess, data,function(succeeded,updatedPosition){
