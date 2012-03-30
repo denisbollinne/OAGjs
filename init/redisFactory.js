@@ -17,10 +17,10 @@ module.exports = function(express) {
     var RedisStore = require('connect-redis')(express);
 
     function ConnectHerokuRedis(options) {
-        options = GetOptions(options);
+        var options2 = GetOptions(options);
 
 //        console.log("RedisStore options", options);
-        RedisStore.call(this, options);
+        RedisStore.call(this, options2);
     }
 
     // Inherit from Connect Redis
@@ -43,7 +43,7 @@ module.exports = function(express) {
 
     function GetOptions(options) {
         var redisToGo = process.env.REDISTOGO_URL ? parse(process.env.REDISTOGO_URL) : false;
-//        console.log("redisToGoURL", redisToGo);
+        console.log("redisToGoURL", redisToGo);
         options = options || {};
 
         if (redisToGo) {
