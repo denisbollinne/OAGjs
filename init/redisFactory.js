@@ -38,7 +38,10 @@ module.exports = function(express) {
         }
         options.no_ready_check = true;
         var rc =  new redis.createClient(options.port || options.socket, options.host, options)
-
+        rc.auth(options.pass);
+        rc.on("connect", function () {
+            rc.flushall(); // This eventually needs to be removed, if the server goes idle and starts back up it flushes the redis data store
+        });
         rc.on('error', function(err){
             console.log('RC ERROR : '+err);
         });
