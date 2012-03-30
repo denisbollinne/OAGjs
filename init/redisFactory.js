@@ -30,8 +30,13 @@ module.exports = function(express) {
     function CreateClient(options) {
         options2 = GetOptions(options);
 
-        return new redis.createClient(options2.port || options2.socket, options2.host, options2)
+        var rc =  new redis.createClient(options2.port || options2.socket, options2.host, options2)
 
+        rc.on('error', function(err){
+            console.log('RC ERROR : '+err);
+        });
+
+        return rc;
     }
 
 
