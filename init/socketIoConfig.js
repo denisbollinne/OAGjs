@@ -13,7 +13,7 @@ module.exports = function(app,sessionStore,express){
         sio.enable('browser client minification');  // send minified client
         sio.enable('browser client etag');          // apply etag caching logic based on version number
         sio.enable('browser client gzip');          // gzip the file
-        sio.set('log level', 1);                    // reduce logging
+//        sio.set('log level', 1);                    // reduce logging
 
         //HEROKU
         sio.set("transports", ["xhr-polling"]); //HEROKU
