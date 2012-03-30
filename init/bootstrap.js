@@ -22,7 +22,7 @@ module.exports = function(app){
 
     routes(app,everyauth.validateAuthenticated);
 
-    var socketIo = socketIoConfig(app);
+    var socketIo = socketIoConfig(app,sessionStore);
     socketIoRoutes(socketIo);
 
     onShutDown(app);
