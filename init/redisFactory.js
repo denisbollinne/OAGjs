@@ -19,11 +19,11 @@ module.exports = function(express) {
 
     function ConnectHerokuRedis(options) {
 
-        return new RedisStore({client:CreateClient(options)});
+        return new RedisStore({client:CreateClient({},options)});
     }
 
 
-    function CreateClient(options) {
+    function CreateClient(options,callback) {
         var redisToGo = process.env.REDISTOGO_URL ? parse(process.env.REDISTOGO_URL) : false;
         console.log("redisToGoURL", redisToGo);
         options = options || {};
@@ -48,7 +48,9 @@ module.exports = function(express) {
         rc.auth(pass);
 
         rc.on('ready', function(){
-            console.log('RC READY');
+            if(callback){
+                callback(rc);
+            }
         });
         return rc;
     }

@@ -30,36 +30,40 @@ module.exports = function(app,sessionStore,express){
         ]);
     });
 
+    redisFactory.CreateClient({},function(redisPub){
+        redisFactory.CreateClient({},function(redisSub){
+            redisFactory.CreateClient({},function(redisClient){
+                var options = {
+                    redisPub: redisPub,
+                    redisSub: redisSub,
+                    redisClient: redisClient,
+                    redis:redisFactory.redis
+                };
+                var redisStore = new redisIoStore(options);
+                sio.set('store', redisStore);
 
-    var options = {
-        redisPub: redisFactory.CreateClient(),
-        redisSub: redisFactory.CreateClient(),
-        redisClient: redisFactory.CreateClient(),
-        redis:redisFactory.redis
-    };
-    var redisStore = new redisIoStore(options);
+                sio.set('authorization', function (data, accept) {
+                    // check if there's a cookie header
+                    if (!data.headers.cookie)
+                        return accept('No cookie transmitted.', false);
 
+                    data.cookie = parseCookie(data.headers.cookie);
+                    data.sessionID = data.cookie['connect.sid'];
 
-    sio.set('store', redisStore);
-    sio.set('authorization', function (data, accept) {
-        // check if there's a cookie header
-        if (!data.headers.cookie)
-            return accept('No cookie transmitted.', false);
+                    sessionStore2.load(data.sessionID, function (err, session) {
+                        if (err || !session || !session.auth.loggedIn)
+                            return accept('Error', false);
 
-        data.cookie = parseCookie(data.headers.cookie);
-        data.sessionID = data.cookie['connect.sid'];
+                        data.session = session;
+                        return accept(null, true);
+                    });
 
-        sessionStore2.load(data.sessionID, function (err, session) {
-            if (err || !session || !session.auth.loggedIn)
-                return accept('Error', false);
-
-            data.session = session;
-            return accept(null, true);
-        });
-
-        // accept the incoming connection
-        accept(null, true);
-    });
+                    // accept the incoming connection
+                    accept(null, true);
+                });
+            })
+        })
+    })
 
     return sio;
 }
