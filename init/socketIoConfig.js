@@ -6,7 +6,6 @@ var sioModule = require('socket.io'),
 module.exports = function(app,sessionStore,express){
    var redisFactory = require('./redisFactory.js')(express) ;
    var sio =  sioModule.listen(app);
-   var sessionStore2 = redisFactory.CreateSessionStore();
 
     sio.configure('production', function(){
 
@@ -53,7 +52,7 @@ module.exports = function(app,sessionStore,express){
                     data.cookie = parseCookie(data.headers.cookie);
                     data.sessionID = data.cookie['connect.sid'];
 
-                    sessionStore2.load(data.sessionID, function (err, session) {
+                    sessionStore.load(data.sessionID, function (err, session) {
                         if (err || !session || !session.auth.loggedIn)
                             return accept('Error', false);
 
