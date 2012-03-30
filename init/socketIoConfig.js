@@ -31,8 +31,11 @@ module.exports = function(app,sessionStore,express){
     });
 
     redisFactory.CreateClient({},function(redisPub){
+        console.log('RC 1 OK');
         redisFactory.CreateClient({},function(redisSub){
+            console.log('RC 2 OK');
             redisFactory.CreateClient({},function(redisClient){
+                console.log('RC 3 OK');
                 var options = {
                     redisPub: redisPub,
                     redisSub: redisSub,

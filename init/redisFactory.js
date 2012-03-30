@@ -40,15 +40,18 @@ module.exports = function(express) {
         options.debug_mode = true;
         var rc =  new redis.createClient(options.port || options.socket, options.host, options)
 
-        rc.on('error', function(err){
-            console.log('RC ERROR : '+err);
-        });
-
         rc.on('ready', function(){
             if(callback){
                 callback(rc);
             }
         });
+
+        rc.auth(options.pass);
+        rc.on('error', function(err){
+            console.log('RC ERROR : '+err);
+        });
+
+
         return rc;
     }
 
