@@ -47,7 +47,7 @@ module.exports = function(express) {
         options = options || {};
 
         if (redisToGo) {
-            options.host = options.host || redisToGo.host;
+            options.host = options.host || redisToGo.hostname;
             options.port = options.port || redisToGo.port;
 
             if (!options.pass && redisToGo.auth) {
