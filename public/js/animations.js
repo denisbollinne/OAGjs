@@ -6,23 +6,33 @@
  */
 
 GAME.Animations = function(){
-    this.runEast = [];
-    this.runWest = [];
-    this.runNorth = [];
-    this.runSouth = [];
+    this.runEast = {};
+    this.runWest = {};
+    this.runNorth = {};
+    this.runSouth = {};
 
-    this.runNorthEast = [];
-    this.runNorthWest = [];
-    this.runSouthEast = [];
-    this.runSouthWest = [];
+    this.runNorthEast = {};
+    this.runNorthWest = {};
+    this.runSouthEast = {};
+    this.runSouthWest = {};
 
-    this.standEast = [];
-    this.standWest = [];
-    this.standNorth = [];
-    this.standSouth = [];
+    this.standEast = {};
+    this.standWest = {};
+    this.standNorth = {};
+    this.standSouth = {};
 
-    this.standNorthEast = [];
-    this.standNorthWest = [];
-    this.standSouthEast = [];
-    this.standSouthWest = [];
+    this.standNorthEast = {};
+    this.standNorthWest = {};
+    this.standSouthEast = {};
+    this.standSouthWest = {};
+
+    this.attackEast = {};
+    this.attackWest = {};
+    this.attackNorth = {};
+    this.attackSouth = {};
+
+    this.attackNorthEast = {};
+    this.attackNorthWest = {};
+    this.attackSouthEast = {};
+    this.attackSouthWest = {};
 };

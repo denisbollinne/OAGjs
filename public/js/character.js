@@ -10,10 +10,11 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
     var WALK_VY = 5;
     var vx = 0;
     var vy = 0;
+    var isAttacking = false;
     var posx = startPosition[0];
     var posy = startPosition[1];
 
-    var p = new Sprite(["center", "bottom"], {
+    var p = new GAMEFW.Sprite(["center", "bottom"], {
         "run_right":animations.runEast,
         "run_left":animations.runWest,
         "run_up":animations.runNorth,
@@ -29,8 +30,17 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         "stand_upRight":animations.standNorthEast,
         "stand_upLeft":animations.standNorthWest,
         "stand_downRight":animations.standSouthEast,
-        "stand_downLeft":animations.standSouthWest
-    }, function () {
+        "stand_downLeft":animations.standSouthWest,
+        "attack_right":animations.attackEast,
+        "attack_left":animations.attackWest,
+        "attack_up":animations.attackNorth,
+        "attack_down":animations.attackSouth,
+        "attack_upRight":animations.attackNorthEast,
+        "attack_upLeft":animations.attackNorthWest,
+        "attack_downRight":animations.attackSouthEast,
+        "attack_downLeft":animations.attackSouthWest
+        },128
+        , function () {
         p.action("stand_down");
     });
 
@@ -83,52 +93,69 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
 
             this.updateanimation();
         }
-    }
+    };
 
     this.updateanimation = function () {
         var dir;
-        if (vx >= WALK_VX) {
-            if (vy >= WALK_VY) {
-                p.action("run_downRight");
-                dir = 'se'
+        var lastAction = p.get_action();
+        if(isAttacking){
+                var attackAction = lastAction.toString().replace("stand", "attack");
+                if(attackAction === lastAction){
+                    isAttacking = false;
+                }
+                else{
+                    p.action(attackAction,true, function(){
+                       var endAttack =  p.get_action().toString().replace("attack", "stand");
+                       p.action(endAttack);
+                        isAttacking = false;
+                    });
+                }
+        }
+
+            if (vx >= WALK_VX) {
+                if (vy >= WALK_VY) {
+                    p.action("run_downRight");
+                    dir = 'se'
+                }
+                else if (vy <= -WALK_VY) {
+                    p.action("run_upRight");
+                    dir = 'ne'
+                }
+                else {
+                    p.action("run_right");
+                    dir = 'e'
+                }
+            }
+            else if (vx <= -WALK_VX) {
+                if (vy >= WALK_VY) {
+                    p.action("run_downLeft");
+                    dir = 'sw'
+                }
+                else if (vy <= -WALK_VY) {
+                    p.action("run_upLeft");
+                    dir = 'nw'
+                }
+                else {
+                    p.action("run_left");
+                    dir = 'w'
+                }
+            }
+            else if (vy >= WALK_VY) {
+                p.action("run_down");
+                dir = 's'
             }
             else if (vy <= -WALK_VY) {
-                p.action("run_upRight");
-                dir = 'ne'
+                p.action("run_up");
+                dir = 'n'
             }
-            else {
-                p.action("run_right");
-                dir = 'e'
+            else  {
+                var standAction = lastAction.toString().replace("run", "stand");
+                if(!isAttacking){
+                    p.action(standAction);
+                }
+                dir = 'none'
             }
-        }
-        else if (vx <= -WALK_VX) {
-            if (vy >= WALK_VY) {
-                p.action("run_downLeft");
-                dir = 'sw'
-            }
-            else if (vy <= -WALK_VY) {
-                p.action("run_upLeft");
-                dir = 'nw'
-            }
-            else {
-                p.action("run_left");
-                dir = 'w'
-            }
-        }
-        else if (vy >= WALK_VY) {
-            p.action("run_down");
-            dir = 's'
-        }
-        else if (vy <= -WALK_VY) {
-            p.action("run_up");
-            dir = 'n'
-        }
-        else {
-            var lastAction = p.get_action();
-            var newAction = lastAction.toString().replace("run", "stand");
-            p.action(newAction);
-            dir = 'none'
-        }
+
         if(isPlayable){
             this.onPositionChanged({x:posx,y:posy,direction:dir,dateTime:Date.now()})
         }
@@ -175,6 +202,11 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             vy += WALK_VY;
             this.updateanimation();
         };
+
+        this.keyDown_32 = function(){
+            isAttacking = true;
+            this.updateanimation();
+        }
     }
 };
 
