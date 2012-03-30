@@ -19,7 +19,7 @@ module.exports = function(express) {
     function ConnectHerokuRedis(options) {
         options = GetOptions(options);
 
-        console.log("RedisStore options", options);
+//        console.log("RedisStore options", options);
         RedisStore.call(this, options);
     }
 
@@ -31,7 +31,7 @@ module.exports = function(express) {
         options = GetOptions(options);
 
 
-        console.log("RedisStore options", options);
+//        console.log("RedisStore options", options);
 
         return new redis.createClient(options.port || options.socket, options.host, options)
 //        this =
@@ -43,7 +43,7 @@ module.exports = function(express) {
 
     function GetOptions(options) {
         var redisToGo = process.env.REDISTOGO_URL ? parse(process.env.REDISTOGO_URL) : false;
-        console.log("redisToGoURL", redisToGo);
+//        console.log("redisToGoURL", redisToGo);
         options = options || {};
 
         if (redisToGo) {
