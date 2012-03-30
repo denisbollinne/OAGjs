@@ -31,12 +31,8 @@ module.exports = function(express) {
             }
         }
 
-
-        RedisStore.call(this, options);
+        return new RedisStore({client:CreateClient()});
     }
-
-    // Inherit from Connect Redis
-    ConnectHerokuRedis.prototype = new RedisStore;
 
 
     function CreateClient(options) {

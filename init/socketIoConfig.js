@@ -6,7 +6,7 @@ var sioModule = require('socket.io'),
 module.exports = function(app,sessionStore,express){
    var redisFactory = require('./redisFactory.js')(express) ;
    var sio =  sioModule.listen(app);
-   var sessionStore2 = new redisFactory.CreateSessionStore();
+   var sessionStore2 = redisFactory.CreateSessionStore();
 
     sio.configure('production', function(){
 

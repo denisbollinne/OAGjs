@@ -43,7 +43,7 @@ module.exports = function(app, validateAuthenticated){
         app.use(express.bodyParser());
         app.use(express.cookieParser());
         app.use(connectTimeout({ time: 10000 }));
-        app.use(express.session({ store: sessionStore = new redisFactory.CreateSessionStore(), secret:'M&DSessionSecret'}));
+        app.use(express.session({ store: sessionStore = redisFactory.CreateSessionStore(), secret:'M&DSessionSecret'}));
     //    app.use(express.logger({ format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }))
         app.use(express.methodOverride());
         app.use(stylus.middleware({ src: __dirname + '/../public' }));
