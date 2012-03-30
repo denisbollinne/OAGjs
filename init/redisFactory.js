@@ -35,7 +35,9 @@ module.exports = function(express) {
         rc.on('error', function(err){
             console.log('RC ERROR : '+err);
         });
-
+        rc.on('ready', function(){
+            console.log('this doesn\'t get printed');
+        });
         return rc;
     }
 
