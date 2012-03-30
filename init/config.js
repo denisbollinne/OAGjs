@@ -31,7 +31,7 @@ module.exports = function(app, validateAuthenticated){
     app.configure('production', function() {
         app.set('db-uri', process.env.MONGOHQ_URL);
         app.set('port',process.env.PORT);
-        app.set('debug',false);
+        app.set('debug',true);
         app.set('host','http://ourawesomegamejs.herokuapp.com')
    });
 
