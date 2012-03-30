@@ -18,20 +18,8 @@ module.exports = function(express) {
     var RedisStore = require('connect-redis')(express);
 
     function ConnectHerokuRedis(options) {
-        var redisToGo = process.env.REDISTOGO_URL ? parse(process.env.REDISTOGO_URL) : false;
-        console.log("redisToGoURL", redisToGo);
-        options = options || {};
 
-        if (redisToGo) {
-            options.host = options.host || redisToGo.hostname;
-            options.port = options.port || redisToGo.port;
-
-            if (!options.pass && redisToGo.auth) {
-                options.pass = options.pass || redisToGo.auth.split(":")[1];
-            }
-        }
-
-        return new RedisStore({client:CreateClient()});
+        return new RedisStore({client:CreateClient(options)});
     }
 
 
@@ -48,7 +36,7 @@ module.exports = function(express) {
                 options.pass = options.pass || redisToGo.auth.split(":")[1];
             }
         }
-
+        options.no_ready_check = true;
         var rc =  new redis.createClient(options.port || options.socket, options.host, options)
 
         rc.on('error', function(err){
