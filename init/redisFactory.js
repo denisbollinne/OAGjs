@@ -50,7 +50,7 @@ module.exports = function(express) {
         return rc;
     }
 
-    return {CreateClient : CreateClient, CreateSessionStore: ConnectHerokuRedis};
+    return {CreateClient : CreateClient, CreateSessionStore: ConnectHerokuRedis, Redis:redis};
 
 
 }

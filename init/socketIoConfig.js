@@ -13,7 +13,7 @@ module.exports = function(app,sessionStore,express){
         sio.enable('browser client minification');  // send minified client
         sio.enable('browser client etag');          // apply etag caching logic based on version number
         sio.enable('browser client gzip');          // gzip the file
-//        sio.set('log level', 1);                    // reduce logging
+        sio.set('log level', 3);                    // reduce logging
 
         //HEROKU
         sio.set("transports", ["xhr-polling"]); //HEROKU
@@ -34,7 +34,8 @@ module.exports = function(app,sessionStore,express){
     var options = {
         redisPub: redisFactory.CreateClient(),
         redisSub: redisFactory.CreateClient(),
-        redisClient: redisFactory.CreateClient()
+        redisClient: redisFactory.CreateClient(),
+        redis:redisFactory.redis
     };
     var redisStore = new redisIoStore(options);
 
