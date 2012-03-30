@@ -1,10 +1,10 @@
 var sioModule = require('socket.io'),
     parseCookie = require('connect').utils.parseCookie,
-    express = require('express'),
-    redisIoStore =  sioModule.RedisStore,
-    redisFactory = require('./redisFactory.js')(express) ;
+    redisIoStore =  sioModule.RedisStore;
 
-module.exports = function(app,sessionStore){
+
+module.exports = function(app,sessionStore,express){
+   var redisFactory = require('./redisFactory.js')(express) ;
    var sio =  sioModule.listen(app);
 //    var sessionStore = new redisFactory.CreateSessionStore();
 

@@ -3,5 +3,5 @@ var express = require('express')
     , mongoose = require('mongoose')
     , app = module.exports =express.createServer();
 
-bootstrapper(app);
+bootstrapper(app,express);
 User = mongoose.model('User');
