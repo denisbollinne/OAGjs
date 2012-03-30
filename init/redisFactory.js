@@ -4,8 +4,7 @@
  * MIT Licensed
  */
 
-var parse = require('url').parse,
-    redis = require('redis');
+var parse = require('url').parse;
 
 /**
  * Return connect heroku redis store
@@ -16,7 +15,6 @@ var parse = require('url').parse,
 module.exports = function(express) {
 
     var RedisStore = require('connect-redis')(express);
-    var RedisClient = redis.RedisClient;
 
     function ConnectHerokuRedis(options) {
         options = GetOptions(options);
