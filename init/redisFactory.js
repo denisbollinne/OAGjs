@@ -37,6 +37,7 @@ module.exports = function(express) {
             }
         }
         options.no_ready_check = true;
+        options.debug_mode = true;
         var rc =  new redis.createClient(options.port || options.socket, options.host, options)
         rc.auth(options.pass);
 
