@@ -1,8 +1,6 @@
 var sioModule = require('socket.io'),
     parseCookie = require('connect').utils.parseCookie,
-    redisIoStore = require('socket.io').RedisStore,
     express = require('express'),
-    redisClient = require('redis').RedisClient;
     redisFactory = require('./redisFactory.js')(express) ;
 
 module.exports = function(app){
