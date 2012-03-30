@@ -38,7 +38,8 @@ module.exports = function(app,sessionStore,express){
                 var options = {
                     redisPub : redisPub,
                     redisSub : redisPub,
-                    redisClient : redisPub
+                    redisClient : redisPub,
+                    redis : redisFactory.redis
                 };
                 var redisStore = new redisIoStore(options);
                 sio.set('store', redisStore);
