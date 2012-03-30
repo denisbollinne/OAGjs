@@ -4,7 +4,8 @@
  * MIT Licensed
  */
 
-var parse = require('url').parse;
+var parse = require('url').parse,
+    redis = require('redis');
 
 /**
  * Return connect heroku redis store
@@ -19,7 +20,6 @@ module.exports = function(express) {
     function ConnectHerokuRedis(options) {
         var options2 = GetOptions(options);
 
-//        console.log("RedisStore options", options);
         RedisStore.call(this, options2);
     }
 
@@ -28,17 +28,12 @@ module.exports = function(express) {
 
 
     function CreateClient(options) {
-        options = GetOptions(options);
+        options2 = GetOptions(options);
 
+        return new redis.createClient(options2.port || options2.socket, options2.host, options2)
 
-//        console.log("RedisStore options", options);
-
-        return new redis.createClient(options.port || options.socket, options.host, options)
-//        this =
-//        RedisClient.call(net_client, options);
     }
-    // Inherit from RedisClient
- //   CreateClient.prototype = RedisClient;
+
 
 
     function GetOptions(options) {

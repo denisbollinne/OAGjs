@@ -1,6 +1,7 @@
 var sioModule = require('socket.io'),
     parseCookie = require('connect').utils.parseCookie,
     express = require('express'),
+    redisIoStore =  sioModule.RedisStore,
     redisFactory = require('./redisFactory.js')(express) ;
 
 module.exports = function(app,sessionStore){
@@ -30,15 +31,15 @@ module.exports = function(app,sessionStore){
     });
 
 
-//    var options = {
-//        redisPub: redisFactory.CreateClient(),
-//        redisSub: redisFactory.CreateClient(),
-//        redisClient: redisFactory.CreateClient()
-//    };
-//    var redisStore = new redisIoStore(options);
-//
-//
-//    sio.set('store', redisStore);
+    var options = {
+        redisPub: redisFactory.CreateClient(),
+        redisSub: redisFactory.CreateClient(),
+        redisClient: redisFactory.CreateClient()
+    };
+    var redisStore = new redisIoStore(options);
+
+
+    sio.set('store', redisStore);
     sio.set('authorization', function (data, accept) {
         // check if there's a cookie header
         if (!data.headers.cookie)
