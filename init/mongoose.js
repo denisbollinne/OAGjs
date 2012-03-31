@@ -43,14 +43,6 @@ module.exports = function(app,mongooseAuth){
                 , redirectPath: '/'
             }
         }
-        , twitter: {
-            everyauth: {
-                myHostname: 'http://local.host:3000'
-                , consumerKey: conf.twit.consumerKey
-                , consumerSecret: conf.twit.consumerSecret
-                , redirectPath: '/'
-            }
-        }
         , password: {
             loginWith: 'email'
             , extraParams: {
@@ -69,22 +61,6 @@ module.exports = function(app,mongooseAuth){
                 , registerView: 'register.jade'
                 , loginSuccessRedirect: '/'
                 , registerSuccessRedirect: '/'
-            }
-        }
-        , github: {
-            everyauth: {
-                myHostname: 'http://local.host:3000'
-                , appId: conf.github.appId
-                , appSecret: conf.github.appSecret
-                , redirectPath: '/'
-            }
-        }
-        , instagram: {
-            everyauth: {
-                myHostname: 'http://local.host:3000'
-                , appId: conf.instagram.clientId
-                , appSecret: conf.instagram.clientSecret
-                , redirectPath: '/'
             }
         }
         , google: {

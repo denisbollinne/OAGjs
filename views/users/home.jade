@@ -10,18 +10,9 @@
   - if (everyauth.facebook)
     h3 Facebook User Data
     p= JSON.stringify(everyauth.facebook.user)
-  - if (everyauth.twitter)
-    h3 Twitter User Data
-    p= JSON.stringify(everyauth.twitter.user)
-  - if (everyauth.github)
-    h3 GitHub User Data
-    p= JSON.stringify(everyauth.github.user)
   - if (everyauth.google)
     h3 Google User Data
     p= JSON.stringify(everyauth.google.user)
-  - if (everyauth.instagram)
-    h3 Instagram User Data
-    p= JSON.stringify(everyauth.instagram.user)
   h3
     a(href='/logout') Logout
 
