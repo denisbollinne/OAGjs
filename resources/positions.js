@@ -1,54 +1,32 @@
 var mongoose = require('mongoose');
 
 var position = mongoose.model('Position');
+var redisFactory = require('../init/redisFactory.js')();
+var staticClient;
 
-exports.index = function(req, res){
-    position.find({},function(err,docs){
-       res.send(docs);
-   })
-};
-
-exports.update = function(req, res){
-    if(req.session.selectedChar){
-        position.findOne({character:req.session.selectedChar._id},function(err,existingPos){
-            if(existingPos != null){
-                var newPos = req.body;
-
-                existingPos.x = newPos.x;
-                existingPos.y = newPos.y;
-                existingPos.direction = newPos.direction;
-                existingPos.dateTime = newPos.dateTime;
-
-                existingPos.save();
-                res.send(200)
-            }
-            else{
-                res.send(404)
-            }
-        });
-    }
-    else{
-        res.send(404)
-    }
-};
+var GetRedisClient = function(){
+    staticClient = staticClient||redisFactory.CreateClient();
+    return staticClient;
+}
 
 exports.updateSio = function(session, data,callback){
     if(session.selectedChar){
-        position.findOne({character:session.selectedChar._id},function(err,existingPos){
-            if(existingPos != null){
+        var client = GetRedisClient();
+        var charId = session.selectedChar._id;
 
+        var charName = "Char_"+charId;
+        client.get(charName,function(err,gameId){
+            var charStatus = "CharStatus_"+charId;
+            client.hgetall(charStatus,function(err,status){
                 var newPos = data;
-                existingPos.x = newPos.x;
-                existingPos.y = newPos.y;
-                existingPos.direction = newPos.direction;
-                existingPos.dateTime = newPos.dateTime;
+                status.x = newPos.x;
+                status.y = newPos.y;
+                status.direction = newPos.direction;
+                status.dateTime = newPos.dateTime.toISOString();
 
-                existingPos.save();
-                callback(true,existingPos);
-            }
-            else{
-                callback(false);
-            }
+                client.hmset(charStatus,status);
+                callback(true,status,gameId);
+            })
         });
     }
     else{

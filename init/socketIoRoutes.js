@@ -15,7 +15,7 @@ module.exports = function(sio){
 
         socket.on('updatePosition', function (data) {
             sess.reload(function () {
-                positionsController.updateSio(sess, data,function(succeeded,updatedPosition){
+                positionsController.updateSio(sess, data,function(succeeded,updatedPosition,game){
                     if(succeeded){
                         socket.broadcast.emit('updatedPosition',updatedPosition)
                     }
