@@ -37,10 +37,11 @@ module.exports = function(app,sessionStore,express,callback){
                 console.log('RC 3 OK');
                 var options = {
                     redisPub : redisPub,
-                    redisSub : redisPub,
-                    redisClient : redisPub,
-                    redis : redisFactory.redis
+                    redisSub : redisSub,
+                    redisClient : redisClient,
+                    redis : redisFactory.Redis
                 };
+             //   console.log('opts.redisPub instanceof RedisClient = '+((options.redisPub) instanceof redisFactory.Redis.RedisClient))
                 var redisStore = new redisIoStore(options);
                 sio.set('store', redisStore);
 
