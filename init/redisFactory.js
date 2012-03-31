@@ -1,19 +1,7 @@
-/**
- * connect-heroku-redis
- * Copyright(c) 2010 Michael Hemesath <mike.hemesath@gmail.com>
- * MIT Licensed
- */
-
 var parse = require('url').parse,
     express = require('express'),
     redis = require('redis');
 
-/**
- * Return connect heroku redis store
- * @param {int} version
- * @return RedisStore
- * @api public
- */
 module.exports = function() {
 
     var RedisStore = require('connect-redis')(express);
