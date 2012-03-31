@@ -2,9 +2,10 @@ var mongoose = require('mongoose');
 
 var character = mongoose.model('Character');
 var position = mongoose.model('Position');
+var redisFactory  = require('../init/redisFactory.js')();
 
 exports.index = function(req, res){
-    character.find({user:req.user._id}).populate('position').run(function(err,docs){
+    character.find({user:req.user._id}).run(function(err,docs){
         res.send(docs);
     })
 };
@@ -83,16 +84,41 @@ exports.select = function(req,res){
 
 
 exports.current = function(req,res){
-    character.findOne({user:req.user._id, _id:req.session.selectedChar._id}).populate('position').run(function(err,docs){
+    character.findOne({user:req.user._id, _id:req.session.selectedChar._id}).run(function(err,char){
         if(!err){
-            res.send(docs);
+            var client =GetRedisClient();
+            var charStatus = "CharStatus_"+char._id;
+            client.HGETALL(charStatus,function(err,status){
+                if(err){
+                    console.log('ERROR : '+err);
+                    res.send(char);
+                } else{
+                    var test = {};
+                    test._id = char._id;
+                    test.race  = char.race;
+                    test.class  = char.class;
+                    test.experience  = char.experience;
+                    test.name  = char.name;
+                    test.user  = char.user;
+                    test.position = status;
+                    test.position.x = parseInt(test.position.x)
+                    test.position.y = parseInt(test.position.y)
+                    console.log(status);
+                }
+                res.send(test);
+            });
+
         }
         else{
             res.send(500);
         }
     });
 };
-
+var staticClient;
+var GetRedisClient = function(){
+    staticClient = staticClient||redisFactory.CreateClient();
+    return staticClient;
+}
 
 exports.position = function(req,res){
     position.findOne({character:req.session.selectedChar._id},function(err,doc){

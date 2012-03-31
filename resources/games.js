@@ -45,6 +45,8 @@ exports.characters = function(req, res){
                             test.name  = char.name;
                             test.user  = char.user;
                             test.position = status;
+                            test.position.x = parseInt(test.position.x);
+                            test.position.y = parseInt(test.position.y);
 
                             charsToReturn.push(test);
                             callback();
@@ -104,7 +106,7 @@ exports.join = function(req,res){
                     };
                     var charStatus = "CharStatus_"+charId;
                     client.HMSET(charStatus,status,function(err,result){
-                        console.log(result);
+                        console.log(err);
                     });
 
                     res.send(200);
