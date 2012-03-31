@@ -24,7 +24,6 @@ module.exports = function(express) {
 
     function CreateClient(options,callback) {
         var redisToGo = process.env.REDISTOGO_URL ? parse(process.env.REDISTOGO_URL) : false;
-        console.log("redisToGoURL", redisToGo);
         options = options || {};
 
         var pass;

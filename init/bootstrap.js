@@ -22,8 +22,9 @@ module.exports = function(app,express){
 
     routes(app,everyauth.validateAuthenticated);
 
-    var socketIo = socketIoConfig(app,sessionStore,express);
-    socketIoRoutes(socketIo);
+    socketIoConfig(app,sessionStore,express,function(socketIo){
+        socketIoRoutes(socketIo);
+    });
 
     onShutDown(app);
 

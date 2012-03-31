@@ -3,7 +3,7 @@ var sioModule = require('socket.io'),
     redisIoStore =  sioModule.RedisStore;
 
 
-module.exports = function(app,sessionStore,express){
+module.exports = function(app,sessionStore,express,callback){
    var redisFactory = require('./redisFactory.js')(express) ;
    var sio =  sioModule.listen(app);
 
@@ -63,9 +63,9 @@ module.exports = function(app,sessionStore,express){
                     // accept the incoming connection
                     accept(null, true);
                 });
+
+                callback(sio);
             })
         })
     })
-
-    return sio;
 }
