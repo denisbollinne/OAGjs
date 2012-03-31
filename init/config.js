@@ -1,7 +1,7 @@
 var express = require('express'),
     stylus = require('stylus'),
     connectTimeout = require('connect-timeout'),
-    redisFactory = require('./redisFactory.js')(express),
+    redisFactory = require('./redisFactory.js')(),
     sessionStore
     ;
 

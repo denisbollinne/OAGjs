@@ -5,6 +5,7 @@
  */
 
 var parse = require('url').parse,
+    express = require('express'),
     redis = require('redis');
 
 /**
@@ -13,7 +14,7 @@ var parse = require('url').parse,
  * @return RedisStore
  * @api public
  */
-module.exports = function(express) {
+module.exports = function() {
 
     var RedisStore = require('connect-redis')(express);
 
