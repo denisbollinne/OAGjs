@@ -4,8 +4,9 @@ var express = require('express')
 
 module.exports = function(app,validateAuthentication){
     appResource(app);
-    var charactersController = require('./../resources/characters');
-    var positionsController = require('./../resources/positions');
+    var charactersController = require('./../resources/characters.js');
+    var positionsController = require('./../resources/positions.js');
+    var gamesController = require('./../resources/games.js');
 
 
     app.get('/characters/select/:name', validateAuthentication, charactersController.select); //select
@@ -16,6 +17,9 @@ module.exports = function(app,validateAuthentication){
     app.get('/positions', validateAuthentication, positionsController.index); //all positions
     app.put('/positions', validateAuthentication, positionsController.update); //update selected character's position
 
+    app.get('/games', validateAuthentication, gamesController.index); //all games
+    app.post('/games/join', validateAuthentication, gamesController.join); //join a game or create one
+    app.post('/games/leave', validateAuthentication, gamesController.leave); //leave a game
 
     app.resource('/characters', charactersController, validateAuthentication);
 
