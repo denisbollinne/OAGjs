@@ -10,8 +10,8 @@ var express = require('express')
     , socketIoRoutes = require('./socketIoRoutes.js')
     , onShutDown = require('./shutdown.js');
 
-module.exports = function(app,express){
-   var sessionStore = configure(app,everyauth.validateAuthenticated);
+module.exports = function(app){
+    configure(app,everyauth.validateAuthenticated);
     everyauth(app);
     mongoose(app,mongooseAuth);
 
@@ -22,7 +22,7 @@ module.exports = function(app,express){
 
     routes(app,everyauth.validateAuthenticated);
 
-    socketIoConfig(app,sessionStore,express,function(socketIo){
+    socketIoConfig(app,function(socketIo){
         socketIoRoutes(socketIo);
     });
 

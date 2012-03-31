@@ -1,11 +1,13 @@
 var sioModule = require('socket.io'),
+    express = require('express'),
     parseCookie = require('connect').utils.parseCookie,
     redisIoStore =  sioModule.RedisStore;
 
 
-module.exports = function(app,sessionStore,express,callback){
+module.exports = function(app,callback){
    var redisFactory = require('./redisFactory.js')(express) ;
    var sio =  sioModule.listen(app);
+   var sessionStore = redisFactory.CreateSessionStore();
 
     sio.configure('production', function(){
 
@@ -41,7 +43,6 @@ module.exports = function(app,sessionStore,express,callback){
                     redisClient : redisClient,
                     redis : redisFactory.Redis
                 };
-             //   console.log('opts.redisPub instanceof RedisClient = '+((options.redisPub) instanceof redisFactory.Redis.RedisClient))
                 var redisStore = new redisIoStore(options);
                 sio.set('store', redisStore);
 
