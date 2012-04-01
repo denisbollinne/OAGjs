@@ -2,12 +2,15 @@ var parse = require('url').parse,
     express = require('express'),
     redis = require('redis');
 
+var redisStoreClient;
+
 module.exports = function() {
 
     var RedisStore = require('connect-redis')(express);
 
     function ConnectHerokuRedis(options) {
-       return new RedisStore({client:CreateClient(options)});
+       redisStoreClient = redisStoreClient || CreateClient(options);
+       return new RedisStore({client:redisStoreClient});
     }
 
 
