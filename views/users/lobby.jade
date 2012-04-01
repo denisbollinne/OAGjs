@@ -1,0 +1,41 @@
+if (!everyauth.loggedIn)
+      h2 Not Authenticated
+      #register
+        a(href='/register') Register
+      #password-login
+        a(href='/login', style='border: 0px') Login
+    - else
+      h2 Lobby
+       #games
+        ul(id='list')
+
+       #join
+        button(id='joinGame') Join
+       #leave
+        button(id='leaveGame') Leave
+       script(type='text/javascript')
+          jQuery.get('/games',function(games){
+          if(games){
+                if(games.length > 0)
+                {
+                    for(var game in games){
+                        $("#list").append("<li>" + game.id + "</li>");
+                    }
+                }
+                else{
+                    $("#list").append("<li>No games found</li>");
+                }
+             }
+
+          });
+          $("#joinGame").click(function(){
+               jQuery.post('/games/join',"{id='Game'}", function(){
+                    window.location.href ="game.html";
+               });
+
+            });
+          $("#leaveGame").click(function(){
+               jQuery.post('/games/leave');
+            });
+
+

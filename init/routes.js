@@ -26,6 +26,10 @@ module.exports = function(app,validateAuthentication){
         res.render('home');
     });
 
+    app.get('/lobby',validateAuthentication, function(req,res){
+       res.render('lobby');
+    });
+
     app.get('/login', function (req, res) {
         res.render('login');
     });
