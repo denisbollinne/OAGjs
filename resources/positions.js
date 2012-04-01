@@ -1,17 +1,8 @@
-var mongoose = require('mongoose');
-
-var position = mongoose.model('Position');
-var redisFactory = require('../init/redisFactory.js')();
-var staticClient;
-
-var GetRedisClient = function(){
-    staticClient = staticClient||redisFactory.CreateClient();
-    return staticClient;
-}
+var common = require('./commonControllersResources.js');
+var client = common.redisClient;
 
 exports.updateSio = function(session, data,callback){
     if(session.selectedChar){
-        var client = GetRedisClient();
         var charId = session.selectedChar._id;
 
         var charName = "Char_"+charId;

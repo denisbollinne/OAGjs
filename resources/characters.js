@@ -1,8 +1,8 @@
-var mongoose = require('mongoose');
+var common = require('./commonControllersResources.js');
 
-var character = mongoose.model('Character');
-var position = mongoose.model('Position');
-var redisFactory  = require('../init/redisFactory.js')();
+var character = common.mongoose.model('Character');
+var position = common.mongoose.model('Position');
+var client = common.redisClient;
 
 exports.index = function(req, res){
     character.find({user:req.user._id}).run(function(err,docs){
@@ -86,7 +86,6 @@ exports.select = function(req,res){
 exports.current = function(req,res){
     character.findOne({user:req.user._id, _id:req.session.selectedChar._id}).run(function(err,char){
         if(!err){
-            var client =GetRedisClient();
             var charStatus = "CharStatus_"+char._id;
             client.HGETALL(charStatus,function(err,status){
                 if(err){
@@ -114,11 +113,7 @@ exports.current = function(req,res){
         }
     });
 };
-var staticClient;
-var GetRedisClient = function(){
-    staticClient = staticClient||redisFactory.CreateClient();
-    return staticClient;
-}
+
 
 exports.position = function(req,res){
     position.findOne({character:req.session.selectedChar._id},function(err,doc){

@@ -1,26 +1,21 @@
-var mongoose = require('mongoose');
+var common = require('./commonControllersResources.js');
+
+var character = common.mongoose.model('Character');
+var client = common.redisClient;
+
 var async = require('async');
-var character = mongoose.model('Character');
-var redisFactory = require('../init/redisFactory.js')();
-var staticClient;
+
+
 
 
 exports.index = function(req, res){
-    var client = GetRedisClient();
-
     var games = "Games";
     client.smembers(games,function(err,allGames){
         res.send(allGames);
     });
 };
-function merge_options(obj1){
-    var obj3 = {};
-    for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
-    return obj3;
-}
 
 exports.characters = function(req, res){
-    var client = GetRedisClient();
     var gameId = req.params.id;
     var roomPlayers = "Game_"+gameId;
     client.smembers(roomPlayers,function(err,allCharsId){
@@ -80,7 +75,6 @@ exports.join = function(req,res){
             res.send(500);
         }
         else{
-            var client = GetRedisClient();
             var charId = req.session.selectedChar._id;
             client.sadd("CharsInGame",charId, function(err,reply){
 
@@ -119,7 +113,6 @@ exports.join = function(req,res){
 };
 
 exports.leave = function(req,res){
-    var client = GetRedisClient();
     var charId = req.session.selectedChar._id;
     client.srem("CharsInGame",charId, function(err,reply){
         if(reply === 0){
@@ -148,8 +141,3 @@ exports.leave = function(req,res){
         }
     });
 };
-
-var GetRedisClient = function(){
-    staticClient = staticClient||redisFactory.CreateClient();
-    return staticClient;
-}
