@@ -102,7 +102,6 @@ exports.current = function(req,res){
                     test.position = status;
                     test.position.x = parseInt(test.position.x)
                     test.position.y = parseInt(test.position.y)
-                    console.log(status);
                 }
                 res.send(test);
             });

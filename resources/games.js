@@ -28,7 +28,6 @@ exports.characters = function(req, res){
                     res.send(500);
                 }
                 else{
-                    console.log('CHARS : '+chars);
                     var charsToReturn = [];
                     async.forEach(chars,function (char, callback) {
                         var charStatus = "CharStatus_"+char._id;
@@ -53,7 +52,6 @@ exports.characters = function(req, res){
                             res.send(500);
                         }
                         else{
-                            console.log(charsToReturn);
                             res.send(charsToReturn);
                         }
                     });

@@ -27,6 +27,4 @@ module.exports = function(app){
     });
 
     onShutDown(app);
-
-    console.log('FORK INITIALIZED')
 }
