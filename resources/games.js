@@ -62,13 +62,7 @@ exports.characters = function(req, res){
 
 
 exports.join = function(req,res){
-    var bodyData = '';
-    req.on('data', function (data) {
-        bodyData += data;
-    });
-    req.on('end', function () {
-        var input = JSON.parse(bodyData);
-
+        var input = req.body;
         if(!input.id){
             res.send(500);
         }
@@ -105,9 +99,6 @@ exports.join = function(req,res){
                 }
             });
         }
-
-    });
-
 };
 
 exports.leave = function(req,res){
