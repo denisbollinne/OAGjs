@@ -1,0 +1,15 @@
+h2 My characters
+ #characters
+  ul(id='list')
+
+script(type='text/javascript')
+    jQuery.get('/characters',function(characters){
+
+        if(characters){
+            for(var char in characters){
+                var currentChar = characters[char];
+                $("#lists").append("<li></li>");
+            }
+        }
+
+    });
