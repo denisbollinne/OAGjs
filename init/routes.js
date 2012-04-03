@@ -27,7 +27,11 @@ module.exports = function(app,validateAuthentication){
     });
 
     app.get('/lobby',validateAuthentication, function(req,res){
-       res.render('lobby');
+        res.render('lobby');
+    });
+
+    app.get('/start',validateAuthentication, function(req,res){
+        res.render('characters');
     });
 
     app.get('/login', function (req, res) {

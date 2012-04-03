@@ -3,13 +3,22 @@ h2 My characters
   ul(id='list')
 
 script(type='text/javascript')
-    jQuery.get('/characters',function(characters){
-
-        if(characters){
-            for(var char in characters){
-                var currentChar = characters[char];
-                $("#lists").append("<li></li>");
+    $(document).ready(function(){
+        jQuery.get('/characters',function(characters){
+            $("#list").empty();
+            if(characters){
+                for(var char in characters){
+                    var currentChar = characters[char];
+                    $("#list").append("<li>" + currentChar.name +  " : " + currentChar.class +" <br/><a href='#' char='" +  currentChar.name +"'>Select</a></li>");
+                }
+                $("#list li a").click(function(){
+                 var char = $(this).attr('char');
+                    jQuery.get("/characters/select/" + char,function(){
+                            window.location.href ="/lobby";
+                        });
+                    }
+                );
             }
-        }
 
+        });
     });
