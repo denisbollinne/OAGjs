@@ -55,10 +55,10 @@ module.exports = function(app,mongooseAuth){
             , everyauth: {
                 getLoginPath: '/loginPw'
                 , postLoginPath: '/loginPw'
-                , loginView: 'loginPw.jade'
+                , loginView: 'users/loginPw.jade'
                 , getRegisterPath: '/register'
                 , postRegisterPath: '/register'
-                , registerView: 'register.jade'
+                , registerView: 'users/register.jade'
                 , loginSuccessRedirect: '/'
                 , registerSuccessRedirect: '/'
             }

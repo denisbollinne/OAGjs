@@ -37,7 +37,7 @@ module.exports = function(app, validateAuthenticated){
 
     app.configure(function() {
         app.set('cookieName','M&DSessionKey');
-        app.set('views', __dirname + '/../views/users');
+        app.set('views', __dirname + '/../views');
         app.set('view engine', 'jade');
         app.use(express.favicon());
         app.use(express.bodyParser());

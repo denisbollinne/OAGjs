@@ -31,7 +31,7 @@ module.exports = function(app,validateAuthentication){
     });
 
     app.get('/login', function (req, res) {
-        res.render('login');
+        res.render('users/login');
     });
 
     app.get('/logout', function (req, res) {
