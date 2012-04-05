@@ -1,5 +1,12 @@
 $(document).ready(function(){
     var currentGame = "";
+    var getGamesWithCurrentGame = function(){
+      jQuery.get('/games/current', function(current){
+          currentGame = current;
+          getGames();
+      });
+    };
+
     var getGames = function(){
         jQuery.get('/games',function(games){
             if(games){
@@ -37,15 +44,23 @@ $(document).ready(function(){
     };
 
     $("#createGame").click(function(){
-        jQuery.post('/games/join',{id:"Game"}, function(){
-            getGames();
-            currentGame = "Game";
-        });
+        var gameName = $("#gameName").val();
+        if(gameName){
+            jQuery.post('/games/join',{id:gameName}, function(){
+                getGames();
+                currentGame = gameName;
+                $("#gameName").val('');
+            });
+        }
+        else{
+            alert("Please enter game name");
+        }
+
     });
     $("#startGame").click(function(){
         if(currentGame){
             window.location.href ="game.html";
         }
     });
-    getGames();
+    getGamesWithCurrentGame();
 });

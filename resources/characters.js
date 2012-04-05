@@ -41,7 +41,7 @@ exports.create = function(req, res){
     charPos.save();
 
    //This should probably return a jade page with the newly created char
-   // res.send(newChar);
+    res.send(200);
 };
 
 exports.show = function(req, res){

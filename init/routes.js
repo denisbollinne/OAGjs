@@ -10,7 +10,7 @@ module.exports = function(app,validateAuthentication){
 
 
     app.get('/characters/select/:name', validateAuthentication, charactersController.select); //select
-    app.get('/characters/deleteall', validateAuthentication, charactersController.destroyAll); //deleteAll
+    app.post('/characters/deleteall', validateAuthentication, charactersController.destroyAll); //deleteAll
     app.get('/characters/position', validateAuthentication, charactersController.position); //position
     app.get('/characters/current', validateAuthentication, charactersController.current); //position
     app.get('/characters/all', validateAuthentication, charactersController.all); //position

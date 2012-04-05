@@ -107,7 +107,7 @@ exports.current = function(req,res){
         var charId = req.session.selectedChar._id;
         client.SISMEMBER("CharsInGame",charId, function(err,reply){
             if(reply === 0){
-                res.send(500);
+                res.send(200);
             }
             else{
                 var charName = "Char_"+charId;
