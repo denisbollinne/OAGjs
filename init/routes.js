@@ -16,6 +16,7 @@ module.exports = function(app,validateAuthentication){
     app.get('/characters/all', validateAuthentication, charactersController.all); //position
 
     app.get('/games', validateAuthentication, gamesController.index); //all games
+    app.get('/games/current', validateAuthentication, gamesController.current); //all games
     app.post('/games/join', validateAuthentication, gamesController.join); //join a game or create one
     app.post('/games/leave', validateAuthentication, gamesController.leave); //leave a game
     app.get('/games/:id', validateAuthentication, gamesController.characters); //all chars in a game

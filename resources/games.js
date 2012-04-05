@@ -101,6 +101,27 @@ exports.join = function(req,res){
         }
 };
 
+exports.current = function(req,res){
+    if(req.session.selectedChar)
+    {
+        var charId = req.session.selectedChar._id;
+        client.SISMEMBER("CharsInGame",charId, function(err,reply){
+            if(reply === 0){
+                res.send(500);
+            }
+            else{
+                var charName = "Char_"+charId;
+                client.get(charName,function(err,gameId){
+                    res.send(gameId,200);
+                });
+            }
+        });
+    }
+    else
+    {
+        res.send(500);
+    }
+};
 exports.leave = function(req,res){
     var charId = req.session.selectedChar._id;
     client.srem("CharsInGame",charId, function(err,reply){
