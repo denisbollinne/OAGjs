@@ -14,6 +14,7 @@ module.exports = function(app,validateAuthentication){
     app.get('/characters/position', validateAuthentication, charactersController.position); //position
     app.get('/characters/current', validateAuthentication, charactersController.current); //position
     app.get('/characters/all', validateAuthentication, charactersController.all); //position
+    app.post('/characters/create', validateAuthentication, charactersController.create);
 
     app.get('/games', validateAuthentication, gamesController.index); //all games
     app.get('/games/current', validateAuthentication, gamesController.current); //all games
@@ -35,6 +36,9 @@ module.exports = function(app,validateAuthentication){
         res.render('characters');
     });
 
+    app.get('/newChar', validateAuthentication, function(req, res){
+       res.render('newChar');
+    });
     app.get('/login', function (req, res) {
         res.render('users/login');
     });
