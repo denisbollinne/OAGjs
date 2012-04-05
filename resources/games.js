@@ -88,7 +88,8 @@ exports.join = function(req,res){
                         x : 150,
                         y : 150,
                         dateTime : new Date().toISOString(),
-                        direction : 'none'
+                        direction : 'none',
+                        HP : 100
                     };
                     var charStatus = "CharStatus_"+charId;
                     client.HMSET(charStatus,status,function(err,result){
