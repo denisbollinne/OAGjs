@@ -1,12 +1,11 @@
 var common = require('./commonControllersResources.js');
 
 var character = common.mongoose.model('Character');
-var position = common.mongoose.model('Position');
 var client = common.redisClient;
 
 exports.index = function(req, res){
     character.find({user:req.user._id}).run(function(err,docs){
-        res.send(docs);
+        res.partial('partials/character',{characters : docs});
     })
 };
 exports.all = function(req, res){
