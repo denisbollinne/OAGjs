@@ -28,17 +28,8 @@ exports.create = function(req, res){
     newChar.class = req.body.class;
     newChar.race = req.body.race;
 
-    var charPos = new position();
-    charPos.x = 150;
-    charPos.y = 150;
-    charPos.dateTime = new Date();
-    charPos.direction = 'none';
-
-    charPos.character = newChar;
-    newChar.position = charPos;
-
     newChar.save();
-    charPos.save();
+
 
    //This should probably return a jade page with the newly created char
     res.send(200);
