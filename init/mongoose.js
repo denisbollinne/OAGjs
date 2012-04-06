@@ -16,17 +16,9 @@ module.exports = function(app,mongooseAuth){
         race : {type:String, required:true, enum:['Knight','Skeletton']},
         class : {type:String, required:true, enum:['Warrior','Barbarian']},
         experience : Number,
-        user : { type: ObjectId, ref: 'User' , required : true },
-        position : { type: ObjectId, ref: 'Position', required : true }
+        user : { type: ObjectId, ref: 'User' , required : true }
     });
 
-    var PositionSchema = new Schema({
-        x : {type:Number, required : true},
-        y : {type:Number, required : true},
-        dateTime : {type:Date, required:true},
-        direction : {type:String, required:true, enum:['none','n','ne','e','se','s','sw','w','nw']},
-        character : { type: ObjectId, ref: 'Character' , required : true }
-    })
     UserSchema.plugin(mongooseAuth, {
         everymodule: {
             everyauth: {
@@ -76,7 +68,6 @@ module.exports = function(app,mongooseAuth){
 
     mongoose.model('User', UserSchema);
     mongoose.model('Character', CharacterSchema);
-    mongoose.model('Position', PositionSchema);
 
    mongoose.connect(app.set('db-uri'));
 
