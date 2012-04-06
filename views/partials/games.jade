@@ -1,0 +1,11 @@
+- if (games.length > 0)
+    -each game in games
+        li
+            #{game}
+            -if (game === currentGame)
+                a(href='#',game=game) Leave
+            -else
+                a(href='#',game=game) Join
+- else
+    li
+        No game found

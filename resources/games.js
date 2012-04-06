@@ -9,10 +9,18 @@ var async = require('async');
 
 
 exports.index = function(req, res){
-    var games = "Games";
-    client.smembers(games,function(err,allGames){
-        res.send(allGames);
+    getCurrentGame(req,function(gameId,code){
+        var foundGame;
+        if(code){
+            foundGame = gameId;
+        }
+        var games = "Games";
+        client.smembers(games,function(err,allGames){
+            res.partial('partials/games',{games:allGames, currentGame:foundGame});
+        });
+
     });
+
 };
 
 exports.characters = function(req, res){
@@ -101,27 +109,36 @@ exports.join = function(req,res){
             });
         }
 };
-
-exports.current = function(req,res){
+var getCurrentGame = function(req,callback){
     if(req.session.selectedChar)
     {
         var charId = req.session.selectedChar._id;
         client.SISMEMBER("CharsInGame",charId, function(err,reply){
             if(reply === 0){
-                res.send(200);
+                callback(200);
             }
             else{
                 var charName = "Char_"+charId;
                 client.get(charName,function(err,gameId){
-                    res.send(gameId,200);
+                    callback(gameId,200);
                 });
             }
         });
     }
     else
     {
-        res.send(500);
+        callback(500);
     }
+}
+exports.current = function(req,res){
+    getCurrentGame(req,function(gameId,code){
+        if(code){
+            return res.send(gameId,code);
+        }else{
+            return res.send(gameId);
+        }
+
+    });
 };
 exports.leave = function(req,res){
     var charId = req.session.selectedChar._id;
