@@ -27,6 +27,9 @@ exports.updateSio = function(session, data,callback){
 
 exports.performAttack = function(session, data,callback){
     var attackHP = 20;
+    var attackRange = 50;
+    var attackAngle = 45;
+
     if(session.selectedChar){
         var currentCharId = session.selectedChar._id;
 
@@ -41,9 +44,10 @@ exports.performAttack = function(session, data,callback){
                     async.forEach(allCharsInGame,function (charId, foreachCallback) {
                         var charStatus = "CharStatus_"+charId;
                         client.hgetall(charStatus,function(err,status){
-                            if(charactersCollide(currentCharPosition,status)) {
+                            if(charactersCollide(currentCharPosition,status,{range : attackRange, angle : attackAngle})) {
                                 status.HP = status.HP - attackHP;
                                 client.hmset(charStatus,status);
+
                                 //TODO : not send all status to the UI
                                 hitCharactersAndHowItAffectTheUi.push(status)
                             }
@@ -63,13 +67,18 @@ exports.performAttack = function(session, data,callback){
 
 
         });
+        //TODO : log to stats
     }
     else{
         callback(false);
     }
 };
 
-var charactersCollide = function(currentChar, targetChar){
+var charactersCollide = function(currentChar, targetChar,attack){
+    var attackRange = attack.range;
+    var attackAngle = attack.angle;
+    var direction = currentChar.direction;
+
     //TODO : implement
     return false;
 }
