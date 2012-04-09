@@ -35,8 +35,9 @@ GAME.startGame = function(){
         // when the sprites are loaded, create the world
         function() {
             jQuery.get('/characters/current',function(currentPlayerInfo){
-                currentCharId = currentPlayerInfo._id;
-                var player = new GAME.player(gs,true,currentPlayerInfo.position).character;
+                var gameId = currentPlayerInfo.game;
+                currentCharId = currentPlayerInfo.character._id;
+                var player = new GAME.player(gs,true,currentPlayerInfo.character.position).character;
                 player.onPositionChanged = onPositionChanged;
 
                // var enemy = new GAME.skeleton(gs).character;
@@ -44,7 +45,7 @@ GAME.startGame = function(){
                 //gs.addEntity(enemy);
                 gs.addEntity(player);
 
-                socket.on('updatedPosition', function (data) {
+                socketo.on('updatedPosition', function (data) {
                     updateCharacters(data);
                 });
             });

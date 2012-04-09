@@ -82,20 +82,23 @@ exports.current = function(req,res){
                     console.log('ERROR : '+err);
                     res.send(char);
                 } else{
-                    var test = {};
-                    test._id = char._id;
-                    test.race  = char.race;
-                    test.class  = char.class;
-                    test.experience  = char.experience;
-                    test.name  = char.name;
-                    test.user  = char.user;
-                    test.position = status;
-                    test.position.x = parseInt(test.position.x)
-                    test.position.y = parseInt(test.position.y)
-                }
-                res.send(test);
-            });
+                    var charName = "Char_"+char._id;
+                    client.get(charName,function(err,gameId){
+                        var test = {};
+                        test._id = char._id;
+                        test.race  = char.race;
+                        test.class  = char.class;
+                        test.experience  = char.experience;
+                        test.name  = char.name;
+                        test.user  = char.user;
+                        test.position = status;
+                        test.position.x = parseInt(test.position.x);
+                        test.position.y = parseInt(test.position.y);
 
+                        res.send({game:gameId,character:test});
+                    });
+                }
+            });
         }
         else{
             res.send(500);

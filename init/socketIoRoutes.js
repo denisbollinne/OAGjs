@@ -3,30 +3,39 @@ var sioModule = require('socket.io'),
     ;
 
 module.exports = function(sio){
-    var positionsController = require('./../resources/positions');
+    var positionsController = require('./../resources/positions.js');
+    var gameController = require('./../resources/games.js');
 
     sio.sockets.on('connection', function (socket) {
         var sess = socket.handshake.session;
-        socket.log.info(
-            'a socket with sessionID'
-            , socket.handshake.sessionID
-            , 'connected'
-        );
+        gameController.getCurrentGame(sess.selectedChar,function(gameId,code){
+            if(code){
+                socket.join(gameId);
+                socket.log.info(
+                    'a socket with sessionID'
+                    , socket.handshake.sessionID
+                    , 'connected'
+                );
 
-        socket.on('updatePosition', function (data) {
-            sess.reload(function () {
-                positionsController.updateSio(sess, data,function(succeeded,updatedPosition,game){
-                    if(succeeded){
-                        socket.broadcast.emit('updatedPosition',updatedPosition)
-                    }
+                socket.on('updatePosition', function (data) {
+                    sess.reload(function () {
+                        positionsController.updateSio(sess, data,function(succeeded,updatedPosition,game){
+                            if(succeeded){
+                                socket.in(game).broadcast.emit('updatedPosition',updatedPosition)
+                            }
+                        });
+                    });
+
                 });
-            });
 
-        });
+                socket.on('disconnect', function () {
+                    socket.leave(gameId);
+                });
 
-//        console.log('A socket with Char ' + sess.selectedChar._id
-//            + ' connected!');
-//        console.log('A socket with Session ' + sess.auth.userId
-//            + ' connected!');
+            }else{
+                socket.log.error('ERROR IN SOCKET.CONNECTON' );
+            }
+
+        })
     });
 }

@@ -6,10 +6,30 @@ var client = common.redisClient;
 var async = require('async');
 
 
-
+var getCurrentGame = function(selectedChar,callback){
+    if(selectedChar)
+    {
+        var charId = selectedChar._id;
+        client.SISMEMBER("CharsInGame",charId, function(err,reply){
+            if(reply === 0){
+                callback(200);
+            }
+            else{
+                var charName = "Char_"+charId;
+                client.get(charName,function(err,gameId){
+                    callback(gameId,200);
+                });
+            }
+        });
+    }
+    else
+    {
+        callback(500);
+    }
+}
 
 exports.index = function(req, res){
-    getCurrentGame(req,function(gameId,code){
+    getCurrentGame(req.session.selectedChar,function(gameId,code){
         var foundGame;
         if(code){
             foundGame = gameId;
@@ -109,29 +129,11 @@ exports.join = function(req,res){
             });
         }
 };
-var getCurrentGame = function(req,callback){
-    if(req.session.selectedChar)
-    {
-        var charId = req.session.selectedChar._id;
-        client.SISMEMBER("CharsInGame",charId, function(err,reply){
-            if(reply === 0){
-                callback(200);
-            }
-            else{
-                var charName = "Char_"+charId;
-                client.get(charName,function(err,gameId){
-                    callback(gameId,200);
-                });
-            }
-        });
-    }
-    else
-    {
-        callback(500);
-    }
-}
+exports.getCurrentGame = getCurrentGame;
+
+
 exports.current = function(req,res){
-    getCurrentGame(req,function(gameId,code){
+    getCurrentGame(req.session.selectedChar,function(gameId,code){
         if(code){
             return res.send(gameId,code);
         }else{
