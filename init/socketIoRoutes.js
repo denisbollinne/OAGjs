@@ -8,7 +8,8 @@ module.exports = function(sio){
 
     sio.sockets.on('connection', function (socket) {
         var sess = socket.handshake.session;
-        gameController.getCurrentGame(sess.selectedChar,function(gameId,code){
+        if(sess){
+            gameController.getCurrentGame(sess.selectedChar,function(gameId,code){
             if(code){
                 socket.join(gameId);
                 socket.log.info(
@@ -47,5 +48,6 @@ module.exports = function(sio){
             }
 
         })
+        }
     });
-}
+};
