@@ -27,6 +27,13 @@ GAME.startGame = function(){
        }
     };
 
+    var triggerAttach = function(attack){
+        var foundChar = allOtherChars[newPos.character];
+        if(foundChar){
+            foundChar.triggerAttack();
+        }
+    };
+
     var onPositionChanged = function(data){
         socket.emit('updatePosition',data);
     };
@@ -52,6 +59,9 @@ GAME.startGame = function(){
 
                 socket.on('updatedPosition', function (data) {
                     updateCharacters(data);
+                });
+                socket.on('attackPerformed', function(data){
+                    triggerAttach(data);
                 });
             });
         }

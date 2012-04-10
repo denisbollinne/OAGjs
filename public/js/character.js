@@ -95,6 +95,11 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         }
     };
 
+    this.triggerAttack = function(){
+        isAttacking = true;
+        this.updateanimation();
+    };
+
     this.updateanimation = function () {
         var dir;
         var lastAction = p.get_action();
@@ -164,8 +169,8 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             }
         }
     };
-    this.onPositionChanged;
-    this.performAttack;
+    this.onPositionChanged = function(data){};
+    this.performAttack = function(data){};
     this.draw = function (c) {
         p.draw(c, [posx, posy]);
     };
