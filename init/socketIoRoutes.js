@@ -27,6 +27,16 @@ module.exports = function(sio){
                     });
 
                 });
+                socket.on('performAttack', function (data) {
+                    sess.reload(function () {
+                        positionsController.performAttack(sess, data,function(succeeded,performedAttack,game){
+                            if(succeeded){
+                                socket.in(game).broadcast.emit('attackPerformed',performedAttack)
+                            }
+                        });
+                    });
+
+                });
 
                 socket.on('disconnect', function () {
                     socket.leave(gameId);

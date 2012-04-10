@@ -157,10 +157,15 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             }
 
         if(isPlayable){
-            this.onPositionChanged({x:posx,y:posy,direction:dir,dateTime:Date.now()})
+            if(isAttacking){
+                this.performAttack({dateTime:Date.now()});
+            }else{
+                this.onPositionChanged({x:posx,y:posy,direction:dir,dateTime:Date.now()})
+            }
         }
     };
     this.onPositionChanged;
+    this.performAttack;
     this.draw = function (c) {
         p.draw(c, [posx, posy]);
     };
