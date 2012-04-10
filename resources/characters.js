@@ -74,7 +74,8 @@ exports.select = function(req,res){
 
 
 exports.current = function(req,res){
-    character.findOne({user:req.user._id, _id:req.session.selectedChar._id}).run(function(err,char){
+    if(req.session.selectedChar){
+        character.findOne({user:req.user._id, _id:req.session.selectedChar._id}).run(function(err,char){
         if(!err){
             var charStatus = "CharStatus_"+char._id;
             client.HGETALL(charStatus,function(err,status){
@@ -104,6 +105,7 @@ exports.current = function(req,res){
             res.send(500);
         }
     });
+    }
 };
 
 
