@@ -4,21 +4,20 @@ var character = common.mongoose.model('Character');
 var client = common.redisClient;
 
 var async = require('async');
+var gameExpirencyInSecond = 60*60; //1H
 
 
 var getCurrentGame = function(selectedChar,callback){
     if(selectedChar)
     {
         var charId = selectedChar._id;
-        client.SISMEMBER("CharsInGame",charId, function(err,reply){
-            if(reply === 0){
-                callback(200);
+        var charName = "Char_"+charId;
+        client.get(charName,function(err,gameId){
+            if(gameId){
+                callback(gameId,200);
             }
             else{
-                var charName = "Char_"+charId;
-                client.get(charName,function(err,gameId){
-                    callback(gameId,200);
-                });
+                callback(200);
             }
         });
     }
@@ -26,7 +25,7 @@ var getCurrentGame = function(selectedChar,callback){
     {
         callback(500);
     }
-}
+};
 
 exports.index = function(req, res){
     getCurrentGame(req.session.selectedChar,function(gameId,code){
@@ -90,44 +89,42 @@ exports.characters = function(req, res){
 
 
 exports.join = function(req,res){
-        var input = req.body;
-        if(!input.id){
-            res.send(500);
-        }
-        else{
-            var charId = req.session.selectedChar._id;
-            client.sadd("CharsInGame",charId, function(err,reply){
+    var input = req.body;
+    if(!input.id){
+        res.send(500);
+    }
+    else{
+        var charId = req.session.selectedChar._id;
+        var games = "Games";
+        client.sadd(games,input.id);
 
-                if(reply === 0){
-                    res.send(500);
-                }
-                else{
-                    var games = "Games";
-                    client.sadd(games,input.id);
+        var charName = "Char_"+charId;
+        client.get(charName,function(err,gameId){
+            if(gameId){
+                res.send(500);
+            }else{
+                client.setex(charName,gameExpirencyInSecond,input.id);
 
-                    var charName = "Char_"+charId;
-                    client.set(charName,input.id);
+                var roomPlayers = "Game_"+input.id;
+                client.sadd(roomPlayers,charId);
 
-                    var roomPlayers = "Game_"+input.id;
-                    client.sadd(roomPlayers,charId);
+                var status = {
+                    charId : charId,
+                    x : 150,
+                    y : 150,
+                    dateTime : new Date().toISOString(),
+                    direction : 'none',
+                    HP : 100
+                };
+                var charStatus = "CharStatus_"+charId;
+                client.HMSET(charStatus,status,function(err,result){
+                    console.log(err);
+                });
 
-                    var status = {
-                        charId : charId,
-                        x : 150,
-                        y : 150,
-                        dateTime : new Date().toISOString(),
-                        direction : 'none',
-                        HP : 100
-                    };
-                    var charStatus = "CharStatus_"+charId;
-                    client.HMSET(charStatus,status,function(err,result){
-                        console.log(err);
-                    });
-
-                    res.send(200);
-                }
-            });
-        }
+                res.send(200);
+            }
+        });
+    }
 };
 exports.getCurrentGame = getCurrentGame;
 
@@ -144,30 +141,27 @@ exports.current = function(req,res){
 };
 exports.leave = function(req,res){
     var charId = req.session.selectedChar._id;
-    client.srem("CharsInGame",charId, function(err,reply){
-        if(reply === 0){
+
+    var charName = "Char_"+charId;
+    client.get(charName,function(err,gameId){
+        if(gameId){
+            client.del(charName);
+            var roomPlayers = "Game_"+gameId;
+            client.srem(roomPlayers,charId);
+
+            var charStatus = "CharStatus_"+charId;
+            client.del(charStatus);
+
+            client.scard(roomPlayers,function(err,count){
+                if(count === 0){
+                    var games = "Games";
+                    client.srem(games,gameId);
+                }
+                res.send(200);
+            });
+        }else{
             res.send(500);
         }
-        else{
-            var charName = "Char_"+charId;
-            client.get(charName,function(err,gameId){
-                client.del(charName);
-                var roomPlayers = "Game_"+gameId;
-                client.srem(roomPlayers,charId);
-
-                var charStatus = "CharStatus_"+charId;
-                client.del(charStatus);
-
-                client.scard(roomPlayers,function(err,count){
-                    if(count === 0){
-                        var games = "Games";
-                        client.srem(games,gameId);
-                    }
-                    res.send(200);
-                });
-            });
-
-            //TODO : StoreStats in Mongo?
-        }
     });
+    //TODO : StoreStats in Mongo?
 };
