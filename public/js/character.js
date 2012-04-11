@@ -89,7 +89,7 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
                 }else if(direction === 'w'){
                     vx = -WALK_VX;
                     vy = 0;
-            }
+                }
             }else{
                 vx = vy=0;
             }
