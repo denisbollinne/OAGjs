@@ -29,7 +29,7 @@ module.exports = function(app,mongooseAuth){
         }
         , facebook: {
             everyauth: {
-                myHostname: 'http://local.host:3000'
+                myHostname: app.set('host')
                 , appId: conf.fb.appId
                 , appSecret: conf.fb.appSecret
                 , redirectPath: '/'
