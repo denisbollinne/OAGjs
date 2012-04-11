@@ -61,7 +61,7 @@ exports.performAttack = function(session, data,callback){
                             res.send(500);
                         }
                         else{
-                            callback(true,hitCharactersAndHowItAffectTheUi,gameId);
+                            callback(true,{attackingChar : currentCharId, hurtedChars : hitCharactersAndHowItAffectTheUi},gameId);
                         }
                     });
                 });

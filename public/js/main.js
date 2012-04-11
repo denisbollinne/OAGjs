@@ -14,21 +14,21 @@ GAME.startGame = function(){
     var currentCharId;
     var allOtherChars = {};
     var updateCharacters = function(newPos){
-       if(newPos.character !==currentCharId){
-           var foundChar = allOtherChars[newPos.character];
+       if(newPos.charId !==currentCharId){
+           var foundChar = allOtherChars[newPos.charId];
            if(foundChar){
                 foundChar.setDirection(newPos.x,newPos.y, newPos.direction, newPos.dateTime)
            }
            else{
                var newPlayer = new GAME.player(gs,false,newPos).character;
-               allOtherChars[newPos.character] = newPlayer;
+               allOtherChars[newPos.charId] = newPlayer;
                gs.addEntity(newPlayer);
            }
        }
     };
 
-    var triggerAttach = function(attack){
-        var foundChar = allOtherChars[newPos.character];
+    var triggerAttach = function(attackingCharId,hurtedCharsStatus){
+        var foundChar = allOtherChars[attackingCharId];
         if(foundChar){
             foundChar.triggerAttack();
         }
@@ -61,7 +61,7 @@ GAME.startGame = function(){
                     updateCharacters(data);
                 });
                 socket.on('attackPerformed', function(data){
-                    triggerAttach(data);
+                    triggerAttach(data.attackingChar,data.hurtedChars);
                 });
             });
         }
