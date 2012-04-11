@@ -17,7 +17,7 @@ GAME.startGame = function(){
        if(newPos.charId !==currentCharId){
            var foundChar = allOtherChars[newPos.charId];
            if(foundChar){
-                foundChar.setDirection(newPos.x,newPos.y, newPos.direction, newPos.dateTime)
+                foundChar.setDirection(newPos.x,newPos.y, newPos.direction, newPos.movementState,newPos.dateTime)
            }
            else{
                var newPlayer = new GAME.player(gs,false,newPos).character;

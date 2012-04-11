@@ -55,39 +55,42 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             posy += vy;
         }
     };
-    var previousX,previousY, previousDir ;
-    this.setDirection = function(x,y,direction,datetime){
-        if(direction != previousDir || x != previousX || y != previousY){
+    var previousX,previousY, previousDir, previousMovementState ;
+    this.setDirection = function(x,y,direction,movementState,datetime){
+        if(direction != previousDir || x != previousX || y != previousY || movementState != previousMovementState){
             posx = x;
             posy = y;
             previousX = x;
             previousY = y;
             previousDir = direction;
-            if(direction === 'n'){
-                vy = -WALK_VY;
-                vx = 0;
-            }else if(direction === 'ne'){
-                vy = -WALK_VY;
-                vx = WALK_VX;
-            }else if(direction === 'nw'){
-                vy = -WALK_VY;
-                vx = -WALK_VX;
-            }else if(direction === 's'){
-                vy = WALK_VY;
-                vx = 0;
-            }else if(direction === 'se'){
-                vy = WALK_VY;
-                vx = WALK_VX;
-            }else if(direction === 'sw'){
-                vy = WALK_VY;
-                vx = -WALK_VX;
-            }else if(direction === 'e'){
-                vx = WALK_VX;
-                vy = 0;
-            }else if(direction === 'w'){
-                vx = -WALK_VX;
-                vy = 0;
-            } else{
+            previousMovementState = movementState;
+            if(movementState ==='walk'){
+                if(direction === 'n'){
+                    vy = -WALK_VY;
+                    vx = 0;
+                }else if(direction === 'ne'){
+                    vy = -WALK_VY;
+                    vx = WALK_VX;
+                }else if(direction === 'nw'){
+                    vy = -WALK_VY;
+                    vx = -WALK_VX;
+                }else if(direction === 's'){
+                    vy = WALK_VY;
+                    vx = 0;
+                }else if(direction === 'se'){
+                    vy = WALK_VY;
+                    vx = WALK_VX;
+                }else if(direction === 'sw'){
+                    vy = WALK_VY;
+                    vx = -WALK_VX;
+                }else if(direction === 'e'){
+                    vx = WALK_VX;
+                    vy = 0;
+                }else if(direction === 'w'){
+                    vx = -WALK_VX;
+                    vy = 0;
+            }
+            }else{
                 vx = vy=0;
             }
 
@@ -101,7 +104,9 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
     };
 
     this.updateanimation = function () {
-        var dir;
+        var dir,movementState;
+
+        movementState = 'walk';
         var lastAction = p.get_action();
         if(isAttacking){
                 var attackAction = lastAction.toString().replace("stand", "attack");
@@ -158,14 +163,14 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
                 if(!isAttacking){
                     p.action(standAction);
                 }
-                dir = 'none'
+                movementState = 'stand'
             }
 
         if(isPlayable){
             if(isAttacking){
                 this.performAttack({dateTime:Date.now()});
             }else{
-                this.onPositionChanged({x:posx,y:posy,direction:dir,dateTime:Date.now()})
+                this.onPositionChanged({x:posx,y:posy,direction:dir,movementState:movementState,dateTime:Date.now()})
             }
         }
     };

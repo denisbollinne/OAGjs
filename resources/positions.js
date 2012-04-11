@@ -15,6 +15,7 @@ exports.updateSio = function(session, data,callback){
                 status.y = newPos.y;
                 status.direction = newPos.direction;
                 status.dateTime = newPos.dateTime;
+                status.movementState = newPos.movementState;
                 client.hmset(charStatus,status);
                 callback(true,status,gameId);
             })

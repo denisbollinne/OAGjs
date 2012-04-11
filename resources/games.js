@@ -114,6 +114,7 @@ exports.join = function(req,res){
                     y : 150,
                     dateTime : new Date().toISOString(),
                     direction : 'none',
+                    movementState : 'stand',
                     HP : 100
                 };
                 var charStatus = "CharStatus_"+charId;
