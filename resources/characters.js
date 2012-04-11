@@ -2,6 +2,7 @@ var common = require('./commonControllersResources.js');
 
 var character = common.mongoose.model('Character');
 var client = common.redisClient;
+var keyBuilder = common.redisKeyBuilder;
 
 exports.index = function(req, res){
     character.find({user:req.user._id}).run(function(err,docs){
@@ -77,14 +78,12 @@ exports.current = function(req,res){
     if(req.session.selectedChar){
         character.findOne({user:req.user._id, _id:req.session.selectedChar._id}).run(function(err,char){
         if(!err){
-            var charStatus = "CharStatus_"+char._id;
-            client.HGETALL(charStatus,function(err,status){
+            client.HGETALL(keyBuilder.charStatus(char._id),function(err,status){
                 if(err){
                     console.log('ERROR : '+err);
                     res.send(char);
                 } else{
-                    var charName = "Char_"+char._id;
-                    client.get(charName,function(err,gameId){
+                    client.get(keyBuilder.charGameId(char._id),function(err,gameId){
                         var test = {};
                         test._id = char._id;
                         test.race  = char.race;

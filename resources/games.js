@@ -2,6 +2,7 @@ var common = require('./commonControllersResources.js');
 
 var character = common.mongoose.model('Character');
 var client = common.redisClient;
+var keyBuilder = common.redisKeyBuilder;
 
 var async = require('async');
 var gameExpirencyInSecond = 60*60; //1H
@@ -11,8 +12,7 @@ var getCurrentGame = function(selectedChar,callback){
     if(selectedChar)
     {
         var charId = selectedChar._id;
-        var charName = "Char_"+charId;
-        client.get(charName,function(err,gameId){
+        client.get(keyBuilder.charGameId(charId),function(err,gameId){
             if(gameId){
                 callback(gameId,200);
             }
@@ -33,8 +33,7 @@ exports.index = function(req, res){
         if(code){
             foundGame = gameId;
         }
-        var games = "Games";
-        client.smembers(games,function(err,allGames){
+        client.smembers(keyBuilder.games(),function(err,allGames){
             res.partial('partials/games',{games:allGames, currentGame:foundGame});
         });
 
@@ -44,8 +43,7 @@ exports.index = function(req, res){
 
 exports.characters = function(req, res){
     var gameId = req.params.id;
-    var roomPlayers = "Game_"+gameId;
-    client.smembers(roomPlayers,function(err,allCharsId){
+    client.smembers(keyBuilder.playersInGame(gameId),function(err,allCharsId){
         character.find()
             .where('_id')
             .in(allCharsId)
@@ -57,8 +55,7 @@ exports.characters = function(req, res){
                 else{
                     var charsToReturn = [];
                     async.forEach(chars,function (char, callback) {
-                        var charStatus = "CharStatus_"+char._id;
-                        client.HGETALL(charStatus,function(err,status){
+                        client.HGETALL(keyBuilder.charStatus(char._id),function(err,status){
                             var test = {};
                             test.race  = char.race;
                             test.class  = char.class;
@@ -95,18 +92,15 @@ exports.join = function(req,res){
     }
     else{
         var charId = req.session.selectedChar._id;
-        var games = "Games";
-        client.sadd(games,input.id);
+        client.sadd(keyBuilder.games(),input.id);
 
-        var charName = "Char_"+charId;
-        client.EXISTS(charName,function(err,exists){
+        client.EXISTS(keyBuilder.charGameId(charId),function(err,exists){
             if(exists){
                 res.send(500);
             }else{
-                client.setex(charName,gameExpirencyInSecond,input.id);
+                client.setex(keyBuilder.charGameId(charId),gameExpirencyInSecond,input.id);
 
-                var roomPlayers = "Game_"+input.id;
-                client.sadd(roomPlayers,charId);
+                client.sadd(keyBuilder.playersInGame(input.id),charId);
 
                 var status = {
                     charId : charId,
@@ -117,8 +111,7 @@ exports.join = function(req,res){
                     movementState : 'stand',
                     HP : 100
                 };
-                var charStatus = "CharStatus_"+charId;
-                client.HMSET(charStatus,status,function(err,result){
+                client.HMSET(keyBuilder.charStatus(charId),status,function(err,result){
                     console.log(err);
                 });
 
@@ -143,20 +136,16 @@ exports.current = function(req,res){
 exports.leave = function(req,res){
     var charId = req.session.selectedChar._id;
 
-    var charName = "Char_"+charId;
-    client.get(charName,function(err,gameId){
+    client.get(keyBuilder.charGameId(charId),function(err,gameId){
         if(gameId){
-            client.del(charName);
-            var roomPlayers = "Game_"+gameId;
-            client.srem(roomPlayers,charId);
+            client.del(keyBuilder.charGameId(charId));
+            client.srem(keyBuilder.playersInGame(gameId),charId);
 
-            var charStatus = "CharStatus_"+charId;
-            client.del(charStatus);
+            client.del(keyBuilder.charStatus(charId));
 
             client.scard(roomPlayers,function(err,count){
                 if(count === 0){
-                    var games = "Games";
-                    client.srem(games,gameId);
+                    client.srem(keyBuilder.games(),gameId);
                 }
                 res.send(200);
             });

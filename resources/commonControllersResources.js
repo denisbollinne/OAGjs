@@ -11,3 +11,4 @@ var staticClient = redisFactory.CreateClient();
 
 exports.redisClient = staticClient;
 exports.mongoose = mongoose;
+exports.redisKeyBuilder = require('./redisKeyBuilder.js')

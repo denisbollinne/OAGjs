@@ -1,15 +1,14 @@
 var common = require('./commonControllersResources.js');
 var client = common.redisClient;
+var keyBuilder = common.redisKeyBuilder;
 var async = require('async');
 
 exports.updateSio = function(session, data,callback){
     if(session.selectedChar){
         var charId = session.selectedChar._id;
 
-        var charName = "Char_"+charId;
-        client.get(charName,function(err,gameId){
-            var charStatus = "CharStatus_"+charId;
-            client.hgetall(charStatus,function(err,status){
+        client.get(keyBuilder.charGameId(charId),function(err,gameId){
+            client.hgetall(keyBuilder.charStatus(charId),function(err,status){
                 var newPos = data;
                 status.x = newPos.x;
                 status.y = newPos.y;
@@ -18,7 +17,7 @@ exports.updateSio = function(session, data,callback){
                 }
                 status.dateTime = newPos.dateTime;
                 status.movementState = newPos.movementState;
-                client.hmset(charStatus,status);
+                client.hmset(keyBuilder.charStatus(charId),status);
                 callback(true,status,gameId);
             })
         });
@@ -36,21 +35,17 @@ exports.performAttack = function(session, data,callback){
     if(session.selectedChar){
         var currentCharId = session.selectedChar._id;
 
-        var charName = "Char_"+currentCharId;
-        client.get(charName,function(err,gameId){
+        client.get(keyBuilder.charGameId(currentCharId),function(err,gameId){
 
-            var charStatus = "CharStatus_"+currentCharId;
-            client.hgetall(charStatus,function(err,currentCharPosition){
-                var roomPlayers = "Game_"+gameId;
-                client.SMEMBERS(roomPlayers,function(err,allCharsInGame){
+            client.hgetall(keyBuilder.charStatus(currentCharId),function(err,currentCharPosition){
+                client.SMEMBERS(keyBuilder.playersInGame(gameId),function(err,allCharsInGame){
                     var hitCharactersAndHowItAffectTheUi = [];
                     async.forEach(allCharsInGame,function (charId, foreachCallback) {
                         if(charId !== currentCharId){
-                            var charStatus = "CharStatus_"+charId;
-                            client.hgetall(charStatus,function(err,status){
+                            client.hgetall(keyBuilder.charStatus(charId),function(err,status){
                                 if(charactersCollide(currentCharPosition,status,{range : attackRange, angle : attackAngle})) {
                                     status.HP = status.HP - attackHP;
-                                    client.hmset(charStatus,status);
+                                    client.hmset(keyBuilder.charStatus(charId),status);
                                     //TODO : not send all status to the UI
                                     hitCharactersAndHowItAffectTheUi.push(status);
                                     foreachCallback();
