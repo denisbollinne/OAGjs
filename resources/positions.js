@@ -52,9 +52,9 @@ exports.performAttack = function(session, data,callback){
                                     //TODO : not send all status to the UI
                                     hitCharactersAndHowItAffectTheUi.push(status);
                                 }
-                                foreachCallback();
                             });
                         }
+                        foreachCallback();
                     }, function(err){
                         if(err){
                             console.log(err);

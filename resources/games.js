@@ -99,8 +99,8 @@ exports.join = function(req,res){
         client.sadd(games,input.id);
 
         var charName = "Char_"+charId;
-        client.get(charName,function(err,gameId){
-            if(gameId){
+        client.EXISTS(charName,function(err,exists){
+            if(exists){
                 res.send(500);
             }else{
                 client.setex(charName,gameExpirencyInSecond,input.id);
