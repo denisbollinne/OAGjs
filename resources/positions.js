@@ -13,7 +13,9 @@ exports.updateSio = function(session, data,callback){
                 var newPos = data;
                 status.x = newPos.x;
                 status.y = newPos.y;
-                status.direction = newPos.direction;
+                if(newPos.direction){
+                    status.direction = newPos.direction;
+                }
                 status.dateTime = newPos.dateTime;
                 status.movementState = newPos.movementState;
                 client.hmset(charStatus,status);
@@ -81,14 +83,12 @@ var charactersCollide = function(currentChar, targetChar,attack){
     var attackRange = attack.range;
     var attackAngle = attack.angle;
     var direction = currentChar.direction;
-
     var rangeBetweenPlayers =computeDistanceBetweenTwoPoints(currentChar,targetChar);
     if(rangeBetweenPlayers <= attack.range){
-        var newRotationAngle = getRotationAngleForDirection(currentChar);
-        console.log('newRotationAngle')
-        console.log(newRotationAngle);
+        var newRotationAngle = getRotationAngleForDirection(direction);
         //var newTargetPoint = rotate(currentChar,targetChar);
         var targetPointAngle = pointAngleCompareToP1(currentChar,targetChar);
+        console.log(targetPointAngle)
         var targetPointAngleWithNewRotationAngle = targetPointAngle - newRotationAngle+ (attackAngle/2);
         if(targetPointAngleWithNewRotationAngle >= 0 && targetPointAngleWithNewRotationAngle< attackAngle){
             console.log('CHAR IN RANGE AND ANGLE : '+targetPointAngleWithNewRotationAngle-(attackAngle/2));
@@ -97,32 +97,9 @@ var charactersCollide = function(currentChar, targetChar,attack){
     }
     return false;
 };
-//var rotate = function(p1,p2){
-//    p3= {};
-//    //Translate to origin
-//    p3.x = p2.x - p1.x;
-//    p3.y = p2.y - p1.y;
-//
-//    //rotate (13*cos 45° - 3*sin 45°, 13*sin 45° + 3*cos 45°)
-//    var angleToRotate = getRotationAngleForDirection(p1);
-//    p3.x = p3.x * Math.cos(angleToRotate) - p3.y * Math.sin(angleToRotate);
-//    p3.y = p3.x * Math.sin(angleToRotate) + p3.y * Math.cos(angleToRotate);
-//
-//    //Translate back
-//    p3.x = p1.x + p3.x;
-//    p3.y = p1.y + p3.y;
-//    return p3;
-//};
-
-//var targetIsInAttackAngle = function(p1,p2,angle){
-//
-//    var a = 180 / Math.PI * Math.atan((p2.y - p1.y)/(p2.x - p1.x));
-//    if(a)
-//    return Math.sqrt(Math.pow(p2.x - p1.x,2) + Math.pow(p2.y - p1.y,2))
-//};
 
 var pointAngleCompareToP1 = function(p1,p2){
-    return 180 / Math.PI * Math.atan((p2.y - p1.y)/(p2.x - p1.x));
+    return 180 / Math.PI * Math.atan2(p2.y - p1.y,p2.x - p1.x);
 };
 
 var computeDistanceBetweenTwoPoints = function(p1,p2){
