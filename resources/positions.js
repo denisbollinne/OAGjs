@@ -51,13 +51,15 @@ exports.performAttack = function(session, data,callback){
                                 if(charactersCollide(currentCharPosition,status,{range : attackRange, angle : attackAngle})) {
                                     status.HP = status.HP - attackHP;
                                     client.hmset(charStatus,status);
-
                                     //TODO : not send all status to the UI
                                     hitCharactersAndHowItAffectTheUi.push(status);
+                                    foreachCallback();
                                 }
                             });
+                        }else{
+                            foreachCallback();
                         }
-                        foreachCallback();
+
                     }, function(err){
                         if(err){
                             console.log(err);
@@ -84,14 +86,12 @@ var charactersCollide = function(currentChar, targetChar,attack){
     var attackAngle = attack.angle;
     var direction = currentChar.direction;
     var rangeBetweenPlayers =computeDistanceBetweenTwoPoints(currentChar,targetChar);
-    if(rangeBetweenPlayers <= attack.range){
+    if(rangeBetweenPlayers <= attackRange){
         var newRotationAngle = getRotationAngleForDirection(direction);
-        //var newTargetPoint = rotate(currentChar,targetChar);
         var targetPointAngle = pointAngleCompareToP1(currentChar,targetChar);
-        console.log(targetPointAngle)
+
         var targetPointAngleWithNewRotationAngle = targetPointAngle - newRotationAngle+ (attackAngle/2);
         if(targetPointAngleWithNewRotationAngle >= 0 && targetPointAngleWithNewRotationAngle< attackAngle){
-            console.log('CHAR IN RANGE AND ANGLE : '+targetPointAngleWithNewRotationAngle-(attackAngle/2));
             return true;
         }
     }
@@ -99,7 +99,8 @@ var charactersCollide = function(currentChar, targetChar,attack){
 };
 
 var pointAngleCompareToP1 = function(p1,p2){
-    return 180 / Math.PI * Math.atan2(p2.y - p1.y,p2.x - p1.x);
+    var angle = ( Math.atan2(p2.y - p1.y,p2.x - p1.x));
+    return (angle >= 0 ? angle : (2*Math.PI + angle)) * 360 / (2*Math.PI)
 };
 
 var computeDistanceBetweenTwoPoints = function(p1,p2){
@@ -107,12 +108,12 @@ var computeDistanceBetweenTwoPoints = function(p1,p2){
 };
 
 var getRotationAngleForDirection = function(direction){
-    if(direction === 'n')return 0;
-    if(direction === 'ne')return 45;
-    if(direction === 'e')return 90;
-    if(direction === 'se')return 135;
-    if(direction === 's')return 180;
-    if(direction === 'sw')return 225;
-    if(direction === 'w')return 270;
-    if(direction === 'nw')return 315;
+    if(direction === 'e')return 0;
+    if(direction === 'se')return 45;
+    if(direction === 's')return 90;
+    if(direction === 'sw')return 135;
+    if(direction === 'w')return 180;
+    if(direction === 'nw')return 225;
+    if(direction === 'n')return 270;
+    if(direction === 'ne')return 315;
 };
