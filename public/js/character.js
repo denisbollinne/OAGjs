@@ -11,37 +11,12 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
     var vx = 0;
     var vy = 0;
     var isAttacking = false;
+    var isHit = false;
     var posx = startPosition[0];
     var posy = startPosition[1];
 
-    var p = new GAMEFW.Sprite(["center", "bottom"], {
-        "run_right":animations.runEast,
-        "run_left":animations.runWest,
-        "run_up":animations.runNorth,
-        "run_down":animations.runSouth,
-        "run_upRight":animations.runNorthEast,
-        "run_upLeft":animations.runNorthWest,
-        "run_downRight":animations.runSouthEast,
-        "run_downLeft":animations.runSouthWest,
-        "stand_right":animations.standEast,
-        "stand_left":animations.standWest,
-        "stand_up":animations.standNorth,
-        "stand_down":animations.standSouth,
-        "stand_upRight":animations.standNorthEast,
-        "stand_upLeft":animations.standNorthWest,
-        "stand_downRight":animations.standSouthEast,
-        "stand_downLeft":animations.standSouthWest,
-        "attack_right":animations.attackEast,
-        "attack_left":animations.attackWest,
-        "attack_up":animations.attackNorth,
-        "attack_down":animations.attackSouth,
-        "attack_upRight":animations.attackNorthEast,
-        "attack_upLeft":animations.attackNorthWest,
-        "attack_downRight":animations.attackSouthEast,
-        "attack_downLeft":animations.attackSouthWest
-        },128
-        , function () {
-        p.action("stand_down");
+    var p = new GAMEFW.Sprite(["center", "bottom"], animations, 128, function () {
+        p.action("standSouth");
     });
 
     this.update = function () {
@@ -122,45 +97,59 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
                 }
         }
 
+        if(isHit){
+            var hitAction = lastAction.toString().replace("stand", "hit");
+            if(hitAction === lastAction){
+                isHit = false;
+            }
+            else{
+                p.action(hitAction,true, function(){
+                    var endHit =  p.get_action().toString().replace("hit", "stand");
+                    p.action(endHit);
+                    isHit = false;
+                });
+            }
+        }
+
             if (vx >= WALK_VX) {
                 if (vy >= WALK_VY) {
-                    p.action("run_downRight");
+                    p.action("runSouthEast");
                     dir = 'se'
                 }
                 else if (vy <= -WALK_VY) {
-                    p.action("run_upRight");
+                    p.action("runNorthEast");
                     dir = 'ne'
                 }
                 else {
-                    p.action("run_right");
+                    p.action("runEast");
                     dir = 'e'
                 }
             }
             else if (vx <= -WALK_VX) {
                 if (vy >= WALK_VY) {
-                    p.action("run_downLeft");
+                    p.action("runSouthWest");
                     dir = 'sw'
                 }
                 else if (vy <= -WALK_VY) {
-                    p.action("run_upLeft");
+                    p.action("runNorthWest");
                     dir = 'nw'
                 }
                 else {
-                    p.action("run_left");
+                    p.action("runWest");
                     dir = 'w'
                 }
             }
             else if (vy >= WALK_VY) {
-                p.action("run_down");
+                p.action("runSouth");
                 dir = 's'
             }
             else if (vy <= -WALK_VY) {
-                p.action("run_up");
+                p.action("runNorth");
                 dir = 'n'
             }
             else  {
                 var standAction = lastAction.toString().replace("run", "stand");
-                if(!isAttacking){
+                if(!isAttacking && !isHit){
                     p.action(standAction);
                 }
                 movementState = 'stand'
@@ -221,7 +210,13 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         this.keyDown_32 = function(){
             isAttacking = true;
             this.updateanimation();
-        }
+        };
+
+        //Todo remove this once collision detection works
+        this.keyDown_72 = function(){
+            isHit = true;
+            this.updateanimation();
+        };
     }
 };
 
