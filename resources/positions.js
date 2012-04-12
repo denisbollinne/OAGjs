@@ -50,6 +50,9 @@ exports.performAttack = function(session, data,callback){
                                     hitCharactersAndHowItAffectTheUi.push(status);
                                     foreachCallback();
                                 }
+                                else{
+                                    foreachCallback();
+                                }
                             });
                         }else{
                             foreachCallback();
