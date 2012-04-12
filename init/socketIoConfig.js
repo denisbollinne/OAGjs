@@ -10,10 +10,10 @@ module.exports = function(app,callback){
 
     sio.configure('production', function(){
 
-//        sio.enable('browser client minification');  // send minified client
-//        sio.enable('browser client etag');          // apply etag caching logic based on version number
-//        sio.enable('browser client gzip');          // gzip the file
-//        sio.set('log level', 3);                    // reduce logging
+        sio.enable('browser client minification');  // send minified client
+        sio.enable('browser client etag');          // apply etag caching logic based on version number
+        sio.enable('browser client gzip');          // gzip the file
+        sio.set('log level', 3);                    // reduce logging
 
         //HEROKU
         sio.set("transports", ["xhr-polling"]); //HEROKU
@@ -21,12 +21,8 @@ module.exports = function(app,callback){
     });
 
     sio.configure('development', function(){
-        sio.enable('browser client minification');  // send minified client
-        sio.enable('browser client etag');          // apply etag caching logic based on version number
-        sio.enable('browser client gzip');          // gzip the file
-        sio.set('log level', 3);                    // reduce logging
 
-        //HEROKU
+        //HEROKU trying to use the same settings in dev
         sio.set("transports", ["xhr-polling"]); //HEROKU
         sio.set("polling duration", 10);
 
