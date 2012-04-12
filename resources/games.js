@@ -143,7 +143,7 @@ exports.leave = function(req,res){
 
             client.del(keyBuilder.charStatus(charId));
 
-            client.scard(roomPlayers,function(err,count){
+            client.scard(keyBuilder.playersInGame(gameId),function(err,count){
                 if(count === 0){
                     client.srem(keyBuilder.games(),gameId);
                 }
