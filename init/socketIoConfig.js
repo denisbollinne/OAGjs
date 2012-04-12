@@ -10,6 +10,17 @@ module.exports = function(app,callback){
 
     sio.configure('production', function(){
 
+//        sio.enable('browser client minification');  // send minified client
+//        sio.enable('browser client etag');          // apply etag caching logic based on version number
+//        sio.enable('browser client gzip');          // gzip the file
+//        sio.set('log level', 3);                    // reduce logging
+
+        //HEROKU
+        sio.set("transports", ["xhr-polling"]); //HEROKU
+        sio.set("polling duration", 10);
+    });
+
+    sio.configure('development', function(){
         sio.enable('browser client minification');  // send minified client
         sio.enable('browser client etag');          // apply etag caching logic based on version number
         sio.enable('browser client gzip');          // gzip the file
@@ -18,16 +29,14 @@ module.exports = function(app,callback){
         //HEROKU
         sio.set("transports", ["xhr-polling"]); //HEROKU
         sio.set("polling duration", 10);
-    });
 
-    sio.configure('development', function(){
-        sio.set('transports', [                     // enable all transports (optional if you want flashsocket)
-            'websocket'
-            , 'flashsocket'
-            , 'htmlfile'
-            , 'xhr-polling'
-            , 'jsonp-polling'
-        ]);
+//        sio.set('transports', [                     // enable all transports (optional if you want flashsocket)
+//            'websocket'
+//            , 'flashsocket'
+//            , 'htmlfile'
+//            , 'xhr-polling'
+//            , 'jsonp-polling'
+//        ]);
     });
 
     redisFactory.CreateClient({},function(redisPub){
