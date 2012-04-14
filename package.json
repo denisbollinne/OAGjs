@@ -32,5 +32,8 @@
         "npm":  "1.1.0"
     },
 
-  "main": "main.js"
+  "main": "main.js",
+
+
+   "scripts": { "start": "./serverNoCluster.js" }
 }
