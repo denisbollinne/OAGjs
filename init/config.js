@@ -35,6 +35,14 @@ module.exports = function(app, validateAuthenticated){
         app.set('host','http://ourawesomegamejs.herokuapp.com')
    });
 
+
+    app.configure('joyent', function() {
+        app.set('db-uri', 'mongodb://127.0.0.1:27017/oagjs');
+        app.set('port',80);
+        app.set('debug',true);
+        app.set('host','http://37.153.96.28')
+    });
+
     app.configure(function() {
         app.set('cookieName','M&DSessionKey');
         app.set('views', __dirname + '/../views');

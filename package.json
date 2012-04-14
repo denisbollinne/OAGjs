@@ -32,8 +32,8 @@
         "npm":  "1.1.0"
     },
 
-  "main": "main.js",
+  "main": "serverNoCluster.js",
 
 
-   "scripts": { "start": "node ./serverNoCluster.js" }
+   "scripts": { "start": "NODE_ENV=joyent node ./serverNoCluster.js" }
 }
