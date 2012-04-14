@@ -15,6 +15,7 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
     var posx = startPosition[0];
     var posy = startPosition[1];
     var HP = 100;
+    var diagonalSpeedDivider =  1.4142135;
 
     var p = new GAMEFW.Sprite(["center", "bottom"], animations, 128, function () {
         p.action("standSouth");
@@ -23,8 +24,8 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
     this.update = function () {
         p.update();
         if (vx != 0 && vy != 0) {
-            posx += vx / 2;
-            posy += vy / 2;
+            posx += vx / diagonalSpeedDivider;
+            posy += vy / diagonalSpeedDivider;
         }
         else {
             posx += vx;
