@@ -35,5 +35,5 @@
   "main": "main.js",
 
 
-   "scripts": { "start": "./serverNoCluster.js" }
+   "scripts": { "start": "node ./serverNoCluster.js" }
 }
