@@ -13,6 +13,7 @@ GAME.startGame = function(){
     imagesToPreload.push("/img/knight/tileSet.png");
     var currentCharId;
     var allOtherChars = {};
+    var player;
     var updateCharacters = function(newPos){
        if(newPos.charId !==currentCharId){
            var foundChar = allOtherChars[newPos.charId];
@@ -32,6 +33,20 @@ GAME.startGame = function(){
         if(foundChar){
             foundChar.triggerAttack();
         }
+        if (hurtedCharsStatus.length > 0){
+            for (var i in hurtedCharsStatus) {
+                var hurtedCharStatus = hurtedCharsStatus[i];
+
+                var foundHurtedChar = allOtherChars[hurtedCharStatus.charId];
+                if(foundHurtedChar){
+                    foundHurtedChar.setHurted(hurtedCharStatus.HP)
+                }else{
+                    if(hurtedCharStatus.charId ===currentCharId){
+                        player.setHurted(hurtedCharStatus.HP)
+                    }
+                }
+            }
+        }
     };
 
     var onPositionChanged = function(data){
@@ -42,7 +57,7 @@ GAME.startGame = function(){
         socket.emit('performAttack',data);
     };
 
-    var socket = io.connect('/');
+    var socket = io.connect();
     socket.on('connect',function(){
         GAMEFW.Sprite.preload(imagesToPreload,
             // when the sprites are loaded, create the world
@@ -50,7 +65,7 @@ GAME.startGame = function(){
                 jQuery.get('/characters/current',function(currentPlayerInfo){
                     var gameId = currentPlayerInfo.game;
                     currentCharId = currentPlayerInfo.character._id;
-                    var player = new GAME.player(gs,true,currentPlayerInfo.character.position).character;
+                    player = new GAME.player(gs,true,currentPlayerInfo.character.position).character;
                     player.onPositionChanged = onPositionChanged;
                     player.performAttack = performAttack;
 

@@ -33,6 +33,7 @@ module.exports = function(sio){
                         positionsController.performAttack(sess, data,function(succeeded,performedAttack,game){
                             if(succeeded){
                                 socket.in(game).broadcast.emit('attackPerformed',performedAttack)
+                                socket.emit('attackPerformed',performedAttack)
                             }
                         });
                     });

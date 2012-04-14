@@ -14,6 +14,7 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
     var isHit = false;
     var posx = startPosition[0];
     var posy = startPosition[1];
+    var HP = 100;
 
     var p = new GAMEFW.Sprite(["center", "bottom"], animations, 128, function () {
         p.action("standSouth");
@@ -71,6 +72,11 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
 
             this.updateanimation();
         }
+    };
+    this.setHurted = function(NewHp){
+        isHit = true;
+        HP = NewHp;
+        this.updateanimation();
     };
 
     this.triggerAttack = function(){
