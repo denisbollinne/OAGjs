@@ -86,7 +86,7 @@ GAME.startGame = function(){
                 }
             );
         }else{
-            //socket.io is somehow reconnecting
+            console.debug('socket.io is somehow reconnecting');
         }
     };
     var socket = io.connect();
