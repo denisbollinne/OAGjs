@@ -543,6 +543,13 @@ function JSGameSoup(canvas, framerate) {
 		
 		// clear the background
 		this.clear();
+
+        entities.sort(function(a, b){
+           if(a.GetZIndex && b.GetZIndex){
+                return a.GetZIndex() -  b.GetZIndex();
+           }
+        });
+
 		// run .draw() on every entity in our list
 		for (var o=0; o<entities.length; o++) {
 			if (entities[o].draw) {

@@ -21,6 +21,10 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         p.action("standSouth");
     });
 
+    this.GetZIndex = function(){
+        return posy;
+    };
+
     this.update = function () {
         p.update();
         if (vx != 0 && vy != 0) {
