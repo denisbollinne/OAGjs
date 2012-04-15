@@ -11,6 +11,7 @@ module.exports = function(sio){
         if(sess){
             gameController.getCurrentGame(sess.selectedChar,function(gameId,code){
             if(code){
+                console.log('CONNECTED');
                 socket.join(gameId);
                 socket.log.info(
                     'a socket with sessionID'
@@ -41,6 +42,7 @@ module.exports = function(sio){
                 });
 
                 socket.on('disconnect', function () {
+                    console.log('DISCONNECTED');
                     socket.leave(gameId);
                 });
 

@@ -57,33 +57,40 @@ GAME.startGame = function(){
         socket.emit('performAttack',data);
     };
 
+    var gameIsLoaded = false;
+    var OnSocketIoConnect = function(){
+        if(!gameIsLoaded){
+            GAMEFW.Sprite.preload(imagesToPreload,
+                // when the sprites are loaded, create the world
+                function() {
+                    gameIsLoaded = true;
+                    jQuery.get('/characters/current',function(currentPlayerInfo){
+                        var gameId = currentPlayerInfo.game;
+                        currentCharId = currentPlayerInfo.character._id;
+                        player = new GAME.player(gs,true,currentPlayerInfo.character.position).character;
+                        player.onPositionChanged = onPositionChanged;
+                        player.performAttack = performAttack;
+
+                        // var enemy = new GAME.skeleton(gs).character;
+
+                        //gs.addEntity(enemy);
+                        gs.addEntity(player);
+
+                        socket.on('updatedPosition', function (data) {
+                            updateCharacters(data);
+                        });
+                        socket.on('attackPerformed', function(data){
+                            triggerAttach(data.attackingChar,data.hurtedChars);
+                        });
+                    });
+                }
+            );
+        }else{
+            //socket.io is somehow reconnecting
+        }
+    };
     var socket = io.connect();
-    socket.on('connect',function(){
-        GAMEFW.Sprite.preload(imagesToPreload,
-            // when the sprites are loaded, create the world
-            function() {
-                jQuery.get('/characters/current',function(currentPlayerInfo){
-                    var gameId = currentPlayerInfo.game;
-                    currentCharId = currentPlayerInfo.character._id;
-                    player = new GAME.player(gs,true,currentPlayerInfo.character.position).character;
-                    player.onPositionChanged = onPositionChanged;
-                    player.performAttack = performAttack;
-
-                   // var enemy = new GAME.skeleton(gs).character;
-
-                    //gs.addEntity(enemy);
-                    gs.addEntity(player);
-
-                    socket.on('updatedPosition', function (data) {
-                        updateCharacters(data);
-                    });
-                    socket.on('attackPerformed', function(data){
-                        triggerAttach(data.attackingChar,data.hurtedChars);
-                    });
-                });
-            }
-        );
-    });
+    socket.on('connect',OnSocketIoConnect);
 
 
     var gs = new JSGameSoup("surface", 50);
