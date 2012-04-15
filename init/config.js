@@ -40,7 +40,7 @@ module.exports = function(app, validateAuthenticated){
         app.set('db-uri', 'mongodb://127.0.0.1:27017/oagjs');
         app.set('port',80);
         app.set('debug',true);
-        app.set('host','http://37.153.96.28')
+        app.set('host','http://dev.itense.be')
     });
 
     app.configure(function() {
