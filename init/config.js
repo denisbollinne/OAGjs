@@ -7,15 +7,20 @@ var express = require('express'),
 
 module.exports = function(app, validateAuthenticated){
 
+    var debug = function(app){
+        app.use(express.errorHandler({ dump: true, stack: true }));
+        app.set('debug',true);
+    };
+
     app.configure('development', function() {
         app.set('db-uri', 'mongodb://localhost:27017/oagjs');
         app.set('port',3000);
-        app.use(express.errorHandler({ dump: true, stack: true }));
         app.set('view options', {
             pretty: true
         });
-        app.set('debug',true);
-        app.set('host','http://localhost:3000')
+        app.set('host','http://localhost:3000');
+
+        debug(app);
     });
 
     app.configure('test', function() {
@@ -24,8 +29,9 @@ module.exports = function(app, validateAuthenticated){
         app.set('view options', {
             pretty: true
         });
-        app.set('debug',true);
-        app.set('host','http://localhost:3000')
+        app.set('host','http://localhost:3000');
+
+        debug(app);
   });
 
     app.configure('production', function() {
@@ -40,8 +46,12 @@ module.exports = function(app, validateAuthenticated){
         app.set('db-uri', 'mongodb://127.0.0.1:27017/oagjs');
         app.set('port',80);
         app.set('debug',true);
-        app.set('host','http://dev.itense.be')
+        app.set('host','http://dev.itense.be');
+
+        debug(app);
+
     });
+
 
     app.configure(function() {
         app.set('cookieName','M&DSessionKey');
