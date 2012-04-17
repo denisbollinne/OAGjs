@@ -43,7 +43,7 @@ module.exports = function(sio){
 
                 socket.on('disconnect', function () {
                     console.log('DISCONNECTED');
-                 //   socket.leave(gameId);
+                    socket.leave(gameId);
                 });
 
             }else{
