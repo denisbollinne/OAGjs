@@ -545,7 +545,7 @@ function JSGameSoup(canvas, framerate) {
 		this.clear();
 
         entities.sort(function(a, b){
-           if(a.GetZIndex && b.GetZIndex){
+           if(a.getZIndex && b.getZIndex){
                 return a.GetZIndex() -  b.GetZIndex();
            }
         });

@@ -48,4 +48,4 @@ module.exports = function(app,validateAuthentication){
         res.redirect('/');
     });
 
-}
+};

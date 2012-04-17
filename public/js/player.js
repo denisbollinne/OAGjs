@@ -5,7 +5,7 @@
  * Time: 17:48
  */
 
-GAME.player = function (gs,playable, currentPlayerInfo){
+GAME.Player = function (gs,playable, currentPlayerInfo){
 
     var animations = new GAME.AnimationFactory();
 

@@ -21,7 +21,7 @@ GAME.startGame = function(){
                 foundChar.setDirection(newPos.x,newPos.y, newPos.direction, newPos.movementState,newPos.dateTime)
            }
            else{
-               var newPlayer = new GAME.player(gs,false,newPos).character;
+               var newPlayer = new GAME.Player(gs,false,newPos).character;
                allOtherChars[newPos.charId] = newPlayer;
                gs.addEntity(newPlayer);
            }
@@ -34,8 +34,8 @@ GAME.startGame = function(){
             foundChar.triggerAttack();
         }
         if (hurtedCharsStatus.length > 0){
-            for (var i in hurtedCharsStatus) {
-                var hurtedCharStatus = hurtedCharsStatus[i];
+            for (var huntedChar in hurtedCharsStatus) {
+                var hurtedCharStatus = hurtedCharsStatus[huntedChar];
 
                 var foundHurtedChar = allOtherChars[hurtedCharStatus.charId];
                 if(foundHurtedChar){
@@ -67,7 +67,7 @@ GAME.startGame = function(){
                     jQuery.get('/characters/current',function(currentPlayerInfo){
                         var gameId = currentPlayerInfo.game;
                         currentCharId = currentPlayerInfo.character._id;
-                        player = new GAME.player(gs,true,currentPlayerInfo.character.position).character;
+                        player = new GAME.Player(gs,true,currentPlayerInfo.character.position).character;
                         player.onPositionChanged = onPositionChanged;
                         player.performAttack = performAttack;
 

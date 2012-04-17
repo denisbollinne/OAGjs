@@ -21,8 +21,13 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         p.action("standSouth");
     });
 
-    this.GetZIndex = function(){
+    this.getZIndex = function(){
         return posy;
+    };
+
+    //TODO: this will be used to offset the collisions, once the general collision detection system is in place.
+    this.getBoundsRect = function(){
+        return {x: 10, y:10, w:40, h:20};
     };
 
     this.update = function () {
