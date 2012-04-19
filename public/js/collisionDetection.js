@@ -43,7 +43,7 @@ GAME.BoundingBox = function(x, y, w, h){
         if(that.x < boundingBox.x && boundingBox.x < that.right){
             isHorizontalCollision = true;
         }
-        if(that.x < (boundingBox.right) && (boundingBox.right) <  this.right){
+        if(that.x < (boundingBox.right) && (boundingBox.right) <  that.right){
             isHorizontalCollision = true;
         }
 
