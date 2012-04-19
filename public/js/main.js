@@ -9,6 +9,7 @@ GAME = {};
 GAME.startGame = function () {
     var animations = new GAME.AnimationFactory();
 
+    var collisionDetector = new GAME.CollisionDetector();
     var imagesToPreload = [];
     imagesToPreload.push("/img/knight/tileSet.png");
     var currentCharId;
@@ -23,6 +24,7 @@ GAME.startGame = function () {
                 var newPlayer = new GAME.Player(gs, false, newPos).character;
                 allOtherChars[newPos.charId] = newPlayer;
                 gs.addEntity(newPlayer);
+                collisionDetector.addCharacter(newPlayer);
             }
         }
     };
@@ -69,6 +71,7 @@ GAME.startGame = function () {
                                                                    currentPlayerInfo.character.position).character;
                                           player.onPositionChanged = onPositionChanged;
                                           player.performAttack = performAttack;
+                                          collisionDetector.addCharacter(player);
 
                                           // var enemy = new GAME.skeleton(gs).character;
 

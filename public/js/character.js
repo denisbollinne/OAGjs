@@ -42,6 +42,15 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             posy += vy;
         }
     };
+
+    this.getBoundingBox = function(){
+
+    };
+
+    this.triggersCollision = function(){
+        //This is a stub, and will be used by collision detection
+    };
+
     var previousX, previousY, previousDir, previousMovementState;
     this.setDirection = function (movementState, direction) {
         if (movementState === 'walk') {
