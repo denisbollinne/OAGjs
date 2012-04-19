@@ -43,7 +43,40 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         }
     };
     var previousX, previousY, previousDir, previousMovementState;
-    this.setDirection = function (x, y, direction, movementState, datetime) {
+    this.setDirection = function (movementState, direction) {
+        if (movementState === 'walk') {
+            if (direction === 'n') {
+                vy = -WALK_VY;
+                vx = 0;
+            } else if (direction === 'ne') {
+                vy = -WALK_VY;
+                vx = WALK_VX;
+            } else if (direction === 'nw') {
+                vy = -WALK_VY;
+                vx = -WALK_VX;
+            } else if (direction === 's') {
+                vy = WALK_VY;
+                vx = 0;
+            } else if (direction === 'se') {
+                vy = WALK_VY;
+                vx = WALK_VX;
+            } else if (direction === 'sw') {
+                vy = WALK_VY;
+                vx = -WALK_VX;
+            } else if (direction === 'e') {
+                vx = WALK_VX;
+                vy = 0;
+            } else if (direction === 'w') {
+                vx = -WALK_VX;
+                vy = 0;
+            }
+        } else {
+            vx = vy = 0;
+        }
+
+        this.updateanimation();
+    }
+    this.setDirectionForNPC = function (x, y, direction, movementState, datetime) {
         if (direction != previousDir || x != previousX || y != previousY || movementState != previousMovementState) {
             posx = x;
             posy = y;
@@ -51,37 +84,8 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             previousY = y;
             previousDir = direction;
             previousMovementState = movementState;
-            if (movementState === 'walk') {
-                if (direction === 'n') {
-                    vy = -WALK_VY;
-                    vx = 0;
-                } else if (direction === 'ne') {
-                    vy = -WALK_VY;
-                    vx = WALK_VX;
-                } else if (direction === 'nw') {
-                    vy = -WALK_VY;
-                    vx = -WALK_VX;
-                } else if (direction === 's') {
-                    vy = WALK_VY;
-                    vx = 0;
-                } else if (direction === 'se') {
-                    vy = WALK_VY;
-                    vx = WALK_VX;
-                } else if (direction === 'sw') {
-                    vy = WALK_VY;
-                    vx = -WALK_VX;
-                } else if (direction === 'e') {
-                    vx = WALK_VX;
-                    vy = 0;
-                } else if (direction === 'w') {
-                    vx = -WALK_VX;
-                    vy = 0;
-                }
-            } else {
-                vx = vy = 0;
-            }
 
-            this.updateanimation();
+            this.setDirection(movementState, direction);
         }
     };
     this.setHurted = function (NewHp) {
@@ -231,25 +235,37 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             var angle = ( Math.atan2(p2.y - p1.y, p2.x - p1.x));
             return (angle >= 0 ? angle : (2 * Math.PI + angle)) * 360 / (2 * Math.PI)
         };
-
         var isPressed = false;
         this.pointerDown = function (p, a, b, c, d) {
             isPressed = true;
-            processMouse(p);
+            this.processMouse({x:p[0], y:p[1]});
         }
         this.pointerMove = function (p, a, b, c, d) {
             if (isPressed) {
-                processMouse(p);
+                this.processMouse({x:p[0], y:p[1]});
             }
         }
         this.pointerUp = function (p, a, b, c, d) {
             isPressed = false;
-            //console.log(p) ;
+            previousDir = 'none';
+            this.setDirection('stand');
         }
 
-        var processMouse = function (p) {
-            var angle = pointAngleCompareToP1({x:posx + halfSpriteSize, y:posy - halfSpriteSize}, {x:p[0], y:p[1]});
-            console.log(angle);
+        var previousDir = 'none';
+        this.directions = ['e', 'se', 's', 'sw', 'w', 'nw', 'n', 'ne'];
+        this.processMouse = function (mousePos) {
+
+            var angle = pointAngleCompareToP1({x:posx, y:posy }, mousePos);
+            var rectifiedAngle = angle + 22
+            if (rectifiedAngle > 360) {
+                rectifiedAngle = rectifiedAngle - 360;
+            }
+            var direction = this.directions[Math.floor(rectifiedAngle / 45)];
+
+            if (previousDir != direction) {
+                this.setDirection('walk', direction);
+                previousDir = direction;
+            }
         }
     }
 };
