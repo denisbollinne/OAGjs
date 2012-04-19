@@ -253,23 +253,23 @@ function JSGameSoup(canvas, framerate) {
 		// was this a touch?
 		if (ev.touches) {
 			var touch = ev.touches[0];
-			mouseX = touch.clientX - canvas.offsetLeft;
-			mouseY = touch.clientY - canvas.offsetTop;
-			this.pointerPosition = [mouseX, mouseY];
+//			mouseX = touch.clientX - canvas.offsetLeft;
+//			mouseY = touch.clientY - canvas.offsetTop;
+			this.pointerPosition = [touch.clientX, touch.clientY];
 			return this.pointerPosition;
 		} else {
 			// Get the mouse position relative to the canvas element.
-			if (ev.layerX || ev.layerX == 0) { // Firefox
-				mouseX = ev.layerX - canvas.offsetLeft;
-				mouseY = ev.layerY - canvas.offsetTop;
-			} else if (ev.offsetX || ev.offsetX == 0) { // Opera
-				mouseX = ev.offsetX;
-				mouseY = ev.offsetY;
-			} else {
-				mouseX = ev.clientX - canvas.offsetLeft + scrollX;
-				mouseY = ev.clientY - canvas.offsetTop + scrollY;
-			}
-			this.pointerPosition = [mouseX, mouseY];
+//			if (ev.layerX || ev.layerX == 0) { // Firefox
+//				mouseX = ev.layerX - canvas.offsetLeft;
+//				mouseY = ev.layerY - canvas.offsetTop;
+//			} else if (ev.offsetX || ev.offsetX == 0) { // Opera
+//				mouseX = ev.offsetX;
+//				mouseY = ev.offsetY;
+//			} else {
+//				mouseX = ev.clientX - canvas.offsetLeft + scrollX;
+//				mouseY = ev.clientY - canvas.offsetTop + scrollY;
+//			}
+			this.pointerPosition = [ev.offsetX, ev.offsetY];
 			return this.pointerPosition;
 		}
 	}
@@ -633,10 +633,11 @@ function JSGameSoup(canvas, framerate) {
 		for (var e=0; e<entities.length; e++) {
 			var ent = entities[e];
 			if (ent[fn]) {
-				if ((ent.pointerPoly && this.pointInPoly(pos, ent.pointerPoly())) || (ent.pointerBox && this.pointInBox(pos, ent.pointerBox())) || (ent.pointerCircle && this.pointInCircle(pos, ent.pointerCircle())) || (ent.pointerTest && ent.pointerTest(pos))) {
-					entityEventQueue.push([ent, fn, arg]);
-					hit.push(ent);
-				}
+                entityEventQueue.push([ent, fn, pos]);
+//				if ((ent.pointerPoly && this.pointInPoly(pos, ent.pointerPoly())) || (ent.pointerBox && this.pointInBox(pos, ent.pointerBox())) || (ent.pointerCircle && this.pointInCircle(pos, ent.pointerCircle())) || (ent.pointerTest && ent.pointerTest(pos))) {
+//
+//					hit.push(ent);
+//				}
 			}
 		}
 		return hit;
