@@ -1,6 +1,6 @@
 {
   "name": "OurAwesomeGame",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": "Maarten <maarten.dewilde@gmail.com> & Denis  <denis.bollinne@gmail.com>",
   "description": "HTML 5 / Nodejs 2D RPG Game",
   "homepage": "https://github.com/denisbollinne/OAGjs",
