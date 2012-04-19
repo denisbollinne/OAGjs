@@ -255,7 +255,7 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         this.directions = ['e', 'se', 's', 'sw', 'w', 'nw', 'n', 'ne'];
         this.processMouse = function (mousePos) {
 
-            var angle = pointAngleCompareToP1({x:posx, y:posy }, mousePos);
+            var angle = pointAngleCompareToP1({x:posx, y:posy - halfSpriteSize }, mousePos);
             var rectifiedAngle = angle + 22
             if (rectifiedAngle > 360) {
                 rectifiedAngle = rectifiedAngle - 360;
