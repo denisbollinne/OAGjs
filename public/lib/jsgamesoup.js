@@ -251,27 +251,27 @@ function JSGameSoup(canvas, framerate) {
 	// get the position of the triggered event
 	this.getSetPointerPosition = function getSetPointerPosition(ev) {
 		// was this a touch?
+        var mouseX,mouseY;
 		if (ev.touches) {
 			var touch = ev.touches[0];
-//			mouseX = touch.clientX - canvas.offsetLeft;
-//			mouseY = touch.clientY - canvas.offsetTop;
-			this.pointerPosition = [touch.clientX, touch.clientY];
-			return this.pointerPosition;
+			mouseX = touch.clientX ;
+			mouseY = touch.clientY;
 		} else {
 			// Get the mouse position relative to the canvas element.
-//			if (ev.layerX || ev.layerX == 0) { // Firefox
-//				mouseX = ev.layerX - canvas.offsetLeft;
-//				mouseY = ev.layerY - canvas.offsetTop;
-//			} else if (ev.offsetX || ev.offsetX == 0) { // Opera
-//				mouseX = ev.offsetX;
-//				mouseY = ev.offsetY;
-//			} else {
-//				mouseX = ev.clientX - canvas.offsetLeft + scrollX;
-//				mouseY = ev.clientY - canvas.offsetTop + scrollY;
-//			}
-			this.pointerPosition = [ev.offsetX, ev.offsetY];
-			return this.pointerPosition;
+			if (ev.layerX || ev.layerX == 0) { // Firefox
+				mouseX = ev.layerX- canvas.offsetLeft;
+				mouseY = ev.layerY- canvas.offsetTop;
+			} else if (ev.offsetX || ev.offsetX == 0) { // Opera
+				mouseX = ev.offsetX;
+				mouseY = ev.offsetY;
+			} else {
+				mouseX = ev.clientX ;
+				mouseY = ev.clientY ;
+			}
+
 		}
+        this.pointerPosition = [mouseX, mouseY];
+        return this.pointerPosition;
 	}
 	
 	/* ** Actual event handlers ** */
