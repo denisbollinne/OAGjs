@@ -18,6 +18,7 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
     var diagonalSpeedDivider = 1.4142135;
     var spriteSize = 128;
     var halfSpriteSize = spriteSize / 2;
+    var that = this;
 
     var p = new GAMEFW.Sprite(["center", "bottom"], animations, spriteSize, function () {
         p.action("standSouth");
@@ -25,11 +26,6 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
 
     this.getZIndex = function () {
         return posy;
-    };
-
-    //TODO: this will be used to offset the collisions, once the general collision detection system is in place.
-    this.getBoundsRect = function () {
-        return {x:10, y:10, w:40, h:20};
     };
 
     this.update = function () {
@@ -44,10 +40,10 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
     };
 
     this.getBoundingBox = function(){
-
+        return new GAME.BoundingBox(posx, posy, spriteSize, spriteSize);
     };
 
-    this.triggersCollision = function(){
+    this.triggersCollision = function(that){
         //This is a stub, and will be used by collision detection
     };
 
@@ -83,8 +79,14 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             vx = vy = 0;
         }
 
+        if(that.triggersCollision(that)){
+            vx = 0;
+            vy = 0;
+        }
+
         this.updateanimation();
-    }
+    };
+
     this.setDirectionForNPC = function (x, y, direction, movementState, datetime) {
         if (direction != previousDir || x != previousX || y != previousY || movementState != previousMovementState) {
             posx = x;

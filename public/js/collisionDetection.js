@@ -14,10 +14,10 @@ GAME.CollisionDetector = function(){
         character.triggersCollision = that.triggersCollision;
     };
 
-    this.triggersCollision = function(character, coordinates){
+    this.triggersCollision = function(character){
         var hasCollision = false;
-        for(var c in characters){
-            if(c !== character){
+        for(var c = 0; c< characters.length; c++){
+            if(characters[c] !== character){
                 if(character.getBoundingBox().collidesWith(characters[c].getBoundingBox())){
                     hasCollision = true;
                 }
