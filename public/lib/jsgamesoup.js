@@ -258,15 +258,15 @@ function JSGameSoup(canvas, framerate) {
 			mouseY = touch.clientY;
 		} else {
 			// Get the mouse position relative to the canvas element.
-			if (ev.layerX || ev.layerX == 0) { // Firefox
-				mouseX = ev.layerX- canvas.offsetLeft;
-				mouseY = ev.layerY- canvas.offsetTop;
-			} else if (ev.offsetX || ev.offsetX == 0) { // Opera
+			if (ev.layerX || ev.layerX == 0) { //TESTED :  Firefox , Chrome
+				mouseX = ev.clientX- canvas.offsetLeft + scrollX;
+				mouseY = ev.clientY- canvas.offsetTop + scrollY;
+			} else if (ev.offsetX || ev.offsetX == 0) { // NOT TESTED :  Opera
 				mouseX = ev.offsetX;
 				mouseY = ev.offsetY;
-			} else {
-				mouseX = ev.clientX ;
-				mouseY = ev.clientY ;
+			} else { // NOT TESTED
+				mouseX = ev.clientX - canvas.offsetLeft;
+				mouseY = ev.clientY - canvas.offsetTop;
 			}
 
 		}
