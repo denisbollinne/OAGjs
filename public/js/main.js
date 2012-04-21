@@ -5,8 +5,13 @@
  * Time: 21:51
  */
 GAME = {};
+GAME.framerate = 50;
 
 GAME.startGame = function () {
+    if(window.isMobile){
+        GAME.framerate = 10;
+    }
+
     var animations = new GAME.AnimationFactory();
 
     var collisionDetector = new GAME.CollisionDetector();
@@ -67,8 +72,7 @@ GAME.startGame = function () {
                                       jQuery.get('/characters/current', function (currentPlayerInfo) {
                                           var gameId = currentPlayerInfo.game;
                                           currentCharId = currentPlayerInfo.character._id;
-                                          player = new GAME.Player(gs, true,
-                                                                   currentPlayerInfo.character.position).character;
+                                          player = new GAME.Player(gs, true, currentPlayerInfo.character.position).character;
                                           player.onPositionChanged = onPositionChanged;
                                           player.performAttack = performAttack;
                                           collisionDetector.addCharacter(player);
@@ -93,7 +97,7 @@ GAME.startGame = function () {
     var socket = io.connect();
     socket.on('connect', OnSocketIoConnect);
 
-    var gs = new JSGameSoup("surface", 50);
+    var gs = new JSGameSoup("surface", GAME.framerate);
     gs.launch();
 };
 

@@ -6,8 +6,8 @@
  */
 
 GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
-    var WALK_VX = 5;
-    var WALK_VY = 5;
+    var WALK_VX = (1000 / GAME.framerate) / 20 * 5;
+    var WALK_VY = (1000 / GAME.framerate) / 20 * 5;
     var vx = 0;
     var vy = 0;
     var isAttacking = false;
@@ -39,11 +39,11 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         }
     };
 
-    this.getBoundingBox = function(){
+    this.getBoundingBox = function () {
         return new GAME.BoundingBox(posx, posy, spriteSize, spriteSize);
     };
 
-    this.triggersCollision = function(that){
+    this.triggersCollision = function (that) {
         //This is a stub, and will be used by collision detection
     };
 
@@ -78,9 +78,9 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             vx = vy = 0;
         }
 
-        if(that.triggersCollision(that)){
-//            vx = 0;
-//            vy = 0;
+        if (that.triggersCollision(that)) {
+            //            vx = 0;
+            //            vy = 0;
         }
 
         that.updateanimation();
