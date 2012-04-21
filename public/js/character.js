@@ -47,7 +47,6 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         //This is a stub, and will be used by collision detection
     };
 
-    var previousX, previousY, previousDir, previousMovementState;
     this.setDirection = function (movementState, direction) {
         if (movementState === 'walk') {
             if (direction === 'n') {
@@ -80,13 +79,13 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         }
 
         if(that.triggersCollision(that)){
-            vx = 0;
-            vy = 0;
+//            vx = 0;
+//            vy = 0;
         }
 
-        this.updateanimation();
+        that.updateanimation();
     };
-
+    var previousX, previousY, previousDir, previousMovementState;
     this.setDirectionForNPC = function (x, y, direction, movementState, datetime) {
         if (direction != previousDir || x != previousX || y != previousY || movementState != previousMovementState) {
             posx = x;
@@ -96,18 +95,18 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             previousDir = direction;
             previousMovementState = movementState;
 
-            this.setDirection(movementState, direction);
+            that.setDirection(movementState, direction);
         }
     };
     this.setHurted = function (NewHp) {
         isHit = true;
         HP = NewHp;
-        this.updateanimation();
+        that.updateanimation();
     };
 
     this.triggerAttack = function () {
         isAttacking = true;
-        this.updateanimation();
+        that.updateanimation();
     };
 
     this.updateanimation = function () {
@@ -179,9 +178,9 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
 
         if (isPlayable) {
             if (isAttacking) {
-                this.performAttack({dateTime:Date.now()});
+                that.performAttack({dateTime:Date.now()});
             } else {
-                this.onPositionChanged({x:posx, y:posy, direction:dir, movementState:movementState, dateTime:Date.now()})
+                that.onPositionChanged({x:posx, y:posy, direction:dir, movementState:movementState, dateTime:Date.now()})
             }
         }
     };
@@ -198,48 +197,48 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         this.keyUp_37 = this.keyUp_39 = function () {
 
             vx = 0;
-            this.updateanimation();
+            that.updateanimation();
         };
 
         this.keyDown_37 = function () {
 
             vx -= WALK_VX;
-            this.updateanimation();
+            that.updateanimation();
         };
 
         this.keyDown_39 = function () {
 
             vx += WALK_VX;
-            this.updateanimation();
+            that.updateanimation();
         };
 
         this.keyUp_38 = this.keyUp_40 = function () {
 
             vy = 0;
-            this.updateanimation();
+            that.updateanimation();
         };
 
         this.keyDown_38 = function () {
 
             vy -= WALK_VY;
-            this.updateanimation();
+            that.updateanimation();
         };
 
         this.keyDown_40 = function () {
 
             vy += WALK_VY;
-            this.updateanimation();
+            that.updateanimation();
         };
 
         this.keyDown_32 = function () {
             isAttacking = true;
-            this.updateanimation();
+            that.updateanimation();
         };
 
         //Todo remove this once collision detection works
         this.keyDown_72 = function () {
             isHit = true;
-            this.updateanimation();
+            that.updateanimation();
         };
 
         var pointAngleCompareToP1 = function (p1, p2) {
@@ -249,20 +248,20 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         var isPressed = false;
         this.pointerDown = function (p, a, b, c, d) {
             isPressed = true;
-            this.processMouse({x:p[0], y:p[1]});
+            that.processMouse({x:p[0], y:p[1]});
         }
         this.pointerMove = function (p, a, b, c, d) {
             if (isPressed) {
-                this.processMouse({x:p[0], y:p[1]});
+                that.processMouse({x:p[0], y:p[1]});
             }
         }
         this.pointerUp = function (p, a, b, c, d) {
             isPressed = false;
-            previousDir = 'none';
-            this.setDirection('stand');
+            previousMouseDir = 'none';
+            that.setDirection('stand');
         }
 
-        var previousDir = 'none';
+        var previousMouseDir = 'none';
         this.directions = ['e', 'se', 's', 'sw', 'w', 'nw', 'n', 'ne'];
         this.processMouse = function (mousePos) {
 
@@ -271,11 +270,11 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             if (rectifiedAngle > 360) {
                 rectifiedAngle = rectifiedAngle - 360;
             }
-            var direction = this.directions[Math.floor(rectifiedAngle / 45)];
+            var direction = that.directions[Math.floor(rectifiedAngle / 45)];
 
-            if (previousDir != direction) {
-                this.setDirection('walk', direction);
-                previousDir = direction;
+            if (previousMouseDir != direction) {
+                that.setDirection('walk', direction);
+                previousMouseDir = direction;
             }
         }
     }
