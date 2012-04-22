@@ -9,16 +9,20 @@ GAME.CollisionDetector = function(){
     var characters = [];
     var that = this;
 
+    var preCalculateBoundingBox = function(boundingBox, vx, vy){
+        return new GAME.BoundingBox(boundingBox.x + vx, boundingBox.y + vy, boundingBox.w, boundingBox.h);
+    };
+
     this.addCharacter = function(character){
         characters.push(character);
         character.triggersCollision = that.triggersCollision;
     };
 
-    this.triggersCollision = function(character){
+    this.triggersCollision = function(character, vx, vy){
         var hasCollision = false;
         for(var c = 0; c< characters.length; c++){
             if(characters[c] !== character){
-                if(character.getBoundingBox().collidesWith(characters[c].getBoundingBox())){
+                if(preCalculateBoundingBox(character.getBoundingBox(), vx, vy).collidesWith(characters[c].getBoundingBox())){
                     hasCollision = true;
                 }
             }

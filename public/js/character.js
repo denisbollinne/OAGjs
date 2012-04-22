@@ -24,26 +24,35 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         p.action("standSouth");
     });
 
+    var resetVelocityOnCollision = function(){
+        if (that.triggersCollision(that, vx, vy)) {
+            vx = 0;
+            vy = 0;
+        }
+    };
+
     this.getZIndex = function () {
         return posy;
     };
 
     this.update = function () {
-        p.update();
-        if (vx != 0 && vy != 0) {
-            posx += vx / diagonalSpeedDivider;
-            posy += vy / diagonalSpeedDivider;
-        } else {
-            posx += vx;
-            posy += vy;
+        if (!that.triggersCollision(that, vx, vy)) {
+            p.update();
+            if (vx != 0 && vy != 0) {
+                posx += vx / diagonalSpeedDivider;
+                posy += vy / diagonalSpeedDivider;
+            } else {
+                posx += vx;
+                posy += vy;
+            }
         }
     };
 
     this.getBoundingBox = function () {
-        return new GAME.BoundingBox(posx, posy, spriteSize, spriteSize);
+        return new GAME.BoundingBox(posx + 55, posy +80, 45, 35);
     };
 
-    this.triggersCollision = function (that) {
+    this.triggersCollision = function (that, vx, vy) {
         //This is a stub, and will be used by collision detection
     };
 
@@ -78,11 +87,6 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             vx = vy = 0;
         }
 
-        if (that.triggersCollision(that)) {
-            //            vx = 0;
-            //            vy = 0;
-        }
-
         that.updateanimation();
     };
     var previousX, previousY, previousDir, previousMovementState;
@@ -111,6 +115,8 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
 
     this.updateanimation = function () {
         var dir, movementState;
+
+        resetVelocityOnCollision();
 
         movementState = 'walk';
         var lastAction = p.get_action();
@@ -249,17 +255,17 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         this.pointerDown = function (p, a, b, c, d) {
             isPressed = true;
             that.processMouse({x:p[0], y:p[1]});
-        }
+        };
         this.pointerMove = function (p, a, b, c, d) {
             if (isPressed) {
                 that.processMouse({x:p[0], y:p[1]});
             }
-        }
+        };
         this.pointerUp = function (p, a, b, c, d) {
             isPressed = false;
             previousMouseDir = 'none';
             that.setDirection('stand');
-        }
+        };
 
         var previousMouseDir = 'none';
         this.directions = ['e', 'se', 's', 'sw', 'w', 'nw', 'n', 'ne'];
