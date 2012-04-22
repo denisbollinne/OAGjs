@@ -54,6 +54,10 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         return new GAME.BoundingBox(posx + 55, posy +80, 45, 35);
     };
 
+    this.getBoundingSphere = function(){
+        return new GAME.BoundingSphere(posx + 77, posy  + 97, 18);
+    };
+
     this.triggersCollision = function (that, vx, vy) {
         //This is a stub, and will be used by collision detection
     };

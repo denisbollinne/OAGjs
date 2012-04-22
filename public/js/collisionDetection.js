@@ -6,28 +6,40 @@
  * To change this template use File | Settings | File Templates.
  */
 GAME.CollisionDetector = function(){
-    var characters = [];
+    var trackedItems = [];
     var that = this;
 
-    var preCalculateBoundingBox = function(boundingBox, vx, vy){
-        return new GAME.BoundingBox(boundingBox.x + vx, boundingBox.y + vy, boundingBox.w, boundingBox.h);
+    this.addCollisionItem = function(collisionItem){
+        trackedItems.push(collisionItem);
+        collisionItem.triggersCollision = that.triggersCollision;
     };
 
-    this.addCharacter = function(character){
-        characters.push(character);
-        character.triggersCollision = that.triggersCollision;
-    };
-
-    this.triggersCollision = function(character, vx, vy){
+    this.triggersCollision = function(item, vx, vy){
         var hasCollision = false;
-        for(var c = 0; c< characters.length; c++){
-            if(characters[c] !== character){
-                if(preCalculateBoundingBox(character.getBoundingBox(), vx, vy).collidesWith(characters[c].getBoundingBox())){
+        for(var c = 0; c< trackedItems.length; c++){
+            if(trackedItems[c] !== item){
+                if(hasSphereCollision(item, trackedItems[c], vx, vy)){
                     hasCollision = true;
                 }
             }
         }
         return hasCollision;
+    };
+
+    var hasBoxCollision = function(item1, item2, vx, vy){
+        return preCalculateBoundingBox(item1.getBoundingBox(), vx, vy).collidesWith(item2.getBoundingBox());
+    };
+
+    var hasSphereCollision = function(item1, item2, vx, vy){
+        return preCalculateBoundingSphere(item1.getBoundingSphere(), vx, vy).collidesWith(item2.getBoundingSphere())
+    };
+
+    var preCalculateBoundingBox = function(boundingBox, vx, vy){
+        return new GAME.BoundingBox(boundingBox.x + vx, boundingBox.y + vy, boundingBox.w, boundingBox.h);
+    };
+
+    var preCalculateBoundingSphere = function(boundingSphere, vx, vy){
+        return new GAME.BoundingSphere(boundingSphere.x + vx, boundingSphere.y + vy, boundingSphere.r);
     };
 };
 

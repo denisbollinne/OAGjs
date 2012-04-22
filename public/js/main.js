@@ -29,7 +29,7 @@ GAME.startGame = function () {
                 var newPlayer = new GAME.Player(gs, false, newPos).character;
                 allOtherChars[newPos.charId] = newPlayer;
                 gs.addEntity(newPlayer);
-                collisionDetector.addCharacter(newPlayer);
+                collisionDetector.addCollisionItem(newPlayer);
             }
         }
     };
@@ -75,7 +75,7 @@ GAME.startGame = function () {
                                           player = new GAME.Player(gs, true, currentPlayerInfo.character.position).character;
                                           player.onPositionChanged = onPositionChanged;
                                           player.performAttack = performAttack;
-                                          collisionDetector.addCharacter(player);
+                                          collisionDetector.addCollisionItem(player);
 
                                           // var enemy = new GAME.skeleton(gs).character;
 
