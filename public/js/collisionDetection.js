@@ -71,3 +71,15 @@ GAME.BoundingBox = function(x, y, w, h){
         return (isHorizontalCollision && isVerticalCollision) || isContainsCollision;
     }
 };
+
+GAME.BoundingSphere = function(x, y, r){
+      this.x = x;
+      this.y = y;
+      this.r = r;
+      var that = this;
+
+      this.collidesWith = function(boundingBox){
+          var distance = Math.sqrt(Math.pow(boundingBox.x - that.x,2) + Math.pow(boundingBox.y - that.y, 2));
+          return distance < (that.r + boundingBox.r);
+      }
+};

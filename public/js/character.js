@@ -45,6 +45,8 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
                 posx += vx;
                 posy += vy;
             }
+
+
         }
     };
 
