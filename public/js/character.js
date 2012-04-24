@@ -5,7 +5,7 @@
  * Time: 19:48
  */
 
-GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
+GAME.Character = function Character(gs, animations, startPosition, isPlayable, hammer) {
     var WALK_VX = (1000 / GAME.framerate) / 20 * 5;
     var WALK_VY = (1000 / GAME.framerate) / 20 * 5;
     var vx = 0;
@@ -200,6 +200,7 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
     };
     this.performAttack = function (data) {
     };
+
     this.draw = function (c) {
 
         if(!isPlayable){
@@ -214,6 +215,7 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         }
         p.draw(c, [posx, posy]);
     };
+
 
     if (isPlayable) {
         /*** input events stuff ***/
@@ -268,21 +270,42 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             var angle = ( Math.atan2(p2.y - p1.y, p2.x - p1.x));
             return (angle >= 0 ? angle : (2 * Math.PI + angle)) * 360 / (2 * Math.PI)
         };
-        var isPressed = false;
-        this.pointerDown = function (p) {
-            isPressed = true;
+
+
+//        var isPressed = false;
+//        this.pointerDown = function (p) {
+//            isPressed = true;
+//            that.processMouse({x:p[0], y:p[1]});
+//        };
+//        this.pointerMove = function (p) {
+//            if (isPressed) {
+//                that.processMouse({x:p[0], y:p[1]});
+//            }
+//        };
+//        this.pointerUp = function (p, a, b, c, d) {
+//            isPressed = false;
+//            previousMouseDir = 'none';
+//            that.setDirection('stand');
+//        };
+
+        hammer.tap = function(p) {
+            console.log(p);
+          //  that.processMouse({x:p[0], y:p[1]});
+        };
+
+        hammer.ondragstart = function(p) {
             that.processMouse({x:p[0], y:p[1]});
         };
-        this.pointerMove = function (p) {
-            if (isPressed) {
-                that.processMouse({x:p[0], y:p[1]});
-            }
+
+         hammer.ondrag = function(p) {
+            that.processMouse({x:p[0], y:p[1]});
         };
-        this.pointerUp = function (p, a, b, c, d) {
-            isPressed = false;
+
+        hammer.ondragend = function(p) {
             previousMouseDir = 'none';
             that.setDirection('stand');
         };
+
 
         var previousMouseDir = 'none';
         var directions = ['e', 'se', 's', 'sw', 'w', 'nw', 'n', 'ne'];
