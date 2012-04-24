@@ -271,34 +271,8 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable, h
             return (angle >= 0 ? angle : (2 * Math.PI + angle)) * 360 / (2 * Math.PI)
         };
 
-
-//        var isPressed = false;
-//        this.pointerDown = function (p) {
-//            isPressed = true;
-//            that.processMouse({x:p[0], y:p[1]});
-//        };
-//        this.pointerMove = function (p) {
-//            if (isPressed) {
-//                that.processMouse({x:p[0], y:p[1]});
-//            }
-//        };
-//        this.pointerUp = function (p, a, b, c, d) {
-//            isPressed = false;
-//            previousMouseDir = 'none';
-//            that.setDirection('stand');
-//        };
-
-        hammer.tap = function(p) {
-            console.log(p);
-          //  that.processMouse({x:p[0], y:p[1]});
-        };
-
-        hammer.ondragstart = function(p) {
-            that.processMouse({x:p[0], y:p[1]});
-        };
-
-         hammer.ondrag = function(p) {
-            that.processMouse({x:p[0], y:p[1]});
+       hammer.ondragstart =  hammer.ondrag = function(ev) {
+            that.processMouse(ev.position);
         };
 
         hammer.ondragend = function(p) {
