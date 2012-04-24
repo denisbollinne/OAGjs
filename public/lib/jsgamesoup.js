@@ -237,108 +237,7 @@ function JSGameSoup(canvas, framerate) {
 		ev.cancelBubble = true; 
 	}
 	
-	// test whether the browser handles the touch events instead of mousing
-	// we'll use touch events instead because they are generally faster
-	this.isTouchDevice = function isTouchDevice() {
-		try {
-			document.createEvent("TouchEvent");
-			return true;
-		} catch (e) {
-			return false;
-		}
-	}
-	
-	// get the position of the triggered event
-	this.getSetPointerPosition = function getSetPointerPosition(ev) {
-		// was this a touch?
-        var mouseX,mouseY;
-		if (ev.touches) {
-			var touch = ev.touches[0];
-			mouseX = touch.clientX ;
-			mouseY = touch.clientY;
-		} else {
-			// Get the mouse position relative to the canvas element.
-			if (ev.layerX || ev.layerX == 0) { //TESTED :  Firefox , Chrome
-				mouseX = ev.clientX- canvas.offsetLeft + scrollX;
-				mouseY = ev.clientY- canvas.offsetTop + scrollY;
-			} else if (ev.offsetX || ev.offsetX == 0) { // NOT TESTED :  Opera
-				mouseX = ev.offsetX;
-				mouseY = ev.offsetY;
-			} else { // NOT TESTED
-				mouseX = ev.clientX - canvas.offsetLeft;
-				mouseY = ev.clientY - canvas.offsetTop;
-			}
 
-		}
-        this.pointerPosition = [mouseX, mouseY];
-        return this.pointerPosition;
-	}
-	
-	/* ** Actual event handlers ** */
-	
-	// these are the pointer events. if we have ontouchstart we use that
-	this.ontouchstart = function ontouchstart(ev) {
-		var ev = (ev) ? ev : window.event;
-		JSGS.pointInEntitiesCall(JSGS.getSetPointerPosition(ev), "pointerDown", ev.touches.length);
-		JSGS.cancelEvent(ev);
-		JSGS.pointerDown = true;
-		return false;
-	}
-	this.attachEvent("touchstart");
-	
-	this.ontouchend = function ontouchend(ev) {
-		var ev = (ev) ? ev : window.event;
-		JSGS.pointInEntitiesCall(JSGS.getSetPointerPosition(ev), "pointerUp", ev.touches.length);
-		JSGS.cancelEvent(ev);
-		JSGS.pointerDown = false;
-		return false;
-	}
-	this.attachEvent("touchend");
-	
-	this.onmove = function onmove(ev, idx) {
-		var ev = (ev) ? ev : window.event;
-		JSGS.pointInEntitiesCall(JSGS.getSetPointerPosition(ev), "pointerMove", idx);
-		JSGS.cancelEvent(ev);
-		return false;
-	}
-	
-	this.ontouchmove = function ontouchmove(ev) {
-		JSGS.onmove(ev, ev.touches.length);
-	}
-	this.attachEvent("touchmove");
-	
-	// pointer pressed event
-	this.onmousedown = function onmousedown(ev) {
-		var ev = (ev) ? ev : window.event;
-		JSGS.pointInEntitiesCall(JSGS.getSetPointerPosition(ev), "pointerDown", ev.button);
-		JSGS.cancelEvent(ev);
-		JSGS.pointerDown = true;
-		return false;
-	}
-	this.attachEvent("mousedown");
-	
-	// pointer released event
-	this.onmouseup = function onmouseup(ev) {
-		var ev = (ev) ? ev : window.event;
-		JSGS.pointInEntitiesCall(JSGS.getSetPointerPosition(ev), "pointerUp", ev.button);
-		JSGS.cancelEvent(ev);
-		JSGS.pointerDown = false;
-		return false;
-	}
-	this.attachEvent("mouseup");
-	
-	// TODO: make this only check for entities which are listening with pointerMove().
-	this.onmousemove = function onmousemove(ev) {
-		JSGS.onmove(ev, ev.button);
-	}
-	this.attachEvent("mousemove");
-	
-	// TODO: add mouse ispressed "event"
-	
-	// TODO: pointer over event
-	
-	// TODO: pointer out event
-	
 	// key down event
 	this.onkeydown = function onkeydown(ev) {
 		var ev = (ev) ? ev : window.event;
@@ -436,14 +335,6 @@ function JSGameSoup(canvas, framerate) {
 			delEntities.push(entities[e]);
 		}
 		return entities.length > 0;
-	}
-	
-	/**
-		Gets a list of entities which have already been triggered by the current event.
-		Call this inside e.g. pointerUp() to get a list of entities which have also had their pointerUp() method called. Note that only lower priority entities will see the triggers of higher priority entities (e.g. entities with higher priorities get triggered first).
-	*/
-	this.getTriggeredEntities = function() {
-		return entitiesTriggered;
 	}
 	
 	this.addEntityToSpecialistLists = function addEntityToSpecialistLists(e) {
@@ -625,23 +516,6 @@ function JSGameSoup(canvas, framerate) {
 	/* ***************************************
 	 	Make calls on entity methods
 	 *****************************************/
-	
-	// call a method on an entity if the point is inside the entity's polygon/circle/box
-	// used in mouse events to send mouseDown and mouseUp events into the entity
-	this.pointInEntitiesCall = function pointInEntitiesCall(pos, fn, arg) {
-		var hit = [];
-		for (var e=0; e<entities.length; e++) {
-			var ent = entities[e];
-			if (ent[fn]) {
-                entityEventQueue.push([ent, fn, pos]);
-//				if ((ent.pointerPoly && this.pointInPoly(pos, ent.pointerPoly())) || (ent.pointerBox && this.pointInBox(pos, ent.pointerBox())) || (ent.pointerCircle && this.pointInCircle(pos, ent.pointerCircle())) || (ent.pointerTest && ent.pointerTest(pos))) {
-//
-//					hit.push(ent);
-//				}
-			}
-		}
-		return hit;
-	}
 	
 	// call a method on each entity for which that method exists
 	// used for key events etc.
