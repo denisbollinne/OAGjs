@@ -269,11 +269,11 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             return (angle >= 0 ? angle : (2 * Math.PI + angle)) * 360 / (2 * Math.PI)
         };
         var isPressed = false;
-        this.pointerDown = function (p, a, b, c, d) {
+        this.pointerDown = function (p) {
             isPressed = true;
             that.processMouse({x:p[0], y:p[1]});
         };
-        this.pointerMove = function (p, a, b, c, d) {
+        this.pointerMove = function (p) {
             if (isPressed) {
                 that.processMouse({x:p[0], y:p[1]});
             }
@@ -285,7 +285,7 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         };
 
         var previousMouseDir = 'none';
-        this.directions = ['e', 'se', 's', 'sw', 'w', 'nw', 'n', 'ne'];
+        var directions = ['e', 'se', 's', 'sw', 'w', 'nw', 'n', 'ne'];
         this.processMouse = function (mousePos) {
 
             var angle = pointAngleCompareToP1({x:posx, y:posy - halfSpriteSize }, mousePos);
@@ -293,7 +293,7 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             if (rectifiedAngle > 360) {
                 rectifiedAngle = rectifiedAngle - 360;
             }
-            var direction = that.directions[Math.floor(rectifiedAngle / 45)];
+            var direction = directions[Math.floor(rectifiedAngle / 45)];
 
             if (previousMouseDir != direction) {
                 that.setDirection('walk', direction);
