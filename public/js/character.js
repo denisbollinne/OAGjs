@@ -201,6 +201,17 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
     this.performAttack = function (data) {
     };
     this.draw = function (c) {
+
+        if(!isPlayable){
+            c.fillStyle = "rgb(0,0,0)";
+            c.fillRect (posx - 25  , posy - 128, 50, 3);
+            c.fillStyle = "rgb(255,0,0)";
+            c.fillRect (posx - 25 , posy - 128, (50 / 100) * HP, 3);
+        }
+        else{
+            c.font = "20pt Calibri";
+            c.fillText("HP : " + HP, 25,25)
+        }
         p.draw(c, [posx, posy]);
     };
 
