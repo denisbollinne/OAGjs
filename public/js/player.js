@@ -5,7 +5,7 @@
  * Time: 17:48
  */
 
-GAME.Player = function (gs,playable, currentPlayerInfo){
+GAME.Player = function (gs,playable, currentPlayerInfo,hammer){
 
     var animations = new GAME.AnimationFactory();
 
@@ -64,5 +64,5 @@ GAME.Player = function (gs,playable, currentPlayerInfo){
     startPosition[0] = currentPlayerInfo.x;
     startPosition[1] = currentPlayerInfo.y;
 
-    this.character = new GAME.Character(gs, knightAnimations, startPosition, playable);
+    this.character = new GAME.Character(gs, knightAnimations, startPosition, playable,hammer);
 };

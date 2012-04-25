@@ -70,9 +70,12 @@ GAME.startGame = function () {
                                   function () {
                                       gameIsLoaded = true;
                                       jQuery.get('/characters/current', function (currentPlayerInfo) {
+
+                                          var hammer = new Hammer(document.getElementById("surface").children[0]);
+
                                           var gameId = currentPlayerInfo.game;
                                           currentCharId = currentPlayerInfo.character._id;
-                                          player = new GAME.Player(gs, true, currentPlayerInfo.character.position).character;
+                                          player = new GAME.Player(gs, true, currentPlayerInfo.character.position,hammer).character;
                                           player.onPositionChanged = onPositionChanged;
                                           player.performAttack = performAttack;
                                           collisionDetector.addCollisionItem(player);
@@ -98,6 +101,8 @@ GAME.startGame = function () {
     socket.on('connect', OnSocketIoConnect);
 
     var gs = new JSGameSoup("surface", GAME.framerate);
+
+
     gs.launch();
 };
 

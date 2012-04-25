@@ -66,8 +66,24 @@ module.exports = function(app,mongooseAuth){
         }
     });
 
+    var BouncingBoxSchema = new Schema({
+                                           x : {type:Number, required : true},
+                                           y: {type:Number, required : true},
+                                           r: {type:Number, required : true}
+                                       });
+
+    var ArenaSchema = new Schema({
+        name : {type:String, required : true},
+        imagePath : {type:String, require : true},
+
+        bouncingBoxes : [ BouncingBoxSchema ]
+    });
+
+
+
     mongoose.model('User', UserSchema);
     mongoose.model('Character', CharacterSchema);
+    mongoose.model('Arena',ArenaSchema);
 
    mongoose.connect(app.set('db-uri'));
 
