@@ -7,6 +7,7 @@ module.exports = function(app,validateAuthentication){
     var charactersController = require('./../resources/characters.js');
     var positionsController = require('./../resources/positions.js');
     var gamesController = require('./../resources/games.js');
+    var arenasController = require('./../resources/arena.js');
 
 
     app.get('/characters/select/:name', validateAuthentication, charactersController.select); //select
@@ -21,6 +22,13 @@ module.exports = function(app,validateAuthentication){
     app.post('/games/join', validateAuthentication, gamesController.join); //join a game or create one
     app.post('/games/leave', validateAuthentication, gamesController.leave); //leave a game
     app.get('/games/:id', validateAuthentication, gamesController.characters); //all chars in a game
+
+    app.get('/arenas', validateAuthentication, arenasController.index); //all arenas
+    app.get('/arenas/:name', validateAuthentication, gamesController.show); //show one arena
+    app.get('/arenas/:name.json', validateAuthentication, gamesController.get); //get one arena
+
+    app.get('/arenas/new', validateAuthentication, gamesController.new); //show form to create arena
+    app.post('/arenas/create', validateAuthentication, gamesController.create); //send form post to create arena
 
     app.resource('/characters', charactersController, validateAuthentication);
 
