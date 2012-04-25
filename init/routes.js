@@ -23,11 +23,12 @@ module.exports = function(app,validateAuthentication){
     app.get('/games/:id', validateAuthentication, gamesController.characters); //all chars in a game
 
     app.get('/arenas', validateAuthentication, arenasController.index); //all arenas
-    app.get('/arenas/:name', validateAuthentication, gamesController.show); //show one arena
-    app.get('/arenas/:name.json', validateAuthentication, gamesController.get); //get one arena
+    app.get('/arenas/new', validateAuthentication, arenasController.new); //show form to create arena
+    app.post('/arenas/create', validateAuthentication, arenasController.create); //send form post to create arena
 
-    app.get('/arenas/new', validateAuthentication, gamesController.new); //show form to create arena
-    app.post('/arenas/create', validateAuthentication, gamesController.create); //send form post to create arena
+    app.get('/arenas/:name.json', validateAuthentication, arenasController.get); //get one arena
+    app.get('/arenas/:name', validateAuthentication, arenasController.show); //show one arena
+
 
     app.resource('/characters', charactersController, validateAuthentication);
 

@@ -29,6 +29,7 @@ exports.create = function(req, res){
     newArena.name = req.body.name;
     newArena.imagePath = req.body.path;
 
+
     newArena.save();
 
     //This should probably return a jade page with the newly created char
