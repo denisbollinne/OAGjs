@@ -12,6 +12,8 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
     var vy = 0;
     var isAttacking = false;
     var isHit = false;
+    var isDead = false;
+    var isDowned = false;
     var posx = startPosition[0];
     var posy = startPosition[1];
     var HP = 100;
@@ -36,6 +38,10 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
     };
 
     this.update = function () {
+
+        if(isDead){
+            return;
+        }
         if (!that.triggersCollision(that, vx, vy)) {
             p.update();
             if (vx != 0 && vy != 0) {
@@ -45,8 +51,6 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
                 posx += vx;
                 posy += vy;
             }
-
-
         }
     };
 
@@ -110,7 +114,13 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
     };
     this.setHurted = function (NewHp) {
         isHit = true;
-        HP = NewHp;
+        if(!isDead){
+            HP = NewHp;
+        }
+        if(HP <= 0 ){
+            HP = 0;
+            isDowned = true;
+        }
         that.updateanimation();
     };
 
@@ -123,6 +133,10 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         var dir, movementState;
 
         resetVelocityOnCollision();
+
+        if(isDead){
+            return;
+        }
 
         movementState = 'walk';
         var lastAction = p.get_action();
@@ -139,8 +153,8 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             }
         }
 
-        if (isHit) {
-            var hitAction = lastAction.toString().replace("stand", "hit");
+        if (isHit && !isDowned) {
+            var hitAction = lastAction.toString().replace("stand", "hit").replace("run","hit");
             if (hitAction === lastAction) {
                 isHit = false;
             } else {
@@ -148,6 +162,21 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
                     var endHit = p.get_action().toString().replace("hit", "stand");
                     p.action(endHit);
                     isHit = false;
+                });
+            }
+        }
+
+        if(isDowned){
+            var dyingAction = lastAction.toString().replace("stand", "dying").replace("hit", "dying").replace("attack","dying");
+            if (dyingAction === lastAction) {
+                isDowned = false;
+            }
+            else{
+                p.action(dyingAction,true, function(){
+                    var deathAction = lastAction.toString().replace("stand", "death");
+                    p.action(deathAction);
+                    isDowned = false;
+                    isDead = true;
                 });
             }
         }
@@ -182,7 +211,7 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
             dir = 'n'
         } else {
             var standAction = lastAction.toString().replace("run", "stand");
-            if (!isAttacking && !isHit) {
+            if (!isAttacking && !isHit && !isDead && !isDowned) {
                 p.action(standAction);
             }
             movementState = 'stand'
@@ -191,7 +220,7 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
         if (isPlayable) {
             if (isAttacking) {
                 that.performAttack({dateTime:Date.now()});
-            } else {
+            } else if(!isDead && !isDowned) {
                 that.onPositionChanged({x:posx, y:posy, direction:dir, movementState:movementState, dateTime:Date.now()})
             }
         }
@@ -260,7 +289,7 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable) {
 
         //Todo remove this once collision detection works
         this.keyDown_72 = function () {
-            isHit = true;
+            isDowned = true;
             that.updateanimation();
         };
 
