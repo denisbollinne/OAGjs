@@ -66,7 +66,7 @@ module.exports = function(app,mongooseAuth){
         }
     });
 
-    var BouncingBoxSchema = new Schema({
+    var BoundingBoxSchema = new Schema({
                                            x : {type:Number, required : true},
                                            y: {type:Number, required : true},
                                            r: {type:Number, required : true}
@@ -76,7 +76,7 @@ module.exports = function(app,mongooseAuth){
         name : {type:String, required : true},
         imagePath : {type:String, require : true},
 
-        bouncingBoxes : [ BouncingBoxSchema ]
+        boundingBoxes : [ BoundingBoxSchema ]
     });
 
 
