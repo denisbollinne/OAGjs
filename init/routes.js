@@ -1,6 +1,5 @@
 var express = require('express')
-    , appResource = require('./resource/app-resource.js')
-    , path = require('path');
+    , appResource = require('./resource/app-resource.js');
 
 module.exports = function(app,validateAuthentication){
     appResource(app);
