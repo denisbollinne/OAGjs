@@ -45,4 +45,24 @@ GAME.Animations = function(){
     this.hitNorthWest = {};
     this.hitSouthEast = {};
     this.hitSouthWest = {};
+
+    this.dyingEast = {};
+    this.dyingWest = {};
+    this.dyingNorth = {};
+    this.dyingSouth = {};
+
+    this.dyingNorthEast = {};
+    this.dyingNorthWest = {};
+    this.dyingSouthEast = {};
+    this.dyingSouthWest = {};
+
+    this.deathEast = {};
+    this.deathWest = {};
+    this.deathNorth = {};
+    this.deathSouth = {};
+
+    this.deathNorthEast = {};
+    this.deathNorthWest = {};
+    this.deathSouthEast = {};
+    this.deathSouthWest = {};
 };
