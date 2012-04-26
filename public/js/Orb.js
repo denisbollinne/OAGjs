@@ -19,12 +19,12 @@ GAME.Orb = function Orb(){
     });
 
     this.update = function(){
-        this.updateanimation();
+        this.updateAnimation();
         p.update();
         posx += vx;
     };
 
-    this.updateanimation = function(){
+    this.updateAnimation = function(){
         if(vx>=WALK_VX){
             p.action("roll_forward");
         }
@@ -40,19 +40,19 @@ GAME.Orb = function Orb(){
     this.keyDown_37 = function () {
 
         vx -= WALK_VX;
-        this.updateanimation();
+        this.updateAnimation();
     };
 
     this.keyUp_37 = this.keyUp_39 = function() {
 
         vx = 0;
-        this.updateanimation();
+        this.updateAnimation();
     };
 
     this.keyDown_39 = function () {
 
         vx += WALK_VX;
-        this.updateanimation();
+        this.updateAnimation();
     };
 
     this.draw = function(c) {

@@ -45,10 +45,10 @@ GAME.startGame = function () {
 
                 var foundHurtedChar = allOtherChars[hurtedCharStatus.charId];
                 if (foundHurtedChar) {
-                    foundHurtedChar.setHurted(hurtedCharStatus.HP)
+                    foundHurtedChar.triggerHit(hurtedCharStatus.HP)
                 } else {
                     if (hurtedCharStatus.charId === currentCharId) {
-                        player.setHurted(hurtedCharStatus.HP)
+                        player.triggerHit(hurtedCharStatus.HP)
                     }
                 }
             }

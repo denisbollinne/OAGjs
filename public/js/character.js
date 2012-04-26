@@ -5,15 +5,12 @@
  * Time: 19:48
  */
 
-GAME.Character = function Character(gs, animations, startPosition, isPlayable, hammer) {
+GAME.Character = function (gs, animations, startPosition, isPlayable, hammer) {
     var WALK_VX = (1000 / GAME.framerate) / 20 * 5;
     var WALK_VY = (1000 / GAME.framerate) / 20 * 5;
     var vx = 0;
     var vy = 0;
-    var isAttacking = false;
-    var isHit = false;
-    var isDead = false;
-    var isDowned = false;
+    var characterAnimations = new GAME.CharacterActions(WALK_VX, WALK_VY);
     var posx = startPosition[0];
     var posy = startPosition[1];
     var HP = 100;
@@ -38,18 +35,16 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable, h
     };
 
     this.update = function () {
-
-        if(isDead){
-            return;
-        }
-        if (!that.triggersCollision(that, vx, vy)) {
-            p.update();
-            if (vx != 0 && vy != 0) {
-                posx += vx / diagonalSpeedDivider;
-                posy += vy / diagonalSpeedDivider;
-            } else {
-                posx += vx;
-                posy += vy;
+        if(characterAnimations.isAlive()){
+            if (!that.triggersCollision(that, vx, vy)) {
+                p.update();
+                if (vx != 0 && vy != 0) {
+                    posx += vx / diagonalSpeedDivider;
+                    posy += vy / diagonalSpeedDivider;
+                } else {
+                    posx += vx;
+                    posy += vy;
+                }
             }
         }
     };
@@ -97,7 +92,7 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable, h
             vx = vy = 0;
         }
 
-        that.updateanimation();
+        that.updateAnimation();
     };
     var previousX, previousY, previousDir, previousMovementState;
     this.setDirectionForNPC = function (x, y, direction, movementState, datetime) {
@@ -112,116 +107,40 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable, h
             that.setDirection(movementState, direction);
         }
     };
-    this.setHurted = function (NewHp) {
-        isHit = true;
-        if(!isDead){
+    this.triggerHit = function (NewHp) {
+        if(characterAnimations.isAlive()){
             HP = NewHp;
+            characterAnimations.hit()
         }
         if(HP <= 0 ){
             HP = 0;
-            isDowned = true;
+            characterAnimations.died();
         }
-        that.updateanimation();
+        that.updateAnimation();
     };
 
     this.triggerAttack = function () {
-        isAttacking = true;
-        that.updateanimation();
+        characterAnimations.attacked();
+        that.updateAnimation();
     };
 
-    this.updateanimation = function () {
+    this.updateAnimation = function () {
         var dir, movementState;
 
         resetVelocityOnCollision();
 
-        if(isDead){
+        if(characterAnimations.isAlive()){
+           characterAnimations.update(p, vx, vy);
+        }
+        else{
             return;
         }
 
-        movementState = 'walk';
-        var lastAction = p.get_action();
-        if (isAttacking) {
-            var attackAction = lastAction.toString().replace("stand", "attack");
-            if (attackAction === lastAction) {
-                isAttacking = false;
-            } else {
-                p.action(attackAction, true, function () {
-                    var endAttack = p.get_action().toString().replace("attack", "stand");
-                    p.action(endAttack);
-                    isAttacking = false;
-                });
-            }
-        }
-
-        if (isHit && !isDowned) {
-            var hitAction = lastAction.toString().replace("stand", "hit").replace("run","hit");
-            if (hitAction === lastAction) {
-                isHit = false;
-            } else {
-                p.action(hitAction, true, function () {
-                    var endHit = p.get_action().toString().replace("hit", "stand");
-                    p.action(endHit);
-                    isHit = false;
-                });
-            }
-        }
-
-        if(isDowned){
-            var dyingAction = lastAction.toString().replace("stand", "dying").replace("hit", "dying").replace("attack","dying");
-            if (dyingAction === lastAction) {
-                isDowned = false;
-            }
-            else{
-                p.action(dyingAction,true, function(){
-                    var deathAction = lastAction.toString().replace("stand", "death");
-                    p.action(deathAction);
-                    isDowned = false;
-                    isDead = true;
-                });
-            }
-        }
-
-        if (vx >= WALK_VX) {
-            if (vy >= WALK_VY) {
-                p.action("runSouthEast");
-                dir = 'se'
-            } else if (vy <= -WALK_VY) {
-                p.action("runNorthEast");
-                dir = 'ne'
-            } else {
-                p.action("runEast");
-                dir = 'e'
-            }
-        } else if (vx <= -WALK_VX) {
-            if (vy >= WALK_VY) {
-                p.action("runSouthWest");
-                dir = 'sw'
-            } else if (vy <= -WALK_VY) {
-                p.action("runNorthWest");
-                dir = 'nw'
-            } else {
-                p.action("runWest");
-                dir = 'w'
-            }
-        } else if (vy >= WALK_VY) {
-            p.action("runSouth");
-            dir = 's'
-        } else if (vy <= -WALK_VY) {
-            p.action("runNorth");
-            dir = 'n'
-        } else {
-            var standAction = lastAction.toString().replace("run", "stand");
-            if (!isAttacking && !isHit && !isDead && !isDowned) {
-                p.action(standAction);
-            }
-            movementState = 'stand'
-        }
-
         if (isPlayable) {
-            if (isAttacking) {
+            if (characterAnimations.isCharacterAttacking()) {
                 that.performAttack({dateTime:Date.now()});
-            } else if(!isDead && !isDowned) {
-                that.onPositionChanged({x:posx, y:posy, direction:dir, movementState:movementState, dateTime:Date.now()})
+            } else if(characterAnimations.isAlive()) {
+                that.onPositionChanged({x:posx, y:posy, direction:characterAnimations.getDir(), movementState:characterAnimations.getState(), dateTime:Date.now()})
             }
         }
     };
@@ -251,49 +170,44 @@ GAME.Character = function Character(gs, animations, startPosition, isPlayable, h
         this.keyUp_37 = this.keyUp_39 = function () {
 
             vx = 0;
-            that.updateanimation();
+            that.updateAnimation();
         };
 
         this.keyDown_37 = function () {
 
             vx -= WALK_VX;
-            that.updateanimation();
+            that.updateAnimation();
         };
 
         this.keyDown_39 = function () {
 
             vx += WALK_VX;
-            that.updateanimation();
+            that.updateAnimation();
         };
 
         this.keyUp_38 = this.keyUp_40 = function () {
 
             vy = 0;
-            that.updateanimation();
+            that.updateAnimation();
         };
 
         this.keyDown_38 = function () {
 
             vy -= WALK_VY;
-            that.updateanimation();
+            that.updateAnimation();
         };
 
         this.keyDown_40 = function () {
 
             vy += WALK_VY;
-            that.updateanimation();
+            that.updateAnimation();
         };
 
         this.keyDown_32 = function () {
-            isAttacking = true;
-            that.updateanimation();
+            characterAnimations.attacked();
+            that.updateAnimation();
         };
 
-        //Todo remove this once collision detection works
-        this.keyDown_72 = function () {
-            isDowned = true;
-            that.updateanimation();
-        };
 
         var pointAngleCompareToP1 = function (p1, p2) {
             var angle = ( Math.atan2(p2.y - p1.y, p2.x - p1.x));
