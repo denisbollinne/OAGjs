@@ -10,7 +10,7 @@ GAME.Player = function (gs,playable, currentPlayerInfo,hammer){
     var animations = new GAME.AnimationFactory();
 
 
-    var knightAnimations = new GAME.Animations();
+    var knightAnimations = {};
     var tileset = "/img/knight/tileSet.png";
     knightAnimations.runWest = new GAMEFW.AnimDef(tileset,2,12,276);
     knightAnimations.runEast = new GAMEFW.AnimDef(tileset,2,12,192);
