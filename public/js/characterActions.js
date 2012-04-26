@@ -36,11 +36,11 @@ GAME.CharacterActions = function( WALK_VX, WALK_VY){
     };
 
     this.getState = function(){
-        return that.movementState;
+        return movementState;
     };
 
     this.getDir = function(){
-        return that.dir;
+        return dir;
     };
 
     this.isCharacterAttacking = function(){
