@@ -1,14 +1,13 @@
 script(type='text/javascript', src='../lib/statemachine.js')
 script(type='text/javascript', src='../lib/jsgamesoup.js')
-script(type='text/javascript', src='../js/jade/createArena.js')
+script(type='text/javascript', src='../lib/jquery-1.7.1.js')
+
 
 
 label Select a file:
-    input(type='file' ,name='fileSelect')
-br
+    input(type='file' ,id='fileSelect')
 br
 
-button(onclick='Arena.RenderImage')
-    label Render
+div(id='surface', style="width:1024px; height: 786px; margin-left: auto; margin-right: auto;border-width:1px;border-style:solid;")
 
-div(name='surface')
+script(type='text/javascript', src='../js/jade/createArena.js')
