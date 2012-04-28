@@ -1,0 +1,14 @@
+script(type='text/javascript', src='../lib/statemachine.js')
+script(type='text/javascript', src='../lib/jsgamesoup.js')
+script(type='text/javascript', src='../js/jade/createArena.js')
+
+
+label Select a file:
+    input(type='file' ,name='fileSelect')
+br
+br
+
+button(onclick='Arena.RenderImage')
+    label Render
+
+div(name='surface')
