@@ -459,12 +459,9 @@ function JSGameSoup(canvas, framerate) {
 		// launch our custom loop
 		if (navigator.userAgent.indexOf("MSIE") == -1) {
 			var looping = setInterval(function() {
-				try {
+
 					GS.gameSoupLoop();
-				} catch(e) {
-					clearInterval(looping);
-					throw(e);
-				}
+
 			}, 1000 / this.framerate);
 		} else {
 			// internet explorer is too hard to debug with try/catch as it forgets the stack :(
