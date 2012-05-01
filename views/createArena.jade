@@ -2,7 +2,9 @@ script(type='text/javascript', src='../lib/statemachine.js')
 script(type='text/javascript', src='../lib/jsgamesoup.js')
 script(type='text/javascript', src='../lib/jquery-1.7.1.js')
 script(type='text/javascript', src='../lib/hammer.js')
-script(type='text/javascript', src='../lib/ajaxfileupload.js')
+script(type='text/javascript', src='../lib/jquery.ui.widget.js')
+script(type='text/javascript', src='../lib/jquery.iframe-transport.js')
+script(type='text/javascript', src='../lib/jquery.fileupload.js')
 
 
 
@@ -10,14 +12,14 @@ table
     tr
         td
             label Select a file:
-                input(type='file' ,id='fileSelect')
+                input(type='file' ,id='fileSelect', name='image')
         td
             label Arena name:
-                input(id='labelArenaName', value='new arena')
+                input(id='labelArenaName', value='new arena', name='name')
         td
             button(id='btnSave')
-                label Save
-br
+                label Upload arena
+
 
 div(id='surface', style="width:1024px; height: 786px; margin-left: auto; margin-right: auto;border-width:1px;border-style:solid;")
 

@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 var common = require('./commonControllersResources.js');
 
 var arena = common.mongoose.model('Arena');
@@ -27,9 +29,8 @@ exports.new = function(req, res){
 exports.createInfo = function(req, res){
     arena.findOne({_id:req.body.id},function(err,arenaDoc){
 
-        arenaDoc.name = req.body.name;
-
         //arenaDoc.circleBoundingBoxes
+        arenaDoc.name = req.body.name;
         arenaDoc.save();
 
         //This should probably return a jade page with the newly created char
@@ -40,11 +41,19 @@ exports.createInfo = function(req, res){
 
 
 exports.create = function(req, res){
-   // console.log(req.body);
+    console.log(req.files.image);
     //Save image
     var newArena = new arena();
-    newArena.name = 'tmpName';
+    newArena.name = 'tmp name';
+    newArena.imagePath = req.files.image.path;
     newArena.save();
 
+    var newPath = 'arenas/'+newArena._id;
+    fs.rename(newArena.imagePath, newPath);
+
+    newArena.imagePath = newPath;
+    newArena.save();
+
+    console.log('OK')
     res.send(200,newArena._id);
 };
