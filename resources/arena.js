@@ -24,14 +24,27 @@ exports.new = function(req, res){
     res.render('createArena');
 };
 
+exports.createInfo = function(req, res){
+    arena.findOne({_id:req.body.id},function(err,arenaDoc){
+
+        arenaDoc.name = req.body.name;
+
+        //arenaDoc.circleBoundingBoxes
+        arenaDoc.save();
+
+        //This should probably return a jade page with the newly created char
+        res.render('showArena',arenaDoc);
+    });
+
+};
+
+
 exports.create = function(req, res){
+   // console.log(req.body);
+    //Save image
     var newArena = new arena();
-    newArena.name = req.body.name;
-    newArena.imagePath = req.body.path;
-
-
+    newArena.name = 'tmpName';
     newArena.save();
 
-    //This should probably return a jade page with the newly created char
-    res.render('showArena',newArena);
+    res.send(200,newArena._id);
 };

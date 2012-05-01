@@ -2,11 +2,21 @@ script(type='text/javascript', src='../lib/statemachine.js')
 script(type='text/javascript', src='../lib/jsgamesoup.js')
 script(type='text/javascript', src='../lib/jquery-1.7.1.js')
 script(type='text/javascript', src='../lib/hammer.js')
+script(type='text/javascript', src='../lib/ajaxfileupload.js')
 
 
 
-label Select a file:
-    input(type='file' ,id='fileSelect')
+table
+    tr
+        td
+            label Select a file:
+                input(type='file' ,id='fileSelect')
+        td
+            label Arena name:
+                input(id='labelArenaName', value='new arena')
+        td
+            button(id='btnSave')
+                label Save
 br
 
 div(id='surface', style="width:1024px; height: 786px; margin-left: auto; margin-right: auto;border-width:1px;border-style:solid;")

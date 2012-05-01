@@ -1,11 +1,31 @@
+var arenaController;
 $('#fileSelect').change(function (evt) {
-    new Arena.CreateArena(evt.target);
+    arenaController = new Arena.CreateArena(evt.target);
+});
+
+$('#btnSave').click(function (evt) {
+    var arenaInfo = {boundingBoxes:arenaController.shapeController.getAllBoundingBoxes()};
+    arenaInfo.name = $('#labelArenaName')[0].value;
+
+    $.ajaxFileUpload({
+                         url:'/arenas/create',
+                         secureuri:false,
+                         fileElementId:'fileSelect',
+                         success:function (data, status) {
+                             if (status === 200) {
+                                 $.post('/arenas/create/' + data, arenaInfo);
+                             }
+                         },
+                         error:function (data, status, e) {
+                             alert(e);
+                         }
+                     })
 });
 
 var Arena = {elementName:"surface"};
 
 Arena.CreateArena = function (imageList) {
-
+    var that = this;
     var onReaderLoad = function (theFile) {
         return function (e) {
 
@@ -22,7 +42,7 @@ Arena.CreateArena = function (imageList) {
                 var imageEntity = new Arena.Image(img, ratio);
                 Arena.gs.addEntity(imageEntity);
 
-                var arenaController = new Arena.ShapeController(ratio);
+                that.shapeController = new Arena.ShapeController(ratio);
 
             };
 
@@ -81,9 +101,11 @@ Arena.ShapeController = function (ratio) {
 
     this.getAllBoundingBoxes = function () {
         var allBoudingBoxes = [];
-        allShapes.foreach(function (shape) {
+        allShapes.each(function (shape) {
             allBoudingBoxes.push(shape.getBoundingBox());
         });
+
+        return allBoudingBoxes;
     }
 };
 
