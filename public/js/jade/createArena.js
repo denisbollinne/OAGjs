@@ -91,8 +91,6 @@ Arena.Rectangle = function (ratio, x, y, halfWidth, halfHeight) {
     this.halfHeight = halfHeight;
 };
 
-Arena.Rectangle.prototype = new Arena.Shape();
-
 Arena.Rectangle.prototype.draw = function (c) {
     c.scale(this.ratio);
     c.strokeStyle = "black";
