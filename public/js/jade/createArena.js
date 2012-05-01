@@ -14,52 +14,22 @@ Arena.CreateArena = function (imageList) {
 
         var jqXHR;
         var blah = $('#fileSelect').fileupload({
-                                                   done:function (e, data, err) {
-                                                       console.log("done, IF HERE ==> WIN !", e, data);
-                                                       //  this.addSuccess(data.result);
-                                                   },
+
                                                    success:function (e, data, err) {
-                                                       console.log("Success", e, data);
+                                                       console.log("UPLOAD Successful", e, data);
                                                        //  this.addSuccess(data.result);
-                                                   },
-                                                   progress:function (e, data) {
-                                                       console.log("progress", e, data);
-                                                   },
-                                                   start:function (e, data) {
-                                                       console.log("start", e, data);
-                                                       //  this.$("#upload_progress_bar").fadeIn();
-                                                   },
-                                                   stop:function (e, data) {
-                                                       console.log("stop", e, data);
-                                                       //  this.$("#upload_progress_bar").fadeOut();
-                                                       //  this.uploadDone();
                                                    },
                                                    fail:function (e, data) {
-                                                       console.log("fail", e, data);
+                                                       console.log("UPLOAD failed", e, data);
                                                        //  console.log("Fail");
                                                    }
 
 
                                                }).fileupload('send', {
                                                                  files:imageList.files,
-                                                                 url:'/arenas/create'
+                                                                 url:'/arenas/create',
+                                                                 formData:{data:JSON.stringify(arenaInfo)}
                                                              });
-
-        //  console.log(jqXHR);
-        //        jqXHR.done(function (e, data) {
-        //            console.log(e);
-        //            console.error(data);
-        //                $.each(data.result, function (index, file) {
-        //                    $('<p/>').text(file.name).appendTo(document.body);
-        //                });
-        //        });
-        //                jqXHR.success(function (result, textStatus) {
-        //                               console.log(result);
-        //                               console.error(textStatus);
-        //
-        //                                       //$.post('/arenas/createInfo/' + data, arenaInfo);
-        //                           });
-
     });
 
     var onReaderLoad = function (theFile) {
