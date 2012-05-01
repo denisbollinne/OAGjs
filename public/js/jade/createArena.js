@@ -22,11 +22,8 @@ Arena.CreateArena = function (imageList) {
                 var imageEntity = new Arena.Image(img, ratio);
                 Arena.gs.addEntity(imageEntity);
 
-                var rect = new Arena.Rectangle(ratio, 50, 30, 25, 15);
-                Arena.gs.addEntity(rect);
+                var arenaController = new Arena.ShapeController(ratio);
 
-                var circle = new Arena.Circle(ratio, 100, 100, 50);
-                Arena.gs.addEntity(circle);
             };
 
             img.onload = onImageLoad;
@@ -51,11 +48,47 @@ Arena.CreateArena = function (imageList) {
 
 };
 
+Arena.ShapeController = function (ratio) {
+    var canvas = document.getElementById(Arena.elementName).children[0];
+    var hammer = new Hammer(canvas);
+
+    var allShapes = [];
+    var buildingShape;
+
+    hammer.ondragstart = function (ev) {
+        if (ev.originalEvent.ctrlKey) {
+            buildingShape = new Arena.Rectangle(ratio, ev.position.x, ev.position.y, 1, 1);
+        } else {
+            buildingShape = new Arena.Circle(ratio, ev.position.x, ev.position.y, 1);
+        }
+
+        Arena.gs.addEntity(buildingShape);
+    };
+
+    hammer.ondrag = function (ev) {
+        if (buildingShape.getType() == 'rectangle') {
+            buildingShape.halfWidth = Math.abs(ev.position.x - buildingShape.posX);
+            buildingShape.halfHeight = Math.abs(ev.position.y - buildingShape.posY);
+        } else {
+            buildingShape.radius = Math.sqrt(Math.pow(ev.position.x - buildingShape.posX,
+                                                      2) + Math.pow(ev.position.y - buildingShape.posY, 2));
+        }
+    };
+
+    hammer.ondragend = function (p) {
+        allShapes.push(buildingShape);
+    };
+
+    this.getAllBoundingBoxes = function () {
+        var allBoudingBoxes = [];
+        allShapes.foreach(function (shape) {
+            allBoudingBoxes.push(shape.getBoundingBox());
+        });
+    }
+};
+
 Arena.Image = function (imageSource, ratio) {
     var image = imageSource;
-    //    this.update = function (){
-    //
-    //    };
 
     this.draw = function (c) {
         c.scale(ratio, ratio);
@@ -63,38 +96,63 @@ Arena.Image = function (imageSource, ratio) {
     };
 }
 
-Arena.Shape = function (ratio, x, y) {
+Arena.Shape = function (type, ratio, x, y) {
     this.posX = x;
     this.posY = y;
-    this.ratio = ratio;
+    this.ratio = 1 / ratio;
+    this.type = type;
 };
 
 Arena.Shape.prototype.getCenter = function () {
     return {x:this.posX, y:this.posY};
 };
 
-Arena.Circle = function (ratio, x, y, r) {
-    Arena.Shape.call(this, ratio, x, y);
-    this.radius = r;
+Arena.Shape.prototype.getType = function () {
+    //circle = 1;
+    //rectangle = 2;
+    return this.type;
 };
 
+Arena.Circle = function (ratio, x, y, r) {
+    Arena.Shape.call(this, 'circle', ratio, x, y);
+    this.radius = r;
+};
+Arena.Circle.prototype = new Arena.Shape();
+
 Arena.Circle.prototype.draw = function (c) {
-    c.scale(this.ratio);
+    c.beginPath();
     c.strokeStyle = "black";
     c.arc(this.posX, this.posY, this.radius, 0, 2 * Math.PI);
+    c.closePath();
     c.stroke();
 };
 
+Arena.Circle.prototype.getBoundingBox = function () {
+    return {x:this.posX * this.ratio, y:this.posY * this.ratio, r:this.radius * this.ratio};
+};
+
 Arena.Rectangle = function (ratio, x, y, halfWidth, halfHeight) {
-    Arena.Shape.call(this, ratio, x, y);
+    Arena.Shape.call(this, 'rectangle', ratio, x, y);
     this.halfWidth = halfWidth;
     this.halfHeight = halfHeight;
 };
+Arena.Rectangle.prototype = new Arena.Shape();
 
 Arena.Rectangle.prototype.draw = function (c) {
-    c.scale(this.ratio);
+    c.beginPath();
     c.strokeStyle = "black";
+    c.closePath();
     c.strokeRect(this.posX - this.halfWidth, this.posY - this.halfHeight, this.halfWidth * 2, this.halfHeight * 2);
 };
+
+Arena.Rectangle.prototype.getBoundingBox = function () {
+    return {
+        x1:(this.posX - this.halfWidth) * this.ratio,
+        y1:(this.posY - this.halfHeight) * this.ratio,
+        x2:(this.posX + this.halfWidth) * this.ratio,
+        y2:(this.posY + this.halfHeight) * this.ratio
+    };
+};
+
 
 
