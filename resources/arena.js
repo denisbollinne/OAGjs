@@ -26,7 +26,6 @@ exports.new = function (req, res) {
     res.render('createArena');
 };
 
-
 exports.create = function (req, res) {
     var body = JSON.parse(req.body.data);
     //Save image
@@ -52,4 +51,19 @@ exports.create = function (req, res) {
     res.send(200);
 
     //res.render('showArena', newArena);
+};
+
+exports.delete = function (req, res) {
+    arena.findOne({_id:req.params.id}, function (err, doc) {
+        if (doc) {
+            doc.remove();
+        }
+        res.send(200);
+    })
+};
+
+exports.deleteAll = function (req, res) {
+    arena.find({}).remove();
+
+    res.send(200);
 };

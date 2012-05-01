@@ -27,6 +27,9 @@ module.exports = function(app,validateAuthentication){
     app.post('/arenas/create', validateAuthentication, arenasController.create); //send form image to create arena
     app.post('/arenas/create/:arenaId', validateAuthentication, arenasController.createInfo); //send metadata to link to the created arena
 
+    app.get('/arenas/deleteAll', validateAuthentication, arenasController.deleteAll); //show one arena
+    app.get('/arenas/delete/:id', validateAuthentication, arenasController.delete); //show one arena
+
     app.get('/arenas/:name.json', validateAuthentication, arenasController.get); //get one arena
     app.get('/arenas/:name', validateAuthentication, arenasController.show); //show one arena
 
