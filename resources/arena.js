@@ -38,17 +38,13 @@ exports.create = function (req, res) {
 
     newArena.save();
 
-    console.log(req.files.image);
-
     fs.rename(req.files.image.path, __dirname + '/../public' + newPath, function (err) {
         if (err) {
             throw err;
         }
 
-        fs.unlink(req.files.image.path, function () {
-            if (err) {
-                throw err;
-            }
+        fs.unlink(req.files.image.path, function (err) {
+
             newArena.imagePath = newPath;
 
             body.boundingBoxes.forEach(function (b) {
@@ -67,18 +63,30 @@ exports.create = function (req, res) {
     });
 
 };
+var deleteArena = function(arena){
+    if (arena) {
+        fs.unlink(__dirname + '/../public' + arena.imagePath, function (err) {
 
+            arena.remove();
+        });
+    }
+};
 exports.delete = function (req, res) {
-    arena.findOne({_id:req.params.id}, function (err, doc) {
-        if (doc) {
-            doc.remove();
-        }
+    arena.findOne({_id:req.params.id}, function (err, arena) {
+        deleteArena(arena);
+
         res.send(200);
-    })
+    });
 };
 
 exports.deleteAll = function (req, res) {
-    arena.find({}).remove();
+    arena.find({},function(err,arenas){
+        arenas.forEach(function(arena){
+            deleteArena(arena);
+            arena.remove();
+        });
+        res.send(200);
+    });
 
-    res.send(200);
+
 };
