@@ -38,25 +38,32 @@ exports.create = function (req, res) {
 
     newArena.save();
 
-    fs.writeFile( __dirname+'/../public' + newPath,req.files.image,'utf8', function (err) {
+    console.log(req.files.image);
+
+    fs.rename(req.files.image.path, __dirname + '/../public' + newPath, function (err) {
         if (err) {
             throw err;
         }
-        newArena.imagePath = newPath;
 
-        body.boundingBoxes.forEach(function (b) {
-            if (b.r) {
-                newArena.circleBoundingBoxes.push(b);
-            } else {
-                newArena.rectangleBoundingBoxes.push(b);
+        fs.unlink(req.files.image.path, function () {
+            if (err) {
+                throw err;
             }
+            newArena.imagePath = newPath;
+
+            body.boundingBoxes.forEach(function (b) {
+                if (b.r) {
+                    newArena.circleBoundingBoxes.push(b);
+                } else {
+                    newArena.rectangleBoundingBoxes.push(b);
+                }
+            });
+
+            newArena.save();
+
+            res.send(200);  //res.render('showArena', newArena);
         });
 
-        newArena.save();
-
-        res.send(200);
-
-        //res.render('showArena', newArena);
     });
 
 };

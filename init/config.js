@@ -58,7 +58,7 @@ module.exports = function(app, validateAuthenticated){
         app.set('views', __dirname + '/../views');
         app.set('view engine', 'jade');
         app.use(express.favicon());
-        app.use(express.bodyParser());
+        app.use(express.bodyParser({uploadDir:'./tmpUploads'}));
         app.use(express.cookieParser());
         app.use(connectTimeout({ time: 10000 }));
         app.use(express.session({ store: sessionStore = redisFactory.CreateSessionStore(), secret:'M&DSessionSecret'}));
