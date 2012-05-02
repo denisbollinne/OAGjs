@@ -34,23 +34,31 @@ exports.create = function (req, res) {
     newArena.imagePath = req.files.image.path;
     newArena.save();
 
-    var newPath = 'arenas/' + newArena._id;
-    fs.rename(newArena.imagePath, newPath);
-
-    newArena.imagePath = newPath;
-
-    body.boundingBoxes.forEach(function (b) {
-        if (b.r) {
-            newArena.circleBoundingBoxes.push(b);
-        } else {
-            newArena.rectangleBoundingBoxes.push(b);
-        }
-    });
+    var newPath = '/img/arenas/' + newArena._id;
 
     newArena.save();
-    res.send(200);
 
-    //res.render('showArena', newArena);
+    fs.writeFile( __dirname+'/../public' + newPath,req.files.image,'utf8', function (err) {
+        if (err) {
+            throw err;
+        }
+        newArena.imagePath = newPath;
+
+        body.boundingBoxes.forEach(function (b) {
+            if (b.r) {
+                newArena.circleBoundingBoxes.push(b);
+            } else {
+                newArena.rectangleBoundingBoxes.push(b);
+            }
+        });
+
+        newArena.save();
+
+        res.send(200);
+
+        //res.render('showArena', newArena);
+    });
+
 };
 
 exports.delete = function (req, res) {
