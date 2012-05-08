@@ -11,8 +11,8 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, hammer) {
     var vx = 0;
     var vy = 0;
     var characterAnimations = new GAME.CharacterActions(WALK_VX, WALK_VY);
-    var posx = startPosition[0];
-    var posy = startPosition[1];
+    this.posx = startPosition[0];
+    this.posy = startPosition[1];
     var HP = 100;
     var diagonalSpeedDivider = 1.4142135;
     var spriteSize = 128;
@@ -31,7 +31,7 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, hammer) {
     };
 
     this.getZIndex = function () {
-        return posy;
+        return that.posy;
     };
 
     this.update = function () {
@@ -39,22 +39,22 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, hammer) {
             if (!that.triggersCollision(that, vx, vy)) {
                 p.update();
                 if (vx != 0 && vy != 0) {
-                    posx += vx / diagonalSpeedDivider;
-                    posy += vy / diagonalSpeedDivider;
+                    that.posx += vx / diagonalSpeedDivider;
+                    that.posy += vy / diagonalSpeedDivider;
                 } else {
-                    posx += vx;
-                    posy += vy;
+                    that.posx += vx;
+                    that.posy += vy;
                 }
             }
         }
     };
 
     this.getBoundingBox = function () {
-        return new GAME.BoundingBox(posx + 55, posy +80, 45, 35);
+        return new GAME.BoundingBox(that.posx + 55, that.posy +80, 45, 35);
     };
 
     this.getBoundingSphere = function(){
-        return new GAME.BoundingSphere(posx + 77, posy  + 97, 18);
+        return new GAME.BoundingSphere(that.posx + 77, that.posy  + 97, 18);
     };
 
     this.triggersCollision = function (that, vx, vy) {
@@ -97,8 +97,8 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, hammer) {
     var previousX, previousY, previousDir, previousMovementState;
     this.setDirectionForNPC = function (x, y, direction, movementState, datetime) {
         if (direction != previousDir || x != previousX || y != previousY || movementState != previousMovementState) {
-            posx = x;
-            posy = y;
+            that.posx = x;
+            that.posy = y;
             previousX = x;
             previousY = y;
             previousDir = direction;
@@ -140,7 +140,7 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, hammer) {
             if (characterAnimations.isCharacterAttacking()) {
                 that.performAttack({dateTime:Date.now()});
             } else if(characterAnimations.isAlive()) {
-                that.onPositionChanged({x:posx, y:posy, direction:characterAnimations.getDir(), movementState:characterAnimations.getState(), dateTime:Date.now()})
+                that.onPositionChanged({x:that.posx, y:that.posy, direction:characterAnimations.getDir(), movementState:characterAnimations.getState(), dateTime:Date.now()})
             }
         }
     };
@@ -153,15 +153,15 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, hammer) {
 
         if(!isPlayable){
             c.fillStyle = "rgb(0,0,0)";
-            c.fillRect (posx - 25  , posy - 128, 50, 3);
+            c.fillRect (that.posx - 25  , that.posy - 128, 50, 3);
             c.fillStyle = "rgb(255,0,0)";
-            c.fillRect (posx - 25 , posy - 128, (50 / 100) * HP, 3);
+            c.fillRect (that.posx - 25 , that.posy - 128, (50 / 100) * HP, 3);
         }
         else{
             c.font = "20pt Calibri";
             c.fillText("HP : " + HP, 25,25)
         }
-        p.draw(c, [posx, posy]);
+        p.draw(c, [that.posx, that.posy]);
     };
 
 
@@ -228,7 +228,7 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, hammer) {
         var directions = ['e', 'se', 's', 'sw', 'w', 'nw', 'n', 'ne'];
         this.processMouse = function (mousePos) {
 
-            var angle = pointAngleCompareToP1({x:posx, y:posy - halfSpriteSize }, mousePos);
+            var angle = pointAngleCompareToP1({x:that.posx, y:that.posy - halfSpriteSize }, mousePos);
             var rectifiedAngle = angle + 22
             if (rectifiedAngle > 360) {
                 rectifiedAngle = rectifiedAngle - 360;

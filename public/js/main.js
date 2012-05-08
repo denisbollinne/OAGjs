@@ -91,7 +91,15 @@ GAME.startGame = function () {
                                           socket.on('attackPerformed', function (data) {
                                               triggerAttach(data.attackingChar, data.hurtedChars);
                                           });
+
+                                          jQuery.get('/arenas/test.json', function(arena){
+                                              var ar = new GAME.Arena(arena.imagePath);
+                                              ar.setPlayer(player);
+                                              gs.addEntity(ar);
+
+                                          });
                                       });
+
                                   });
         } else {
             console.debug('socket.io is somehow reconnecting');
