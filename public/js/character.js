@@ -5,7 +5,7 @@
  * Time: 19:48
  */
 
-GAME.Character = function (gs, animations, startPosition, isPlayable, hammer) {
+GAME.Character = function (gs, animations, startPosition, isPlayable, arena,  hammer) {
     var WALK_VX = (1000 / GAME.framerate) / 20 * 5;
     var WALK_VY = (1000 / GAME.framerate) / 20 * 5;
     var vx = 0;
@@ -153,15 +153,20 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, hammer) {
 
         if(!isPlayable){
             c.fillStyle = "rgb(0,0,0)";
-            c.fillRect (that.posx - 25  , that.posy - 128, 50, 3);
+            c.fillRect (that.posx + that.arena.getXOffset() - 25  , that.posx+ that.arena.getYOffset() - 128, 50, 3);
             c.fillStyle = "rgb(255,0,0)";
-            c.fillRect (that.posx - 25 , that.posy - 128, (50 / 100) * HP, 3);
+            c.fillRect (that.posx + that.arena.getXOffset() - 25 , that.posy + that.arena.getYOffset() - 128, (50 / 100) * HP, 3);
         }
         else{
             c.font = "20pt Calibri";
             c.fillText("HP : " + HP, 25,25)
         }
-        p.draw(c, [that.posx, that.posy]);
+        if(isPlayable){
+            p.draw(c, [512, 393]);
+        }
+        else{
+            p.draw(c, [that.posx + that.arena.getXOffset(), that.posy + that.arena.getYOffset()]);
+        }
     };
 
 

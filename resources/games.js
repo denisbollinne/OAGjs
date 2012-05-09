@@ -104,8 +104,8 @@ exports.join = function(req,res){
 
                 var status = {
                     charId : charId,
-                    x : 150,
-                    y : 150,
+                    x : 512,
+                    y : 393,
                     dateTime : new Date().toISOString(),
                     direction : 'none',
                     movementState : 'stand',

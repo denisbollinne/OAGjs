@@ -9,11 +9,13 @@ GAME.Arena = function(imagePath){
     var img = new Image();
     img.src = imagePath;
 
-    var player = {posx : 500, posy : 500};
+    var centerPos = {x : 512,y : 393};
+    var player = {posx : 0, posy: 0};
+
 
     var that = this;
 
-    this.setPlayer = function(p){
+    this.setCurrentPlayer = function(p){
         player  = p;
     };
 
@@ -21,11 +23,19 @@ GAME.Arena = function(imagePath){
         return -1000;
     };
 
+    this.getXOffset = function(){
+        return player.posx - centerPos.x;
+    };
+
+    this.getYOffset = function(){
+        return player.posy - centerPos.y;
+    };
+
     this.draw = function (c) {
 
         c.drawImage(img,
-            player.posx,
-            player.posy ,
+            that.getXOffset(),
+            that.getYOffset(),
             1024,
             768,
             //On Screen

@@ -13,6 +13,9 @@ GAME.startGame = function () {
     }
 
     var animations = new GAME.AnimationFactory();
+    var arena = {};
+
+    var that = this;
 
     var collisionDetector = new GAME.CollisionDetector();
     var imagesToPreload = [];
@@ -26,7 +29,7 @@ GAME.startGame = function () {
             if (foundChar) {
                 foundChar.setDirectionForNPC(newPos.x, newPos.y, newPos.direction, newPos.movementState, newPos.dateTime)
             } else {
-                var newPlayer = new GAME.Player(gs, false, newPos).character;
+                var newPlayer = new GAME.Player(gs, false, newPos, arena).character;
                 allOtherChars[newPos.charId] = newPlayer;
                 gs.addEntity(newPlayer);
                 collisionDetector.addCollisionItem(newPlayer);
@@ -75,7 +78,7 @@ GAME.startGame = function () {
 
                                           var gameId = currentPlayerInfo.game;
                                           currentCharId = currentPlayerInfo.character._id;
-                                          player = new GAME.Player(gs, true, currentPlayerInfo.character.position,hammer).character;
+                                          player = new GAME.Player(gs, true, currentPlayerInfo.character.position,null, hammer).character;
                                           player.onPositionChanged = onPositionChanged;
                                           player.performAttack = performAttack;
                                           collisionDetector.addCollisionItem(player);
@@ -93,9 +96,9 @@ GAME.startGame = function () {
                                           });
 
                                           jQuery.get('/arenas/test.json', function(arena){
-                                              var ar = new GAME.Arena(arena.imagePath);
-                                              ar.setPlayer(player);
-                                              gs.addEntity(ar);
+                                              that.arena = new GAME.Arena(arena.imagePath);
+                                              that.arena.setCurrentPlayer(player);
+                                              gs.addEntity(that.arena);
 
                                           });
                                       });

@@ -5,7 +5,7 @@
  * Time: 17:48
  */
 
-GAME.Player = function (gs,playable, currentPlayerInfo,hammer){
+GAME.Player = function (gs,playable, currentPlayerInfo, arena , hammer){
 
     var knightAnimations = {};
     var tileset = "/img/knight/tileSet.png";
@@ -61,5 +61,5 @@ GAME.Player = function (gs,playable, currentPlayerInfo,hammer){
     startPosition[0] = currentPlayerInfo.x;
     startPosition[1] = currentPlayerInfo.y;
 
-    this.character = new GAME.Character(gs, knightAnimations, startPosition, playable,hammer);
+    this.character = new GAME.Character(gs, knightAnimations, startPosition, playable, arena, hammer);
 };
