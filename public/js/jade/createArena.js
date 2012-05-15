@@ -103,6 +103,7 @@ Arena.ShapeController = function (ratio) {
 
     hammer.ondragend = function (p) {
         allShapes.push(buildingShape);
+        $('#boudingBoxesList').append('<li>'+buildingShape+'</li>')
     };
 
     this.getAllBoundingBoxes = function () {
@@ -134,6 +135,11 @@ Arena.Shape = function (type, ratio, x, y) {
 Arena.Shape.prototype.getCenter = function () {
     return {x:this.posX, y:this.posY};
 };
+
+Arena.Shape.prototype.toString = function () {
+    return ""+this.type;
+};
+
 
 Arena.Shape.prototype.getType = function () {
     //circle = 1;
