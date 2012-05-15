@@ -23,13 +23,18 @@ GAME.startGame = function () {
     var currentCharId;
     var allOtherChars = {};
     var player;
+
+    var getArena = function(){
+        return that.arenaGetter;
+    };
+
     var updateCharacters = function (newPos) {
         if (newPos.charId !== currentCharId) {
             var foundChar = allOtherChars[newPos.charId];
             if (foundChar) {
                 foundChar.setDirectionForNPC(newPos.x, newPos.y, newPos.direction, newPos.movementState, newPos.dateTime)
             } else {
-                var newPlayer = new GAME.Player(gs, false, newPos, arena).character;
+                var newPlayer = new GAME.Player(gs, false, newPos, getArena).character;
                 allOtherChars[newPos.charId] = newPlayer;
                 gs.addEntity(newPlayer);
                 collisionDetector.addCollisionItem(newPlayer);
@@ -78,7 +83,7 @@ GAME.startGame = function () {
 
                                           var gameId = currentPlayerInfo.game;
                                           currentCharId = currentPlayerInfo.character._id;
-                                          player = new GAME.Player(gs, true, currentPlayerInfo.character.position,null, hammer).character;
+                                          player = new GAME.Player(gs, true, currentPlayerInfo.character.position, getArena, hammer).character;
                                           player.onPositionChanged = onPositionChanged;
                                           player.performAttack = performAttack;
                                           collisionDetector.addCollisionItem(player);
@@ -96,9 +101,9 @@ GAME.startGame = function () {
                                           });
 
                                           jQuery.get('/arenas/test.json', function(arena){
-                                              that.arena = new GAME.Arena(arena.imagePath);
-                                              that.arena.setCurrentPlayer(player);
-                                              gs.addEntity(that.arena);
+                                              that.arenaGetter = new GAME.Arena(arena.imagePath);
+                                              that.arenaGetter.setCurrentPlayer(player);
+                                              gs.addEntity(that.arenaGetter);
 
                                           });
                                       });
@@ -112,6 +117,7 @@ GAME.startGame = function () {
     socket.on('connect', OnSocketIoConnect);
 
     var gs = new JSGameSoup("surface", GAME.framerate);
+
 
 
     gs.launch();

@@ -18,6 +18,7 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, arena,  ha
     var spriteSize = 128;
     var halfSpriteSize = spriteSize / 2;
     var that = this;
+    that.arenaGetter = arena;
 
     var p = new GAMEFW.Sprite(["center", "bottom"], animations, spriteSize, function () {
         p.action("standSouth");
@@ -153,9 +154,9 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, arena,  ha
 
         if(!isPlayable){
             c.fillStyle = "rgb(0,0,0)";
-            c.fillRect (that.posx + that.arena.getXOffset() - 25  , that.posx+ that.arena.getYOffset() - 128, 50, 3);
+            c.fillRect (that.posx - that.arenaGetter().getXOffset() - 25  , that.posy- that.arenaGetter().getYOffset() - 128, 50, 3);
             c.fillStyle = "rgb(255,0,0)";
-            c.fillRect (that.posx + that.arena.getXOffset() - 25 , that.posy + that.arena.getYOffset() - 128, (50 / 100) * HP, 3);
+            c.fillRect (that.posx - that.arenaGetter().getXOffset() - 25 , that.posy - that.arenaGetter().getYOffset() - 128, (50 / 100) * HP, 3);
         }
         else{
             c.font = "20pt Calibri";
@@ -165,7 +166,7 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, arena,  ha
             p.draw(c, [512, 393]);
         }
         else{
-            p.draw(c, [that.posx + that.arena.getXOffset(), that.posy + that.arena.getYOffset()]);
+            p.draw(c, [that.posx - that.arenaGetter().getXOffset(), that.posy - that.arenaGetter().getYOffset()]);
         }
     };
 

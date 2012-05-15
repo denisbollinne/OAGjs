@@ -20,7 +20,7 @@ GAME.Arena = function(imagePath){
     };
 
     this.getZIndex = function () {
-        return -1000;
+        return -1;
     };
 
     this.getXOffset = function(){
