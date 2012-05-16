@@ -21,17 +21,49 @@ GAME.CollisionDetector = function(){
                 if(hasSphereCollision(item, trackedItems[c], vx, vy)){
                     hasCollision = true;
                 }
+                if(hasBoxCollision(item, trackedItems[c], vx, vy)){
+                    hasCollision = true;
+                }
             }
         }
         return hasCollision;
     };
 
+    this.addCircles = function(circles){
+        for(var i = 0; i < circles.length; i++){
+            var circle = circles[i];
+            var box = new GAME.BoundingSphere(circle.x, circle.y, circle.r);
+            that.addCollisionItem(box);
+        }
+    };
+
+    this.addRectangles = function(rectangles){
+        for(var i = 0; i < rectangles.length; i++){
+            var rect = rectangles[i];
+            var box = new GAME.BoundingBox(rect.x1, rect.y1, Math.abs(rect.x2 - rect.x1), Math.abs(rect.y2 - rect.y1));
+            that.addCollisionItem(box);
+        }
+
+    };
+
     var hasBoxCollision = function(item1, item2, vx, vy){
-        return preCalculateBoundingBox(item1.getBoundingBox(), vx, vy).collidesWith(item2.getBoundingBox());
+        if(item2.getBoundingBox){
+            return preCalculateBoundingBox(item1.getBoundingBox(), vx, vy).collidesWith(item2.getBoundingBox());
+        }
+        else if(item2.collidesWith){
+            return preCalculateBoundingBox(item1.getBoundingBox(), vx, vy).collidesWith(item2);
+        }
+        return false;
     };
 
     var hasSphereCollision = function(item1, item2, vx, vy){
-        return preCalculateBoundingSphere(item1.getBoundingSphere(), vx, vy).collidesWith(item2.getBoundingSphere())
+        if(item2.getBoundingBox){
+            return preCalculateBoundingSphere(item1.getBoundingSphere(), vx, vy).collidesWith(item2.getBoundingSphere())
+        }
+        else if(item2.collidesWith){
+            return preCalculateBoundingSphere(item1.getBoundingSphere(), vx, vy).collidesWith(item2)
+        }
+        return false;
     };
 
     var preCalculateBoundingBox = function(boundingBox, vx, vy){

@@ -5,7 +5,7 @@
  * Time: 19:47
  * To change this template use File | Settings | File Templates.
  */
-GAME.Arena = function(imagePath){
+GAME.Arena = function(imagePath, cicles, rectangles){
     var img = new Image();
     img.src = imagePath;
 

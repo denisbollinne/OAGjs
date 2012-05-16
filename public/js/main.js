@@ -101,7 +101,9 @@ GAME.startGame = function () {
                                           });
 
                                           jQuery.get('/arenas/test.json', function(arena){
-                                              that.arenaGetter = new GAME.Arena(arena.imagePath);
+                                              that.arenaGetter = new GAME.Arena(arena.imagePath );
+                                              collisionDetector.addCircles(arena.circleBoundingBoxes);
+                                              collisionDetector.addRectangles(arena.rectangleBoundingBoxes);
                                               that.arenaGetter.setCurrentPlayer(player);
                                               gs.addEntity(that.arenaGetter);
 
