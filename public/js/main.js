@@ -71,9 +71,14 @@ GAME.startGame = function () {
         socket.emit('performAttack', data);
     };
 
-    var gameIsLoaded = false;
-    var OnSocketIoConnect = function () {
-        if (!gameIsLoaded) {
+    var socket = io.connect();
+    socket.on('connect');
+
+    var gs = new JSGameSoup("surface", GAME.framerate);
+
+//    var gameIsLoaded = false;
+//    var OnSocketIoConnect = function () {
+//        if (!gameIsLoaded) {
             GAMEFW.Sprite.preload(imagesToPreload, // when the sprites are loaded, create the world
                                   function () {
                                       gameIsLoaded = true;
@@ -111,14 +116,11 @@ GAME.startGame = function () {
                                       });
 
                                   });
-        } else {
-            console.debug('socket.io is somehow reconnecting');
-        }
-    };
-    var socket = io.connect();
-    socket.on('connect', OnSocketIoConnect);
+//        } else {
+//            console.debug('socket.io is somehow reconnecting');
+//        }
+//    };
 
-    var gs = new JSGameSoup("surface", GAME.framerate);
 
 
 
