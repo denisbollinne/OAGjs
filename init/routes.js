@@ -23,6 +23,7 @@ module.exports = function(app,validateAuthentication){
     app.get('/games/:id', validateAuthentication, gamesController.characters); //all chars in a game
 
     app.get('/arenas', validateAuthentication, arenasController.index); //all arenas
+    app.get('/arenas/random', validateAuthentication, arenasController.getRandom); //get random arena
     app.get('/arenas/new', validateAuthentication, arenasController.new); //show form to create arena
     app.post('/arenas/create', validateAuthentication, arenasController.create); //send form image to create arena
     app.post('/arenas/create/:arenaId', validateAuthentication, arenasController.createInfo); //send metadata to link to the created arena

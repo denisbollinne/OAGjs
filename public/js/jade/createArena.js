@@ -199,10 +199,10 @@ Arena.Rectangle.prototype.draw = function (c) {
 
 Arena.Rectangle.prototype.getBoundingBox = function () {
     return {
-        x1:(this.posX - this.halfWidth) * this.ratio,
-        y1:(this.posY - this.halfHeight) * this.ratio,
-        x2:(this.posX + this.halfWidth) * this.ratio,
-        y2:(this.posY + this.halfHeight) * this.ratio
+        x1:(this.posX  * this.ratio- this.halfWidth * this.ratio),
+        y1:(this.posY * this.ratio - this.halfHeight * this.ratio),
+        x2:(this.posX * this.ratio + this.halfWidth * this.ratio),
+        y2:(this.posY  * this.ratio+ this.halfHeight * this.ratio)
     };
 };
 

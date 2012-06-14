@@ -1,6 +1,7 @@
 var common = require('./commonControllersResources.js');
 
 var character = common.mongoose.model('Character');
+var arena = common.mongoose.model('Arena');
 var client = common.redisClient;
 var keyBuilder = common.redisKeyBuilder;
 

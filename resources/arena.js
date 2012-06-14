@@ -88,5 +88,13 @@ exports.deleteAll = function (req, res) {
         res.send(200);
     });
 
-
+exports.getRandom = function(req,res){
+    console.log('getRandom');
+    arena.count(function(err,countOfArena){
+        var arenaNumber = Math.floor((Math.random()*countOfArena));
+        arena.find({}).skip(arenaNumber).limit(1).exec(function (err, doc) {
+            res.send(doc[0]);
+        });
+    })
+}
 };
