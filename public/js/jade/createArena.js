@@ -7,29 +7,35 @@ var Arena = {elementName:"surface"};
 Arena.CreateArena = function (imageList) {
     var that = this;
 
+    var hasWhiteSpace = function hasWhiteSpace(s) {
+        return /\s/g.test(s);
+    };
+
     $('#btnSave').click(function (evt) {
 
         var arenaInfo = {boundingBoxes:that.shapeController.getAllBoundingBoxes()};
         arenaInfo.name = $('#labelArenaName')[0].value;
+        if (hasWhiteSpace(arenaInfo.name)) {
+            console.error('invalid name');
+        } else {
+            var blah = $('#fileSelect').fileupload({
 
-        var jqXHR;
-        var blah = $('#fileSelect').fileupload({
-
-                                                   success:function (e, data, err) {
-                                                       console.log("UPLOAD Successful", e, data);
-                                                       //  this.addSuccess(data.result);
-                                                   },
-                                                   fail:function (e, data) {
-                                                       console.log("UPLOAD failed", e, data);
-                                                       //  console.log("Fail");
-                                                   }
+                                                       success:function (e, data, err) {
+                                                           console.log("UPLOAD Successful", e, data);
+                                                           //  this.addSuccess(data.result);
+                                                       },
+                                                       fail:function (e, data) {
+                                                           console.log("UPLOAD failed", e, data);
+                                                           //  console.log("Fail");
+                                                       }
 
 
-                                               }).fileupload('send', {
-                                                                 files:imageList.files,
-                                                                 url:'/arenas/create',
-                                                                 formData:{data:JSON.stringify(arenaInfo)}
-                                                             });
+                                                   }).fileupload('send', {
+                                                                     files:imageList.files,
+                                                                     url:'/arenas/create',
+                                                                     formData:{data:JSON.stringify(arenaInfo)}
+                                                                 });
+        }
     });
 
     var onReaderLoad = function (theFile) {
@@ -81,18 +87,19 @@ Arena.ShapeController = function (ratio) {
     var allShapes = {};
     var buildingShape;
 
-    var createSequence = function(){
+    var createSequence = function () {
         this.id = 1;
-        this.get = function(){return this.id++;}
+        this.get = function () {
+            return this.id++;
+        }
     }
     var sequence = new createSequence();
 
-
     hammer.ondragstart = function (ev) {
         if (ev.originalEvent.ctrlKey) {
-            buildingShape = new Arena.Rectangle(sequence.get(),ratio, ev.position.x, ev.position.y, 1, 1);
+            buildingShape = new Arena.Rectangle(sequence.get(), ratio, ev.position.x, ev.position.y, 1, 1);
         } else {
-            buildingShape = new Arena.Circle(sequence.get(),ratio, ev.position.x, ev.position.y, 1);
+            buildingShape = new Arena.Circle(sequence.get(), ratio, ev.position.x, ev.position.y, 1);
         }
 
         Arena.gs.addEntity(buildingShape);
@@ -110,19 +117,19 @@ Arena.ShapeController = function (ratio) {
 
     hammer.ondragend = function (p) {
         allShapes[buildingShape.getID()] = buildingShape;
-        $('#boudingBoxesList').append('<li id="'+buildingShape.getID()+'">'+buildingShape+' <a href="#" shape='+buildingShape.getID()+'>Remove</a></li>');
+        $('#boudingBoxesList').append('<li id="' + buildingShape.getID() + '">' + buildingShape + ' <a href="#" shape=' + buildingShape.getID() + '>Remove</a></li>');
 
-        $('#boudingBoxesList li a').click(function(){
+        $('#boudingBoxesList li a').click(function () {
             var clickedShapeId = $(this).attr('shape');
             var clickedShape = allShapes[clickedShapeId];
             Arena.gs.delEntity(clickedShape);
-            $('#'+clickedShapeId).remove();
+            $('#' + clickedShapeId).remove();
         });
     };
 
     this.getAllBoundingBoxes = function () {
         var allBoudingBoxes = [];
-        for(var shapeId in allShapes) {
+        for (var shapeId in allShapes) {
             allBoudingBoxes.push(allShapes[shapeId].getBoundingBox());
         }
 
@@ -139,7 +146,7 @@ Arena.Image = function (imageSource, ratio) {
     };
 };
 
-Arena.Shape = function (id,type, ratio, x, y) {
+Arena.Shape = function (id, type, ratio, x, y) {
     this.posX = x;
     this.posY = y;
     this.ratio = 1 / ratio;
@@ -152,7 +159,7 @@ Arena.Shape.prototype.getCenter = function () {
 };
 
 Arena.Shape.prototype.toString = function () {
-    return this.id+": "+this.type;
+    return this.id + ": " + this.type;
 };
 
 Arena.Shape.prototype.getID = function () {
@@ -165,8 +172,8 @@ Arena.Shape.prototype.getType = function () {
     return this.type;
 };
 
-Arena.Circle = function (id,ratio, x, y, r) {
-    Arena.Shape.call(this,id, 'circle', ratio, x, y);
+Arena.Circle = function (id, ratio, x, y, r) {
+    Arena.Shape.call(this, id, 'circle', ratio, x, y);
     this.radius = r;
 };
 Arena.Circle.prototype = new Arena.Shape();
@@ -183,8 +190,8 @@ Arena.Circle.prototype.getBoundingBox = function () {
     return {x:this.posX * this.ratio, y:this.posY * this.ratio, r:this.radius * this.ratio};
 };
 
-Arena.Rectangle = function (id,ratio, x, y, halfWidth, halfHeight) {
-    Arena.Shape.call(this, id,'rectangle', ratio, x, y);
+Arena.Rectangle = function (id, ratio, x, y, halfWidth, halfHeight) {
+    Arena.Shape.call(this, id, 'rectangle', ratio, x, y);
     this.halfWidth = halfWidth;
     this.halfHeight = halfHeight;
 };
@@ -199,10 +206,10 @@ Arena.Rectangle.prototype.draw = function (c) {
 
 Arena.Rectangle.prototype.getBoundingBox = function () {
     return {
-        x1:(this.posX  * this.ratio- this.halfWidth * this.ratio),
+        x1:(this.posX * this.ratio - this.halfWidth * this.ratio),
         y1:(this.posY * this.ratio - this.halfHeight * this.ratio),
         x2:(this.posX * this.ratio + this.halfWidth * this.ratio),
-        y2:(this.posY  * this.ratio+ this.halfHeight * this.ratio)
+        y2:(this.posY * this.ratio + this.halfHeight * this.ratio)
     };
 };
 

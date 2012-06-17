@@ -9,10 +9,10 @@ module.exports = function(sio){
     sio.sockets.on('connection', function (socket) {
         var sess = socket.handshake.session;
         if(sess){
-            gameController.getCurrentGame(sess.selectedChar,function(gameId,code){
+            gameController.getCurrentGame(sess.selectedChar,function(game,code){
             if(code){
                 console.log('CONNECTED');
-                socket.join(gameId);
+                socket.join(game.gameId);
                 socket.log.info(
                     'a socket with sessionID'
                     , socket.handshake.sessionID
@@ -44,6 +44,7 @@ module.exports = function(sio){
                 socket.on('disconnect', function () {
                     console.log('DISCONNECTED');
                     socket.leave(gameId);
+
                 });
 
             }else{

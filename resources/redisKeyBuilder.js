@@ -13,3 +13,7 @@ exports.games = function(){
 exports.playersInGame = function(gameId){
     return  "Game_"+gameId;
 };
+
+exports.arenaForGame = function(gameId){
+    return  "Arena_"+gameId;
+};

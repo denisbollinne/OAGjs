@@ -2,6 +2,7 @@ var common = require('./commonControllersResources.js');
 
 var character = common.mongoose.model('Character');
 var arena = common.mongoose.model('Arena');
+var arenasController = require('./arena.js');
 var client = common.redisClient;
 var keyBuilder = common.redisKeyBuilder;
 
@@ -15,7 +16,9 @@ var getCurrentGame = function(selectedChar,callback){
         var charId = selectedChar._id;
         client.get(keyBuilder.charGameId(charId),function(err,gameId){
             if(gameId){
-                callback(gameId,200);
+                client.get(keyBuilder.arenaForGame(gameId),function(err,arena){
+                    callback({gameId:gameId,arena:arena},200);
+                });
             }
             else{
                 callback(200);
@@ -29,10 +32,10 @@ var getCurrentGame = function(selectedChar,callback){
 };
 
 exports.index = function(req, res){
-    getCurrentGame(req.session.selectedChar,function(gameId,code){
+    getCurrentGame(req.session.selectedChar,function(game,code){
         var foundGame;
         if(code){
-            foundGame = gameId;
+            foundGame = game.gameId;
         }
         client.smembers(keyBuilder.games(),function(err,allGames){
             res.partial('partials/games',{games:allGames, currentGame:foundGame});
@@ -97,26 +100,28 @@ exports.join = function(req,res){
 
         client.EXISTS(keyBuilder.charGameId(charId),function(err,exists){
             if(exists){
-                res.send(500);
+                res.send(200);
             }else{
                 client.setex(keyBuilder.charGameId(charId),gameExpirencyInSecond,input.id);
 
                 client.sadd(keyBuilder.playersInGame(input.id),charId);
+                arenasController.getRandomArena(function(arena){
+                    client.set(keyBuilder.arenaForGame(input.id),arena.name);
+                    var status = {
+                        charId : charId,
+                        x : 512,
+                        y : 393,
+                        dateTime : new Date().toISOString(),
+                        direction : 'none',
+                        movementState : 'stand',
+                        HP : 100
+                    };
+                    client.HMSET(keyBuilder.charStatus(charId),status,function(err,result){
+                        console.log(err);
+                    });
 
-                var status = {
-                    charId : charId,
-                    x : 512,
-                    y : 393,
-                    dateTime : new Date().toISOString(),
-                    direction : 'none',
-                    movementState : 'stand',
-                    HP : 100
-                };
-                client.HMSET(keyBuilder.charStatus(charId),status,function(err,result){
-                    console.log(err);
+                    res.send(200);
                 });
-
-                res.send(200);
             }
         });
     }
@@ -125,11 +130,11 @@ exports.getCurrentGame = getCurrentGame;
 
 
 exports.current = function(req,res){
-    getCurrentGame(req.session.selectedChar,function(gameId,code){
+    getCurrentGame(req.session.selectedChar,function(game,code){
         if(code){
-            return res.send(gameId,code);
+            return res.send(game,code);
         }else{
-            return res.send(gameId);
+            return res.send(game);
         }
 
     });

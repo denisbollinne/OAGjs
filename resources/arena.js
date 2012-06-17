@@ -26,11 +26,18 @@ exports.new = function (req, res) {
     res.render('createArena');
 };
 
+var hasWhiteSpace = function hasWhiteSpace(s) {
+    return /\s/g.test(s);
+};
+
 exports.create = function (req, res) {
     var body = JSON.parse(req.body.data);
     //Save image
     var newArena = new arena();
     newArena.name = body.name;
+    if(hasWhiteSpace(newArena.name)){
+        res.send('invalid name, name shouldn\'t contain any spaces');
+    }
     newArena.imagePath = req.files.image.path;
     newArena.save();
 
@@ -89,11 +96,19 @@ exports.deleteAll = function (req, res) {
     });
 };
 
-exports.getRandom = function(req,res){
+var getRandomArena = function(callback){
     arena.count(function(err,countOfArena){
         var arenaNumber = Math.floor((Math.random()*countOfArena));
         arena.find({}).skip(arenaNumber).limit(1).exec(function (err, doc) {
-            res.send(doc[0]);
+            callback(doc[0]);
         });
+    })
+};
+
+exports.getRandomArena = getRandomArena;
+
+exports.getRandom = function(req,res){
+    getRandomArena(function(arena){
+        res.send(arena);
     })
 };

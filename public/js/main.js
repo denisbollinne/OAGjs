@@ -104,15 +104,17 @@ GAME.startGame = function () {
                                           socket.on('attackPerformed', function (data) {
                                               triggerAttach(data.attackingChar, data.hurtedChars);
                                           });
+                                          jQuery.get('/games/current',function(game){
+                                              jQuery.get('/arenas/'+game.arena+'.json', function(arena){
+                                                  that.arenaGetter = new GAME.Arena(arena.imagePath );
+                                                  collisionDetector.addCircles(arena.circleBoundingBoxes);
+                                                  collisionDetector.addRectangles(arena.rectangleBoundingBoxes);
+                                                  that.arenaGetter.setCurrentPlayer(player);
+                                                  gs.addEntity(that.arenaGetter);
 
-                                          jQuery.get('/arenas/test.json', function(arena){
-                                              that.arenaGetter = new GAME.Arena(arena.imagePath );
-                                              collisionDetector.addCircles(arena.circleBoundingBoxes);
-                                              collisionDetector.addRectangles(arena.rectangleBoundingBoxes);
-                                              that.arenaGetter.setCurrentPlayer(player);
-                                              gs.addEntity(that.arenaGetter);
+                                              });
+                                          })
 
-                                          });
                                       });
 
                                   });
