@@ -27,8 +27,10 @@ GAME.CharacterActions = function( WALK_VX, WALK_VY){
     };
 
     this.hit = function(){
-        isHit = true;
-        this.update = hitAnimation;
+        if(movementState==='stand'){
+            isHit = true;
+            this.update = hitAnimation;
+        }
     };
 
     this.isAlive = function(){
@@ -81,7 +83,7 @@ GAME.CharacterActions = function( WALK_VX, WALK_VY){
             p.action("runNorth");
             dir = 'n'
         } else {
-            var standAction = lastAction.toString().replace("run", "stand");
+            var standAction = replaceActionWith(lastAction, "stand");
             if (!isAttacking && !isHit && !isDead && !isDowned) {
                 p.action(standAction);
             }
@@ -92,12 +94,12 @@ GAME.CharacterActions = function( WALK_VX, WALK_VY){
     var attackAnimation = function(p){
         var lastAction = p.get_action();
 
-        var attackAction = lastAction.toString().replace("stand", "attack");
+        var attackAction = replaceActionWith(lastAction,"attack");
         if (attackAction === lastAction) {
             isAttacking = false;
         } else {
             p.action(attackAction, true, function () {
-                var endAttack = p.get_action().toString().replace("attack", "stand");
+                var endAttack = replaceActionWith(p.get_action(),"stand");
                 p.action(endAttack);
                 isAttacking = false;
                 that.update = defaultAnimation;
@@ -108,12 +110,12 @@ GAME.CharacterActions = function( WALK_VX, WALK_VY){
     var hitAnimation = function(p){
         var lastAction = p.get_action();
 
-        var hitAction = lastAction.toString().replace("stand", "hit").replace("run","hit");
+        var hitAction = replaceActionWith(lastAction,"hit");
         if (hitAction === lastAction) {
             isHit = false;
         } else {
             p.action(hitAction, true, function () {
-                var endHit = p.get_action().toString().replace("hit", "stand");
+                var endHit = replaceActionWith(p.get_action(), "stand");
                 p.action(endHit);
                 isHit = false;
                 that.update = defaultAnimation;
@@ -124,13 +126,13 @@ GAME.CharacterActions = function( WALK_VX, WALK_VY){
     var dyingAnimation = function(p){
         var lastAction = p.get_action();
 
-        var dyingAction = lastAction.toString().replace("stand", "dying").replace("hit", "dying").replace("attack","dying");
+        var dyingAction = replaceActionWith(lastAction,"dying");
         if (dyingAction === lastAction) {
             isDowned = false;
         }
         else{
             p.action(dyingAction,true, function(){
-                var deathAction = lastAction.toString().replace("stand", "death");
+                var deathAction = replaceActionWith(lastAction, "death");
                 p.action(deathAction);
                 isDowned = false;
                 isDead = true;
@@ -139,4 +141,15 @@ GAME.CharacterActions = function( WALK_VX, WALK_VY){
         }
     };
     that.update = defaultAnimation;
+
+    var replaceActionWith = function(current, expected){
+        var actions = ["stand","run","death","dying","attack","hit"];
+        var actionString = current.toString();
+
+        for(var i=0;i<actions.length;i++){
+            var action = actions[i];
+            actionString = actionString.replace(action,expected);
+        }
+        return actionString;
+    }
 };
