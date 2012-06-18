@@ -49,6 +49,7 @@ GAME.Arena = function(imagePath, cicles, rectangles){
         }
         if(imagePositionY<0){
             offsetY = Math.abs(imagePositionY);
+
             imagePositionY = 0;
         }
 
