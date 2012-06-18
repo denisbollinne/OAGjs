@@ -65,10 +65,6 @@ GAME.Arena = function(imagePath, cicles, rectangles){
             offsetX = 0;
         }
 
-        c.fillStyle = "black";
-        c.rect(0, 0, 1024, 768);
-        c.fill();
-
         c.drawImage(img,
             imagePositionX,
             imagePositionY,
