@@ -33,14 +33,32 @@ GAME.Arena = function(imagePath, cicles, rectangles){
 
     this.draw = function (c) {
 
+        var imageX = that.getXOffset();
+        var imageY = that.getYOffset();
+        var offsetX = 0;
+        var offsetY = 0;
+
+        if(imageX < 0){
+            offsetX = Math.abs(imageX);
+            imageX = 0;
+        }
+        if(imageY<0){
+            offsetY = Math.abs(imageY);
+            imageY = 0;
+        }
+
+        c.fillStyle = "black";
+        c.rect(0, 0, 1024, 768);
+        c.fill();
+
         c.drawImage(img,
-            that.getXOffset(),
-            that.getYOffset(),
+            imageX,
+            imageY,
             1024,
             768,
             //On Screen
-            0,
-            0,
+            offsetX,
+            offsetY,
             1024,
             768);
     }
