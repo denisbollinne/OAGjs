@@ -33,18 +33,36 @@ GAME.Arena = function(imagePath, cicles, rectangles){
 
     this.draw = function (c) {
 
-        var imageX = that.getXOffset();
-        var imageY = that.getYOffset();
+        var imagePositionX = that.getXOffset();
+        var imagePositionY = that.getYOffset();
         var offsetX = 0;
         var offsetY = 0;
+        var heightOnScreen = 768;
+        var widthOnScreen = 1024;
 
-        if(imageX < 0){
-            offsetX = Math.abs(imageX);
-            imageX = 0;
+        var fullImageHeight = img.height;
+        var fullImageWidth = img.width;
+
+        if(imagePositionX < 0){
+            offsetX = Math.abs(imagePositionX);
+            imagePositionX = 0;
         }
-        if(imageY<0){
-            offsetY = Math.abs(imageY);
-            imageY = 0;
+        if(imagePositionY<0){
+            offsetY = Math.abs(imagePositionY);
+            imagePositionY = 0;
+        }
+
+        var remainingBottomMargin = fullImageHeight - 768 - imagePositionY;
+        var remainingRightMargin = fullImageWidth - 1024 - imagePositionX;
+
+        if(remainingBottomMargin < 0){
+            heightOnScreen = heightOnScreen + remainingBottomMargin;
+            offsetY = 0;
+        }
+
+        if(remainingRightMargin < 0){
+            widthOnScreen = widthOnScreen + remainingRightMargin;
+            offsetX = 0;
         }
 
         c.fillStyle = "black";
@@ -52,15 +70,15 @@ GAME.Arena = function(imagePath, cicles, rectangles){
         c.fill();
 
         c.drawImage(img,
-            imageX,
-            imageY,
-            1024,
-            768,
+            imagePositionX,
+            imagePositionY,
+            widthOnScreen,
+            heightOnScreen,
             //On Screen
             offsetX,
             offsetY,
-            1024,
-            768);
+            widthOnScreen,
+            heightOnScreen);
     }
 
 };
