@@ -11,22 +11,30 @@ Arena.CreateArena = function (imageList) {
         return /\s/g.test(s);
     };
 
+    var errorHandling = {logDiv : $('#resultDiv')}
+    errorHandling.clear = function(){
+        this.logDiv.empty();
+    };
+    errorHandling.log = function(color,text){
+        this.logDiv.append('<p style="color:'+color+';">'+text+'</p>');
+    };
+
     $('#btnSave').click(function (evt) {
+        errorHandling.clear();
 
         var arenaInfo = {boundingBoxes:that.shapeController.getAllBoundingBoxes()};
         arenaInfo.name = $('#labelArenaName')[0].value;
         if (hasWhiteSpace(arenaInfo.name)) {
-            console.error('invalid name');
+            errorHandling.log('red','Name shouldn\'t contain any spaces');
         } else {
             var blah = $('#fileSelect').fileupload({
 
                                                        success:function (e, data, err) {
-                                                           console.log("UPLOAD Successful", e, data);
-                                                           //  this.addSuccess(data.result);
+                                                           errorHandling.log('green','Arena created successfully');
                                                        },
                                                        fail:function (e, data) {
-                                                           console.log("UPLOAD failed", e, data);
-                                                           //  console.log("Fail");
+                                                           errorHandling.log('red','Failed to create the arena, See console for details');
+                                                           console.debug("UPLOAD failed", e, data);
                                                        }
 
 
