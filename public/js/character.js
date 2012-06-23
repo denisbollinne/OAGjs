@@ -36,8 +36,9 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, arena,  ha
     };
 
     this.update = function () {
+        var arena = that.arenaGetter();
         if(characterAnimations.isAlive()){
-            if (!that.triggersCollision(that, vx, vy)) {
+            if (arena.areCoordinatesInArena({x: that.posx + vx, y: that.posy + vy}) && !that.triggersCollision(that, vx, vy) ) {
                 p.update();
                 if (vx != 0 && vy != 0) {
                     that.posx += vx / diagonalSpeedDivider;
