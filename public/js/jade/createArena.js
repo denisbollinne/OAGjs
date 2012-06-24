@@ -90,7 +90,7 @@ Arena.CreateArena = function (imageList) {
 
 Arena.ShapeController = function (ratio) {
     var canvas = document.getElementById(Arena.elementName).children[0];
-    var hammer = new Hammer(canvas);
+    var hammer = new Hammer(canvas,{drag_min_distance :1});
 
     var allShapes = {};
     var buildingShape;
