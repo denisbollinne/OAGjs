@@ -132,6 +132,7 @@ Arena.ShapeController = function (ratio) {
             var clickedShape = allShapes[clickedShapeId];
             Arena.gs.delEntity(clickedShape);
             $('#' + clickedShapeId).remove();
+            delete allShapes[clickedShapeId];
         });
     };
 
