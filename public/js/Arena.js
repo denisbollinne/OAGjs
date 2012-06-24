@@ -9,6 +9,8 @@ GAME.Arena = function(imagePath, cicles, rectangles){
     var img = new Image();
     img.src = imagePath;
 
+
+
     var centerPos = {x : 512,y : 393};
     var player = {posx : 0, posy: 0};
 
@@ -31,6 +33,17 @@ GAME.Arena = function(imagePath, cicles, rectangles){
         return player.posy - centerPos.y;
     };
 
+    this.areCoordinatesInArena = function(coordinates){
+        var fullImageHeight = img.height;
+        var fullImageWidth = img.width;
+        if(coordinates.x > 0 && coordinates.y > 64){
+            if(coordinates.x < fullImageWidth && coordinates.y < fullImageHeight){
+                return true;
+            }
+        }
+        return false;
+    };
+
     this.draw = function (c) {
 
         var imagePositionX = that.getXOffset();
@@ -49,6 +62,7 @@ GAME.Arena = function(imagePath, cicles, rectangles){
         }
         if(imagePositionY<0){
             offsetY = Math.abs(imagePositionY);
+
             imagePositionY = 0;
         }
 
