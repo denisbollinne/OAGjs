@@ -104,7 +104,7 @@ GAME.BoundingBox = function(x, y, w, h){
         }
 
         var isContainsCollision = false;
-        if(!isHorizontalCollision && !isVerticalCollision){
+        if(!isHorizontalCollision || !isVerticalCollision){
             if(boundingBox.x < that.x && that.x < boundingBox.right){
                 if(boundingBox.y < that.y && that.y < boundingBox.bottom ){
                     isContainsCollision = true;
