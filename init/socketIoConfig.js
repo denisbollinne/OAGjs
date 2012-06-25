@@ -42,8 +42,8 @@ module.exports = function(app,callback){
         //HEROKU trying to use the same settings in dev
         sio.set("transports", ["xhr-polling"]); //HEROKU
         sio.set("polling duration", 10);
-
-//        sio.set('transports', [                     // enable all transports (optional if you want flashsocket)
+        sio.set('log level', 2);
+        //        sio.set('transports', [                     // enable all transports (optional if you want flashsocket)
 //            'websocket'
 //            , 'flashsocket'
 //            , 'htmlfile'
