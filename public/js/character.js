@@ -52,11 +52,11 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, arena,  ha
     };
 
     this.getBoundingBox = function () {
-        return new GAME.BoundingBox(that.posx + 55, that.posy +80, 45, 35);
+        return new GAME.BoundingBox(that.posx , that.posy - 30 , 45, 35);
     };
 
     this.getBoundingSphere = function(){
-        return new GAME.BoundingSphere(that.posx + 77, that.posy  + 97, 18);
+        return new GAME.BoundingSphere(that.posx , that.posy -30, 18);
     };
 
     this.triggersCollision = function (that, vx, vy) {
