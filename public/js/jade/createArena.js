@@ -78,8 +78,7 @@ Arena.CreateArena = function (imageList) {
     } else {
         Arena.gs = new JSGameSoup(Arena.elementName, 20);
         Arena.gs.launch();
-    }
-    ;
+    } ;
 
     var reader = new FileReader();
     reader.onload = onReaderLoad(file);
@@ -114,13 +113,9 @@ Arena.ShapeController = function (ratio) {
     };
 
     hammer.ondrag = function (ev) {
-        if (buildingShape.getType() == 'rectangle') {
-            buildingShape.halfWidth = Math.abs(ev.position.x - buildingShape.posX);
-            buildingShape.halfHeight = Math.abs(ev.position.y - buildingShape.posY);
-        } else {
-            buildingShape.radius = Math.sqrt(Math.pow(ev.position.x - buildingShape.posX,
-                                                      2) + Math.pow(ev.position.y - buildingShape.posY, 2));
-        }
+            buildingShape.posX2 = ev.position.x ;
+            buildingShape.posY2 = ev.position.y ;
+
     };
 
     hammer.ondragend = function (p) {
@@ -155,16 +150,14 @@ Arena.Image = function (imageSource, ratio) {
     };
 };
 
-Arena.Shape = function (id, type, ratio, x, y) {
+Arena.Shape = function (id, type, ratio, x, y, x2, y2) {
     this.posX = x;
     this.posY = y;
+    this.posX2 = x2;
+    this.posY2 = y2;
     this.ratio = 1 / ratio;
     this.type = type;
     this.id = id;
-};
-
-Arena.Shape.prototype.getCenter = function () {
-    return {x:this.posX, y:this.posY};
 };
 
 Arena.Shape.prototype.toString = function () {
@@ -181,28 +174,28 @@ Arena.Shape.prototype.getType = function () {
     return this.type;
 };
 
-Arena.Circle = function (id, ratio, x, y, r) {
-    Arena.Shape.call(this, id, 'circle', ratio, x, y);
-    this.radius = r;
+Arena.Circle = function (id, ratio, x, y, x2,y2) {
+    Arena.Shape.call(this, id, 'circle', ratio, x, y, x2, y2);
 };
 Arena.Circle.prototype = new Arena.Shape();
 
 Arena.Circle.prototype.draw = function (c) {
     c.beginPath();
     c.strokeStyle = "black";
-    c.arc(this.posX, this.posY, this.radius, 0, 2 * Math.PI);
+    var radius = Math.sqrt(Math.pow(this.posX2 - this.posX, 2) + Math.pow(this.posY2 - this.posY, 2)) / 2;
+    var x = (this.posX2 - this.posX)/2;
+    var y = (this.posY2 - this.posY) / 2;
+    c.arc(this.posX+x, this.posY+y, radius, 0, 2 * Math.PI);
     c.closePath();
     c.stroke();
 };
 
 Arena.Circle.prototype.getBoundingBox = function () {
-    return {x:this.posX * this.ratio, y:this.posY * this.ratio, r:this.radius * this.ratio};
+    return {x:(this.posX+ (this.posX2 - this.posX)/2) * this.ratio, y:(this.posY + (this.posY2 - this.posY) / 2) * this.ratio, r: Math.sqrt(Math.pow(this.posX2 - this.posX, 2) + Math.pow(this.posY2 - this.posY, 2)) / 2 * this.ratio};
 };
 
-Arena.Rectangle = function (id, ratio, x, y, halfWidth, halfHeight) {
-    Arena.Shape.call(this, id, 'rectangle', ratio, x, y);
-    this.halfWidth = halfWidth;
-    this.halfHeight = halfHeight;
+Arena.Rectangle = function (id, ratio, x, y, x2, y2) {
+    Arena.Shape.call(this, id, 'rectangle', ratio, x, y, x2, y2);
 };
 Arena.Rectangle.prototype = new Arena.Shape();
 
@@ -210,15 +203,15 @@ Arena.Rectangle.prototype.draw = function (c) {
     c.beginPath();
     c.strokeStyle = "black";
     c.closePath();
-    c.strokeRect(this.posX - this.halfWidth, this.posY - this.halfHeight, this.halfWidth * 2, this.halfHeight * 2);
+    c.strokeRect(this.posX, this.posY , this.posX2 - this.posX , this.posY2 - this.posY );
 };
 
 Arena.Rectangle.prototype.getBoundingBox = function () {
     return {
-        x1:(this.posX * this.ratio - this.halfWidth * this.ratio),
-        y1:(this.posY * this.ratio - this.halfHeight * this.ratio),
-        x2:(this.posX * this.ratio + this.halfWidth * this.ratio),
-        y2:(this.posY * this.ratio + this.halfHeight * this.ratio)
+        x1:(this.posX * this.ratio ),
+        y1:(this.posY * this.ratio),
+        x2:(this.posX2 * this.ratio ),
+        y2:(this.posY2 * this.ratio)
     };
 };
 
