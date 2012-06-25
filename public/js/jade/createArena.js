@@ -168,12 +168,6 @@ Arena.Shape.prototype.getID = function () {
     return this.id;
 };
 
-Arena.Shape.prototype.getType = function () {
-    //circle = 1;
-    //rectangle = 2;
-    return this.type;
-};
-
 Arena.Circle = function (id, ratio, x, y, x2,y2) {
     Arena.Shape.call(this, id, 'circle', ratio, x, y, x2, y2);
 };
