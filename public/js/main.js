@@ -8,7 +8,7 @@ GAME = {};
 GAME.framerate = 50;
 
 GAME.startGame = function () {
-    if(window.isMobile){
+    if (window.isMobile) {
         GAME.framerate = 10;
     }
 
@@ -24,7 +24,7 @@ GAME.startGame = function () {
     var allOtherChars = {};
     var player;
 
-    var getArena = function(){
+    var getArena = function () {
         return that.arenaGetter;
     };
 
@@ -32,7 +32,8 @@ GAME.startGame = function () {
         if (newPos.charId !== currentCharId) {
             var foundChar = allOtherChars[newPos.charId];
             if (foundChar) {
-                foundChar.setDirectionForNPC(newPos.x, newPos.y, newPos.direction, newPos.movementState, newPos.dateTime)
+                foundChar.setDirectionForNPC(newPos.x, newPos.y, newPos.direction, newPos.movementState,
+                                             newPos.dateTime)
             } else {
                 var newPlayer = new GAME.Player(gs, false, newPos, getArena).character;
                 allOtherChars[newPos.charId] = newPlayer;
@@ -70,61 +71,45 @@ GAME.startGame = function () {
     var performAttack = function (data) {
         socket.emit('performAttack', data);
     };
-
+    var gs = new JSGameSoup("surface", GAME.framerate);
     var socket = io.connect();
     socket.on('connect');
 
-    var gs = new JSGameSoup("surface", GAME.framerate);
+    GAMEFW.Sprite.preload(imagesToPreload, function () {
+        jQuery.get('/games/current', function (game) {
+            jQuery.get('/arenas/' + game.arena + '.json', function (arena) {
+                jQuery.get('/characters/current', function (currentPlayerInfo) {
 
-//    var gameIsLoaded = false;
-//    var OnSocketIoConnect = function () {
-//        if (!gameIsLoaded) {
-            GAMEFW.Sprite.preload(imagesToPreload, // when the sprites are loaded, create the world
-                                  function () {
-                                      gameIsLoaded = true;
-                                      jQuery.get('/characters/current', function (currentPlayerInfo) {
+                    var hammer = new Hammer(document.getElementById("surface").children[0]);
 
-                                          var hammer = new Hammer(document.getElementById("surface").children[0]);
+                    currentCharId = currentPlayerInfo.character._id;
+                    player = new GAME.Player(gs, true, currentPlayerInfo.character.position, getArena,
+                                             hammer).character;
+                    player.onPositionChanged = onPositionChanged;
+                    player.performAttack = performAttack;
+                    collisionDetector.addCollisionItem(player);
 
-                                          var gameId = currentPlayerInfo.game;
-                                          currentCharId = currentPlayerInfo.character._id;
-                                          player = new GAME.Player(gs, true, currentPlayerInfo.character.position, getArena, hammer).character;
-                                          player.onPositionChanged = onPositionChanged;
-                                          player.performAttack = performAttack;
-                                          collisionDetector.addCollisionItem(player);
+                    gs.addEntity(player);
 
-                                          // var enemy = new GAME.skeleton(gs).character;
+                    socket.on('updatedPosition', function (data) {
+                        updateCharacters(data);
+                    });
+                    socket.on('attackPerformed', function (data) {
+                        triggerAttach(data.attackingChar, data.hurtedChars);
+                    });
 
-                                          //gs.addEntity(enemy);
-                                          gs.addEntity(player);
+                    that.arenaGetter = new GAME.Arena(arena.imagePath);
+                    collisionDetector.addCircles(arena.circleBoundingBoxes);
+                    collisionDetector.addRectangles(arena.rectangleBoundingBoxes);
+                    that.arenaGetter.setCurrentPlayer(player);
+                    gs.addEntity(that.arenaGetter);
 
-                                          socket.on('updatedPosition', function (data) {
-                                              updateCharacters(data);
-                                          });
-                                          socket.on('attackPerformed', function (data) {
-                                              triggerAttach(data.attackingChar, data.hurtedChars);
-                                          });
-                                          jQuery.get('/games/current',function(game){
-                                              jQuery.get('/arenas/'+game.arena+'.json', function(arena){
-                                                  that.arenaGetter = new GAME.Arena(arena.imagePath );
-                                                  collisionDetector.addCircles(arena.circleBoundingBoxes);
-                                                  collisionDetector.addRectangles(arena.rectangleBoundingBoxes);
-                                                  that.arenaGetter.setCurrentPlayer(player);
-                                                  gs.addEntity(that.arenaGetter);
+                });
+            })
 
-                                              });
-                                          })
+        });
 
-                                      });
-
-                                  });
-//        } else {
-//            console.debug('socket.io is somehow reconnecting');
-//        }
-//    };
-
-
-
+    });
 
     gs.launch();
 };
