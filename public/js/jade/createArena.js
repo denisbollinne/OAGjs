@@ -11,12 +11,12 @@ Arena.CreateArena = function (imageList) {
         return /\s/g.test(s);
     };
 
-    var errorHandling = {logDiv : $('#resultDiv')}
-    errorHandling.clear = function(){
+    var errorHandling = {logDiv:$('#resultDiv')}
+    errorHandling.clear = function () {
         this.logDiv.empty();
     };
-    errorHandling.log = function(color,text){
-        this.logDiv.append('<p style="color:'+color+';">'+text+'</p>');
+    errorHandling.log = function (color, text) {
+        this.logDiv.append('<p style="color:' + color + ';">' + text + '</p>');
     };
 
     $('#btnSave').click(function (evt) {
@@ -25,15 +25,16 @@ Arena.CreateArena = function (imageList) {
         var arenaInfo = {boundingBoxes:that.shapeController.getAllBoundingBoxes()};
         arenaInfo.name = $('#labelArenaName')[0].value;
         if (hasWhiteSpace(arenaInfo.name)) {
-            errorHandling.log('red','Name shouldn\'t contain any spaces');
+            errorHandling.log('red', 'Name shouldn\'t contain any spaces');
         } else {
             var blah = $('#fileSelect').fileupload({
 
                                                        success:function (e, data, err) {
-                                                           errorHandling.log('green','Arena created successfully');
+                                                           errorHandling.log('green', 'Arena created successfully');
                                                        },
                                                        fail:function (e, data) {
-                                                           errorHandling.log('red','Failed to create the arena, See console for details');
+                                                           errorHandling.log('red',
+                                                                             'Failed to create the arena, See console for details');
                                                            console.debug("UPLOAD failed", e, data);
                                                        }
 
@@ -78,7 +79,8 @@ Arena.CreateArena = function (imageList) {
     } else {
         Arena.gs = new JSGameSoup(Arena.elementName, 20);
         Arena.gs.launch();
-    } ;
+    }
+    ;
 
     var reader = new FileReader();
     reader.onload = onReaderLoad(file);
@@ -89,7 +91,7 @@ Arena.CreateArena = function (imageList) {
 
 Arena.ShapeController = function (ratio) {
     var canvas = document.getElementById(Arena.elementName).children[0];
-    var hammer = new Hammer(canvas,{drag_min_distance :1});
+    var hammer = new Hammer(canvas, {drag_min_distance:1});
 
     var allShapes = {};
     var buildingShape;
@@ -113,8 +115,8 @@ Arena.ShapeController = function (ratio) {
     };
 
     hammer.ondrag = function (ev) {
-            buildingShape.posX2 = ev.position.x ;
-            buildingShape.posY2 = ev.position.y ;
+        buildingShape.posX2 = ev.position.x;
+        buildingShape.posY2 = ev.position.y;
 
     };
 
@@ -168,7 +170,7 @@ Arena.Shape.prototype.getID = function () {
     return this.id;
 };
 
-Arena.Circle = function (id, ratio, x, y, x2,y2) {
+Arena.Circle = function (id, ratio, x, y, x2, y2) {
     Arena.Shape.call(this, id, 'circle', ratio, x, y, x2, y2);
 };
 Arena.Circle.prototype = new Arena.Shape();
@@ -177,15 +179,19 @@ Arena.Circle.prototype.draw = function (c) {
     c.beginPath();
     c.strokeStyle = "black";
     var radius = Math.sqrt(Math.pow(this.posX2 - this.posX, 2) + Math.pow(this.posY2 - this.posY, 2)) / 2;
-    var x = (this.posX2 - this.posX)/2;
+    var x = (this.posX2 - this.posX) / 2;
     var y = (this.posY2 - this.posY) / 2;
-    c.arc(this.posX+x, this.posY+y, radius, 0, 2 * Math.PI);
+    c.arc(this.posX + x, this.posY + y, radius, 0, 2 * Math.PI);
     c.closePath();
     c.stroke();
 };
 
 Arena.Circle.prototype.getBoundingBox = function () {
-    return {x:(this.posX+ (this.posX2 - this.posX)/2) * this.ratio, y:(this.posY + (this.posY2 - this.posY) / 2) * this.ratio, r: Math.sqrt(Math.pow(this.posX2 - this.posX, 2) + Math.pow(this.posY2 - this.posY, 2)) / 2 * this.ratio};
+    return {
+        x:(this.posX + (this.posX2 - this.posX) / 2) * this.ratio,
+        y:(this.posY + (this.posY2 - this.posY) / 2) * this.ratio,
+        r:Math.sqrt(Math.pow(this.posX2 - this.posX, 2) + Math.pow(this.posY2 - this.posY, 2)) / 2 * this.ratio
+    };
 };
 
 Arena.Rectangle = function (id, ratio, x, y, x2, y2) {
@@ -197,7 +203,7 @@ Arena.Rectangle.prototype.draw = function (c) {
     c.beginPath();
     c.strokeStyle = "black";
     c.closePath();
-    c.strokeRect(this.posX, this.posY , this.posX2 - this.posX , this.posY2 - this.posY );
+    c.strokeRect(this.posX, this.posY, this.posX2 - this.posX, this.posY2 - this.posY);
 };
 
 Arena.Rectangle.prototype.getBoundingBox = function () {
