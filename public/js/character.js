@@ -13,6 +13,7 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, arena,  ha
     var characterAnimations = new GAME.CharacterActions(WALK_VX, WALK_VY);
     this.posx = startPosition[0];
     this.posy = startPosition[1];
+
     var HP = 100;
     var diagonalSpeedDivider = 1.4142135;
     var spriteSize = 128;
@@ -23,6 +24,15 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, arena,  ha
     var p = new GAMEFW.Sprite(["center", "bottom"], animations, spriteSize, function () {
         p.action("standSouth");
     });
+
+
+    this.getRelativePosX = function(){
+        return that.posx - that.arenaGetter().getXOffset();
+    };
+
+    this.getRelativePosY = function(){
+        return that.posy - that.arenaGetter().getYOffset();
+    };
 
     var resetVelocityOnCollision = function(){
         if (that.triggersCollision(that, vx, vy)) {
@@ -155,9 +165,9 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, arena,  ha
 
         if(!isPlayable){
             c.fillStyle = "rgb(0,0,0)";
-            c.fillRect (that.posx - that.arenaGetter().getXOffset() - 25  , that.posy- that.arenaGetter().getYOffset() - 128, 50, 3);
+            c.fillRect (that.getRelativePosX()  - 25  , that.getRelativePosY() - 128, 50, 3);
             c.fillStyle = "rgb(255,0,0)";
-            c.fillRect (that.posx - that.arenaGetter().getXOffset() - 25 , that.posy - that.arenaGetter().getYOffset() - 128, (50 / 100) * HP, 3);
+            c.fillRect (that.getRelativePosX() - 25 , that.getRelativePosY() - 128, (50 / 100) * HP, 3);
         }
         else{
             c.font = "20pt Calibri";
@@ -167,7 +177,7 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, arena,  ha
             p.draw(c, [512, 393]);
         }
         else{
-            p.draw(c, [that.posx - that.arenaGetter().getXOffset(), that.posy - that.arenaGetter().getYOffset()]);
+            p.draw(c, [that.getRelativePosX(), that.getRelativePosY()]);
         }
     };
 
@@ -235,7 +245,7 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, arena,  ha
         var directions = ['e', 'se', 's', 'sw', 'w', 'nw', 'n', 'ne'];
         this.processMouse = function (mousePos) {
 
-            var angle = pointAngleCompareToP1({x:that.posx, y:that.posy - halfSpriteSize }, mousePos);
+            var angle = pointAngleCompareToP1({x:that.getRelativePosX(), y:that.getRelativePosY() - halfSpriteSize }, mousePos);
             var rectifiedAngle = angle + 22
             if (rectifiedAngle > 360) {
                 rectifiedAngle = rectifiedAngle - 360;
