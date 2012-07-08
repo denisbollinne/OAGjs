@@ -3,7 +3,6 @@
  * User: Maarten De Wilde
  * Date: 8/05/12
  * Time: 19:47
- * To change this template use File | Settings | File Templates.
  */
 GAME.Arena = function(imagePath, cicles, rectangles){
     var img = new Image();

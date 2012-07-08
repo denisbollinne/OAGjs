@@ -225,6 +225,13 @@ GAME.Character = function (gs, animations, startPosition, isPlayable, arena,  ha
             that.updateAnimation();
         };
 
+        this.keyDown_72 = function(){
+            var x = 512 - 15;
+            var y = 393 - 50;
+            var effect = new GAME.ParticleEffect(x ,y , that.getZIndex());
+            gs.addEntity(effect);
+            effect.start();
+        };
 
         var pointAngleCompareToP1 = function (p1, p2) {
             var angle = ( Math.atan2(p2.y - p1.y, p2.x - p1.x));
