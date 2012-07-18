@@ -1,10 +1,14 @@
 define(['express','./resource/app-resource.js','resources/characters','resources/positions','resources/games','resources/arena']
-    ,function(express,appResource,charactersController,positionsController,gamesController,arenasController){
+    ,function(express,appResource,charactersController2,positionsController2,gamesController2,arenasController2){
 
     return function(app,validateAuthentication){
         appResource(app);
+        var charactersController = new charactersController2();
+        var positionsController = new positionsController2();
+        var gamesController = new  gamesController2();
+        var arenasController = new arenasController2();
 
-        app.get('/characters/select/:name', validateAuthentication, charactersController().select); //select
+        app.get('/characters/select/:name', validateAuthentication, charactersController.select); //select
         app.post('/characters/deleteall', validateAuthentication, charactersController.destroyAll); //deleteAll
         app.get('/characters/position', validateAuthentication, charactersController.position); //position
         app.get('/characters/current', validateAuthentication, charactersController.current); //position

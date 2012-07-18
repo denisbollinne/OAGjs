@@ -5,7 +5,7 @@ define(['resources/commonControllersResources'],function(common){
         character = common.mongoose.model('Character');
         client = common.redisClient;
         var keyBuilder = common.redisKeyBuilder;
-    }
+    };
 
         blah.prototype.all = function(req, res){
             character.find({}).populate('position').run(function(err,docs){
@@ -122,7 +122,6 @@ define(['resources/commonControllersResources'],function(common){
             res.partial('partials/character',{characters : docs});
         })
     };
+
     return blah;
-
-
 });
