@@ -1,30 +1,26 @@
-var express = require('express')
-    , url = require('url')
-    , stylus = require('stylus')
-    , routes = require('./routes.js')
-    , configure = require('./config.js')
-    , everyauth = require('./everyauth.js')
-    , mongoose = require('./mongoose.js')
-    ,mongooseAuth = require('../lib/mongoose-auth/index.js')
-    , socketIoConfig = require('./socketIoConfig.js')
-    , socketIoRoutes = require('./socketIoRoutes.js')
-    , onShutDown = require('./shutdown.js');
+define(['require','url','stylus','init/routes','init/config','init/everyauth',
+           'init/mongoose'
+           ,'init/socketIoConfig','init/socketIoRoutes','init/shutdown','lib/mongoose-auth-ported/index']
+    ,function(require,url,stylus,routes,configure,everyauth
+    , mongoose , socketIoConfig  , socketIoRoutes , onShutDown,mongooseAuth){
 
-module.exports = function(app){
-    configure(app,everyauth.validateAuthenticated);
-    everyauth(app);
-    mongoose(app,mongooseAuth);
+    return function(app){
 
-    console.log(mongooseAuth);
-    app.use(mongooseAuth.middleware());
+        configure(app);
+        console.log(mongooseAuth);
+       var validateAuthenticated =  everyauth(app);
+        mongoose(app,mongooseAuth);
 
-    mongooseAuth.helpExpress(app);
+        app.use(mongooseAuth.middleware());
 
-    routes(app,everyauth.validateAuthenticated);
+        mongooseAuth.helpExpress(app);
 
-    socketIoConfig(app,function(socketIo){
-        socketIoRoutes(socketIo);
-    });
+        routes(app,validateAuthenticated);
 
-    onShutDown(app);
-}
+        socketIoConfig(app,function(socketIo){
+            socketIoRoutes(socketIo);
+        });
+
+        onShutDown(app);
+    }
+});

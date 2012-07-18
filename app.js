@@ -1,7 +1,7 @@
-var express = require('express')
-    , bootstrapper = require('./init/bootstrap.js')
-    , mongoose = require('mongoose')
-    , app = module.exports =express.createServer();
+define(['express','init/bootstrap','mongoose'],function(express,bootstrapper,mongoose){
+    var app =express.createServer();
+    bootstrapper(app);
+    User = mongoose.model('User');
+    return app;
+});
 
-bootstrapper(app);
-User = mongoose.model('User');

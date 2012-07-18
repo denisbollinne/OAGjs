@@ -1,46 +1,44 @@
-var parse = require('url').parse,
-    express = require('express'),
-    redis = require('redis');
+define(['url','express','redis','connect-redis'],function(url,express,redis,connectRedis){
+    var parse = url.parse;
 
-var redisStoreClient;
+    var redisStoreClient;
 
-module.exports = function() {
+    return function() {
 
-    var RedisStore = require('connect-redis')(express);
+        var RedisStore = connectRedis(express);
 
-    function ConnectHerokuRedis(options) {
-       redisStoreClient = redisStoreClient || CreateClient(options);
-       return new RedisStore({client:redisStoreClient});
-    }
-
-
-    function CreateClient(options,callback) {
-        var redisToGo = process.env.REDISTOGO_URL ? parse(process.env.REDISTOGO_URL) : false;
-        options = options || {};
-
-        var pass;
-        if (redisToGo) {
-            options.host = options.host || redisToGo.hostname;
-            options.port = options.port || redisToGo.port;
-
-            if (!options.pass && redisToGo.auth) {
-                options.pass = options.pass || redisToGo.auth.split(":")[1];
-            }
+        function ConnectHerokuRedis(options) {
+           redisStoreClient = redisStoreClient || CreateClient(options);
+           return new RedisStore({client:redisStoreClient});
         }
-       // options.no_ready_check = true;
-        options.debug_mode = true;
-        var rc =  new redis.createClient(options.port || options.socket, options.host, options)
-
-        rc.auth(options.pass);
-        rc.on('error', function(err){
-            console.log('RC ERROR : '+err);
-        });
 
 
-        return rc;
+        function CreateClient(options,callback) {
+            var redisToGo = process.env.REDISTOGO_URL ? parse(process.env.REDISTOGO_URL) : false;
+            options = options || {};
+
+            var pass;
+            if (redisToGo) {
+                options.host = options.host || redisToGo.hostname;
+                options.port = options.port || redisToGo.port;
+
+                if (!options.pass && redisToGo.auth) {
+                    options.pass = options.pass || redisToGo.auth.split(":")[1];
+                }
+            }
+           // options.no_ready_check = true;
+            options.debug_mode = true;
+            var rc =  new redis.createClient(options.port || options.socket, options.host, options);
+
+            rc.auth(options.pass);
+            rc.on('error', function(err){
+                console.log('RC ERROR : '+err);
+            });
+
+
+            return rc;
+        }
+
+        return {CreateClient : CreateClient, CreateSessionStore: ConnectHerokuRedis, Redis:redis};
     }
-
-    return {CreateClient : CreateClient, CreateSessionStore: ConnectHerokuRedis, Redis:redis};
-
-
-}
+});
