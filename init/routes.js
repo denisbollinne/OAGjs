@@ -1,5 +1,5 @@
-define(['express','./resource/app-resource.js','resources/characters','resources/positions','resources/games','resources/arena']
-    ,function(express,appResource,charactersController2,positionsController2,gamesController2,arenasController2){
+define(['express','./resource/app-resource.js','resources/characters','resources/positions','resources/games','resources/arena','resources/staticFile']
+    ,function(express,appResource,charactersController2,positionsController2,gamesController2,arenasController2, fsController2){
 
     return function(app,validateAuthentication){
         appResource(app);
@@ -7,7 +7,9 @@ define(['express','./resource/app-resource.js','resources/characters','resources
         var positionsController = new positionsController2();
         var gamesController = new  gamesController2();
         var arenasController = new arenasController2();
+        var fsController = new fsController2();
 
+        app.get('/shared/require.js',fsController.getRequireJsFile);
         app.get('/characters/select/:name', validateAuthentication, charactersController.select); //select
         app.post('/characters/deleteall', validateAuthentication, charactersController.destroyAll); //deleteAll
         app.get('/characters/position', validateAuthentication, charactersController.position); //position
