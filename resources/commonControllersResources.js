@@ -10,6 +10,6 @@ define(['mongoose','init/redisFactory','resources/redisKeyBuilder'],function(mon
     return {
           redisClient :staticClient,
          mongoose: mongoose,
-         redisKeyBuilder :redisKeyBuilder
+        redisKeyBuilder :new redisKeyBuilder()
 };
 });

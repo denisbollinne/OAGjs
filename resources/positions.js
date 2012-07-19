@@ -1,10 +1,48 @@
 define(['resources/commonControllersResources','async'],function(common,async){
 
-    return function(){
+    function positionController(){
         var client = common.redisClient;
         var keyBuilder = common.redisKeyBuilder;
 
-        this.updateSio = function(session, data,callback){
+        function charactersCollide(currentChar, targetChar,attack){
+            var attackRange = attack.range;
+            var attackAngle = attack.angle;
+            var direction = currentChar.direction;
+            var rangeBetweenPlayers =computeDistanceBetweenTwoPoints(currentChar,targetChar);
+            if(rangeBetweenPlayers <= attackRange){
+                var newRotationAngle = getRotationAngleForDirection(direction);
+                var targetPointAngle = pointAngleCompareToP1(currentChar,targetChar);
+
+                var targetPointAngleWithNewRotationAngle = targetPointAngle - newRotationAngle+ (attackAngle/2);
+                if(targetPointAngleWithNewRotationAngle >= 0 && targetPointAngleWithNewRotationAngle< attackAngle){
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        function pointAngleCompareToP1(p1,p2){
+            var angle = ( Math.atan2(p2.y - p1.y,p2.x - p1.x));
+            return (angle >= 0 ? angle : (2*Math.PI + angle)) * 360 / (2*Math.PI)
+        };
+
+        function computeDistanceBetweenTwoPoints(p1,p2){
+            return Math.sqrt(Math.pow(p2.x - p1.x,2) + Math.pow(p2.y - p1.y,2))
+        };
+
+        function getRotationAngleForDirection(direction){
+            if(direction === 'e')return 0;
+            if(direction === 'se')return 45;
+            if(direction === 's')return 90;
+            if(direction === 'sw')return 135;
+            if(direction === 'w')return 180;
+            if(direction === 'nw')return 225;
+            if(direction === 'n')return 270;
+            if(direction === 'ne')return 315;
+        };
+
+
+        positionController.prototype.updateSio = function(session, data,callback){
             if(session.selectedChar){
                 var charId = session.selectedChar._id;
 
@@ -27,8 +65,7 @@ define(['resources/commonControllersResources','async'],function(common,async){
                 callback(false);
             }
         };
-
-        this.performAttack = function(session, data,callback){
+        positionController.prototype.performAttack = function(session, data,callback){
             var attackHP = 20;
             var attackRange = 60;
             var attackAngle = 45;
@@ -80,41 +117,7 @@ define(['resources/commonControllersResources','async'],function(common,async){
             }
         };
 
-        var charactersCollide = function(currentChar, targetChar,attack){
-            var attackRange = attack.range;
-            var attackAngle = attack.angle;
-            var direction = currentChar.direction;
-            var rangeBetweenPlayers =computeDistanceBetweenTwoPoints(currentChar,targetChar);
-            if(rangeBetweenPlayers <= attackRange){
-                var newRotationAngle = getRotationAngleForDirection(direction);
-                var targetPointAngle = pointAngleCompareToP1(currentChar,targetChar);
-
-                var targetPointAngleWithNewRotationAngle = targetPointAngle - newRotationAngle+ (attackAngle/2);
-                if(targetPointAngleWithNewRotationAngle >= 0 && targetPointAngleWithNewRotationAngle< attackAngle){
-                    return true;
-                }
-            }
-            return false;
-        };
-
-        var pointAngleCompareToP1 = function(p1,p2){
-            var angle = ( Math.atan2(p2.y - p1.y,p2.x - p1.x));
-            return (angle >= 0 ? angle : (2*Math.PI + angle)) * 360 / (2*Math.PI)
-        };
-
-        var computeDistanceBetweenTwoPoints = function(p1,p2){
-            return Math.sqrt(Math.pow(p2.x - p1.x,2) + Math.pow(p2.y - p1.y,2))
-        };
-
-        var getRotationAngleForDirection = function(direction){
-            if(direction === 'e')return 0;
-            if(direction === 'se')return 45;
-            if(direction === 's')return 90;
-            if(direction === 'sw')return 135;
-            if(direction === 'w')return 180;
-            if(direction === 'nw')return 225;
-            if(direction === 'n')return 270;
-            if(direction === 'ne')return 315;
-        };
     };
+
+    return positionController;
 });

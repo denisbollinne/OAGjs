@@ -1,36 +1,54 @@
 define(['fs','resources/commonControllersResources'],function(fs,common){
 
-    return function(){
+    function arenaController(){
         var arena = common.mongoose.model('Arena');
 
+        function hasWhiteSpace(s) {
+            return /\s/g.test(s);
+        };
 
-        this.index = function (req, res) {
+        function deleteArena (arena){
+            if (arena) {
+                fs.unlink(__dirname + '/../public' + arena.imagePath, function (err) {
+
+                    arena.remove();
+                });
+            }
+        };
+
+        function getRandomArena(callback){
+            arena.count(function(err,countOfArena){
+                var arenaNumber = Math.floor((Math.random()*countOfArena));
+                arena.find({}).skip(arenaNumber).limit(1).exec(function (err, doc) {
+                    callback(doc[0]);
+                });
+            })
+        };
+
+        arenaController.prototype.index = function (req, res) {
             arena.find({}, function (err, docs) {
                 res.send(docs);
             })
         };
 
-        this.show = function (req, res) {
+        arenaController.prototype.show = function (req, res) {
             arena.findOne({name:req.params.name}, function (err, doc) {
                 res.render('showArena', doc);
             })
         };
 
-        this.get = function (req, res) {
+        arenaController.prototype.get = function (req, res) {
             arena.findOne({name:req.params.name}, function (err, doc) {
                 res.send(doc);
             })
         };
 
-        this.new = function (req, res) {
+        arenaController.prototype.new = function (req, res) {
             res.render('createArena');
         };
 
-        var hasWhiteSpace = function hasWhiteSpace(s) {
-            return /\s/g.test(s);
-        };
 
-        this.create = function (req, res) {
+        arenaController.prototype.create = function (req, res) {
             var body = JSON.parse(req.body.data);
             //Save image
             var newArena = new arena();
@@ -70,15 +88,8 @@ define(['fs','resources/commonControllersResources'],function(fs,common){
             });
 
         };
-        var deleteArena = function(arena){
-            if (arena) {
-                fs.unlink(__dirname + '/../public' + arena.imagePath, function (err) {
 
-                    arena.remove();
-                });
-            }
-        };
-        this.delete = function (req, res) {
+        arenaController.prototype.delete = function (req, res) {
             arena.findOne({_id:req.params.id}, function (err, arena) {
                 deleteArena(arena);
 
@@ -86,7 +97,7 @@ define(['fs','resources/commonControllersResources'],function(fs,common){
             });
         };
 
-        this.deleteAll = function (req, res) {
+        arenaController.prototype.deleteAll = function (req, res) {
             arena.find({},function(err,arenas){
                 arenas.forEach(function(arena){
                     deleteArena(arena);
@@ -96,21 +107,15 @@ define(['fs','resources/commonControllersResources'],function(fs,common){
             });
         };
 
-        var getRandomArena = function(callback){
-            arena.count(function(err,countOfArena){
-                var arenaNumber = Math.floor((Math.random()*countOfArena));
-                arena.find({}).skip(arenaNumber).limit(1).exec(function (err, doc) {
-                    callback(doc[0]);
-                });
-            })
-        };
 
-        this.getRandomArena = getRandomArena;
+        arenaController.prototype.getRandomArena = getRandomArena;
 
-        this.getRandom = function(req,res){
+        arenaController.prototype.getRandom = function(req,res){
             getRandomArena(function(arena){
                 res.send(arena);
             })
         };
+
     };
+    return arenaController;
 });

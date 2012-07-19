@@ -1,14 +1,17 @@
-define(['resources/commonControllersResources','async','resources/arena'],function(common,async,arenasController){
+define(['resources/commonControllersResources','async','resources/arena'],function(common,async,arenasController2){
 
-    return function(){
+    function gameController(){
+        var arenasController = new arenasController2();
+
         var character = common.mongoose.model('Character');
         var arena = common.mongoose.model('Arena');
+
         var client = common.redisClient;
         var keyBuilder = common.redisKeyBuilder;
 
         var gameExpirencyInSecond = 60*60; //1H
-
-        var getCurrentGame = function(selectedChar,callback){
+        var that=this;
+        function getCurrentGame (selectedChar,callback){
             if(selectedChar)
             {
                 var charId = selectedChar._id;
@@ -27,9 +30,24 @@ define(['resources/commonControllersResources','async','resources/arena'],functi
             {
                 callback(500);
             }
-        };
+        }
 
-        this.index = function(req, res){
+
+    gameController.prototype.getCurrentGame = getCurrentGame;
+
+
+    gameController.prototype.current = function(req,res){
+        getCurrentGame(req.session.selectedChar,function(game,code){
+            if(code){
+                return res.send(game,code);
+            }else{
+                return res.send(game);
+            }
+
+        });
+    };
+
+        gameController.prototype.index = function(req, res){
             getCurrentGame(req.session.selectedChar,function(game,code){
                 var foundGame;
                 if(code){
@@ -43,7 +61,7 @@ define(['resources/commonControllersResources','async','resources/arena'],functi
 
         };
 
-        this.characters = function(req, res){
+        gameController.prototype.characters = function(req, res){
             var gameId = req.params.id;
             client.smembers(keyBuilder.playersInGame(gameId),function(err,allCharsId){
                 character.find()
@@ -87,7 +105,7 @@ define(['resources/commonControllersResources','async','resources/arena'],functi
         };
 
 
-        this.join = function(req,res){
+        gameController.prototype.join = function(req,res){
             var input = req.body;
             if(!input.id){
                 res.send(500);
@@ -124,20 +142,8 @@ define(['resources/commonControllersResources','async','resources/arena'],functi
                 });
             }
         };
-        this.getCurrentGame = getCurrentGame;
 
-
-        this.current = function(req,res){
-            getCurrentGame(req.session.selectedChar,function(game,code){
-                if(code){
-                    return res.send(game,code);
-                }else{
-                    return res.send(game);
-                }
-
-            });
-        };
-        this.leave = function(req,res){
+        gameController.prototype.leave = function(req,res){
             var charId = req.session.selectedChar._id;
 
             client.get(keyBuilder.charGameId(charId),function(err,gameId){
@@ -160,4 +166,6 @@ define(['resources/commonControllersResources','async','resources/arena'],functi
             //TODO : StoreStats in Mongo?
         };
     }
+    return gameController;
+
 });

@@ -1,7 +1,8 @@
-define(function(){
+define(['resources/positions','resources/games'],function(positionController2, gameController2){
     return function(sio){
-        var positionsController = require('./../resources/positions.js');
-        var gameController = require('./../resources/games.js');
+
+        var gameController = new gameController2();
+        var positionsController = new positionController2();
 
         sio.sockets.on('connection', function (socket) {
             var sess = socket.handshake.session;

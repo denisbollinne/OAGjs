@@ -1,24 +1,23 @@
 define(['resources/commonControllersResources'],function(common){
 
-    function blah(){
+    function characterController(){
 
         character = common.mongoose.model('Character');
         client = common.redisClient;
         var keyBuilder = common.redisKeyBuilder;
-    };
 
-        blah.prototype.all = function(req, res){
+        characterController.prototype.all = function(req, res){
             character.find({}).populate('position').run(function(err,docs){
                 res.send(docs);
             })
         };
 
-        blah.prototype.new = function(req, res){
+        characterController.prototype.new = function(req, res){
             //SEND new character html page
            // res.send(jadePage);
         };
 
-        blah.prototype.create = function(req, res){
+        characterController.prototype.create = function(req, res){
             var newChar = new character();
             newChar.user = req.user;
             newChar.name = req.body.name
@@ -29,37 +28,37 @@ define(['resources/commonControllersResources'],function(common){
             newChar.save();
 
 
-           //blah.prototype should probably return a jade page with the newly created char
+           //characterController.prototype should probably return a jade page with the newly created char
             res.send(200);
         };
 
-        blah.prototype.show = function(req, res){
+        characterController.prototype.show = function(req, res){
             res.send('show character ' + req.params.id);
         };
 
-        blah.prototype.edit = function(req, res){
+        characterController.prototype.edit = function(req, res){
             res.send('edit character ' + req.params.id);
         };
 
-        blah.prototype.update = function(req, res){
+        characterController.prototype.update = function(req, res){
             res.send('update character ' + req.params.id);
         };
         //SHOULD BE A POST
-        blah.prototype.destroy = function(req, res){
+        characterController.prototype.destroy = function(req, res){
             character.findOne({user:req.user._id, _id:req.param.id}).populate('position').run(function(err,docs){
                 docs.remove();
                 res.send('destroy character ' + req.params.id);
             });
         };
         //SHOULD BE A POST
-        blah.prototype.destroyAll = function(req, res){
+        characterController.prototype.destroyAll = function(req, res){
             character.remove({user:req.user._id}, function(err,docs){
                 res.send('destroy all characters');
             });
         };
 
         //SHOULD BE A POST
-        blah.prototype.select = function(req,res){
+        characterController.prototype.select = function(req,res){
             character.findOne({user:req.user._id, name:req.params.name},function(err,docs){
                 if(docs != null){
                     req.session.selectedChar = docs;
@@ -72,7 +71,7 @@ define(['resources/commonControllersResources'],function(common){
         };
 
 
-        blah.prototype.current = function(req,res){
+        characterController.prototype.current = function(req,res){
             if(req.session.selectedChar){
                 character.findOne({user:req.user._id, _id:req.session.selectedChar._id}).run(function(err,char){
                 if(!err){
@@ -106,7 +105,7 @@ define(['resources/commonControllersResources'],function(common){
         };
 
 
-        blah.prototype.position = function(req,res){
+        characterController.prototype.position = function(req,res){
             position.findOne({character:req.session.selectedChar._id},function(err,doc){
                 if(doc != null){
                     res.send(doc);
@@ -117,11 +116,11 @@ define(['resources/commonControllersResources'],function(common){
             });
         };
 
-    blah.prototype.index = function(req, res){
-        character.find({user:req.user._id}).run(function(err,docs){
-            res.partial('partials/character',{characters : docs});
-        })
+        characterController.prototype.index = function(req, res){
+            character.find({user:req.user._id}).run(function(err,docs){
+                res.partial('partials/character',{characters : docs});
+            })
+        };
     };
-
-    return blah;
+    return characterController;
 });
