@@ -1,4 +1,4 @@
-define(['fs','resources/commonControllersResources'],function(fs,common){
+define(['fs','resources/commonControllersResources','module','path'],function(fs,common,module,path){
 
     function arenaController(){
         var arena = common.mongoose.model('Arena');
@@ -6,6 +6,9 @@ define(['fs','resources/commonControllersResources'],function(fs,common){
         function hasWhiteSpace(s) {
             return /\s/g.test(s);
         };
+
+        var __filename = module.uri;
+        var __dirname = path.dirname(__filename);
 
         function deleteArena (arena){
             if (arena) {
