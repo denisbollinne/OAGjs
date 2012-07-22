@@ -4,7 +4,8 @@
  * Date: 11/03/12
  * Time: 19:48
  */
-define('character',['settings','framework/sprite','characterAction','particleEffect'],function(settings,sprite,characterAction,particleEffect){
+define('character',['settings','framework/sprite','characterActions','particleEffect','boundingBox','boundingSphere']
+    ,function(settings,sprite,characterAction,particleEffect,boundingBox,boundingSphere){
 
     return function (gs, animations, startPosition, isPlayable, arena,  hammer) {
         var WALK_VX = (1000 / settings.framerate) / 20 * 5;
@@ -63,11 +64,11 @@ define('character',['settings','framework/sprite','characterAction','particleEff
         };
 
         this.getBoundingBox = function () {
-            return new GAME.BoundingBox(that.posx , that.posy - 30 , 45, 35);
+            return new boundingBox(that.posx , that.posy - 30 , 45, 35);
         };
 
         this.getBoundingSphere = function(){
-            return new GAME.BoundingSphere(that.posx , that.posy -30, 18);
+            return new boundingSphere(that.posx , that.posy -30, 18);
         };
 
         this.triggersCollision = function (that, vx, vy) {

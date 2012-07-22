@@ -4,7 +4,7 @@
  * Date: 26/04/12
  * Time: 20:41
  */
-define('characterAction',function(){
+define('characterActions',function(){
     return function( WALK_VX, WALK_VY){
         var isAttacking = false;
         var isHit = false;
