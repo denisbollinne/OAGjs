@@ -5,7 +5,7 @@
  @param animations is a dictionary containing all actions and their associated set of images and the number of frames to show each image for. For instance: {"stand": [["img/stand.png", 0],], "walk": [["img/walk1.png", 3], ["img/walk2.png", 3],]} where each walk frame is shown for three frames.
  @param loadedcallback is a function that is called once all of the frames in all action animations are successfully loaded.
  */
-define('framework/sprite',function(){
+define(function(){
     return function Sprite(anchor, animations, size, loadedcallback) {
         var loadcount = 0;
         var action = "";

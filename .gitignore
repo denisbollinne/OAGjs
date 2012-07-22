@@ -17,3 +17,6 @@ dump.rdb
 
 node_modules
 npm-debug.log
+
+public/img/arenas
+tmpUploads

@@ -4,7 +4,7 @@
  * Date: 11/03/12
  * Time: 19:48
  */
-define('character',['settings','framework/sprite','characterActions','particleEffect','boundingBox','boundingSphere']
+define(['js/settings','js/framework/sprite','js/characterActions','js/particleEffect','js/boundingBox','js/boundingSphere']
     ,function(settings,sprite,characterAction,particleEffect,boundingBox,boundingSphere){
 
     return function (gs, animations, startPosition, isPlayable, arena,  hammer) {

@@ -4,7 +4,7 @@
  * Date: 14/03/12
  * Time: 17:48
  */
-define("player",['framework/animDef','character'],function(animDef,character){
+define(['js/framework/animDef','js/character'],function(animDef,character){
 
     return function (gs,playable, currentPlayerInfo, arena , hammer){
 

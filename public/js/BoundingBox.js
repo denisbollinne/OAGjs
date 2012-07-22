@@ -5,7 +5,7 @@
  * Time: 8:42
  * To change this template use File | Settings | File Templates.
  */
-define("boundingBox",function(){
+define(function(){
     return function(x, y, w, h){
         this.x = x;
         this.y = y;

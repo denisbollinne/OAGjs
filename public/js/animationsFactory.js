@@ -4,7 +4,7 @@
  * Date: 13/03/12
  * Time: 19:19
  */
-define("animationsFactory", function () {
+define( function () {
     return function () {
         this.createAnimations = function (name, frames, framsToShowEachImageFor) {
             var arr = [];

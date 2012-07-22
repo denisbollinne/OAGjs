@@ -5,7 +5,7 @@
  * Time: 8:43
  * To change this template use File | Settings | File Templates.
  */
-define("boundingSphere",function(){
+define(function(){
     return function(x, y, r){
         this.x = x;
         this.y = y;

@@ -1,3 +1,3 @@
-define("settings",{
+define({
     framerate: 50
 });

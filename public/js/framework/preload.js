@@ -5,7 +5,7 @@
  * Time: 19:36
  * To change this template use File | Settings | File Templates.
  */
-define('framework/preload',function(){
+define(function(){
     /**
      @method preload
      @description Pre-loads a whole array of images. Provides feedback on which images are loaded via the progresscallback, which returns the number of images left to load each time one is loaded, and 0 when the final image is loaded.

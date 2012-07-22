@@ -1,5 +1,5 @@
-define("framework\animDef",function(){
-    return function AnimDef( image, duration, tiles, offset){
+define(function(){
+    return function ( image, duration, tiles, offset){
         this.image = image;
         if(duration){
             this.duration = duration;

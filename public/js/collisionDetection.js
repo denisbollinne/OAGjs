@@ -5,7 +5,7 @@
  * Time: 20:20
  * To change this template use File | Settings | File Templates.
  */
-define("collisionDetection",["boundingSphere","boundingBox"],function(boundingSphereClass,boundingBoxClass){
+define(["js/boundingSphere","js/boundingBox"],function(boundingSphereClass,boundingBoxClass){
     return  function(){
         var trackedItems = [];
         var that = this;

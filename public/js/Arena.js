@@ -4,7 +4,7 @@
  * Date: 8/05/12
  * Time: 19:47
  */
-define("arena",function(){
+define(function(){
     return function(imagePath, cicles, rectangles){
         var img = new Image();
         img.src = imagePath;

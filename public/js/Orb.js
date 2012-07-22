@@ -4,8 +4,7 @@
  * Date: 7/03/12
  * Time: 21:59
  */
-define("orb", function (orb) {
-
+define(function () {
     return function Orb() {
         var WALK_VX = 15;
         var vx = 0;
