@@ -4,7 +4,7 @@
  * Date: 8/07/12
  * Time: 17:56
  */
-define(function(){
+define(["particle"],function(){
     return (function(x, y, z){
 
         var zindex = z;
