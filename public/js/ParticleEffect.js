@@ -16,13 +16,19 @@ define(["particle"],function(){
             init : function(){}
         };
 
+        var angle = 0;
+
         this.getZIndex = function () {
             return z - 1;
         };
 
         this.update  = function(){
             if(isStarted){
+                particleEffect.position.x = x + (Math.sin(angle) * 40);
+                particleEffect.position.y = y + (Math.cos(angle) * 40);
+                angle+= .3;
                 particleEffect.update(1);
+
             }
         };
         this.draw =  function(c){
@@ -44,12 +50,12 @@ define(["particle"],function(){
         var createHealAnimation = function(effect, x, y){
             effect.position = Vector.create( x, y );
             effect.positionRandom = Vector.create( 5, 5 );
-            effect.size = 40;
-            effect.sizeRandom = 5;
+            effect.size = 10;
+            effect.sizeRandom = 1;
             effect.speed = 2;
             effect.speedRandom = 1.5;
-            effect.lifeSpan = 7;
-            effect.lifeSpanRandom = 10;
+            effect.lifeSpan = 3;
+            effect.lifeSpanRandom = 3;
             effect.angle = 0;
             effect.angleRandom = 360;
             effect.gravity = Vector.create( -.1,-.1 );
@@ -59,7 +65,7 @@ define(["particle"],function(){
             effect.endColourRandom =   [ 255, 0, 255, 0 ];
             effect.sharpness = 40;
             effect.sharpnessRandom = 5;
-            effect.duration = 15;
+            effect.duration = 30;
         };
 
         particleEffect = new cParticleSystem();
