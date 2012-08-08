@@ -13,8 +13,8 @@ requirejs.config({
                      }
                  });
 //GAME.framerate = 50;
-requirejs(["js/settings", "js/animationsFactory", "js/collisionDetection", "js/player", "js/Arena", "js/framework/preload", "jquery","hammer","jsgamesoup","socketIo"],
-          function (settings, animationFactory, collisionDetectorClass, playerClass, arenaUi, imgPreload, jQuery) {
+requirejs(["js/settings", "js/animationsFactory", "js/collisionDetection", "js/player", "js/Arena",  "js/Hud", "js/framework/preload", "jquery","hammer","jsgamesoup","socketIo",],
+          function (settings, animationFactory, collisionDetectorClass, playerClass, arenaUi, hudClass, imgPreload, jQuery) {
               //    if (window.isMobile) {
               //        GAME.framerate = 10;
               //    }
@@ -107,6 +107,8 @@ requirejs(["js/settings", "js/animationsFactory", "js/collisionDetection", "js/p
                               that.arenaGetter.setCurrentPlayer(player);
                               gs.addEntity(that.arenaGetter);
 
+                              var hud = new hudClass(gs);
+                              gs.addEntity(hud);
                           });
                       })
 
