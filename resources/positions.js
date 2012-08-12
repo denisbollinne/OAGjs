@@ -69,6 +69,7 @@ define(['resources/commonControllersResources','async'],function(common,async){
             var attackHP = 20;
             var attackRange = 60;
             var attackAngle = 45;
+            var executionTime = new Date(data.dateTime);
 
             if(session.selectedChar){
                 var currentCharId = session.selectedChar._id;
