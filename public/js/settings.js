@@ -1,0 +1,3 @@
+define({
+    framerate: 50
+});

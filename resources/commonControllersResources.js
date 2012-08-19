@@ -1,3 +1,4 @@
+define(['mongoose','init/redisFactory','resources/redisKeyBuilder'],function(mongoose,redisFactory,redisKeyBuilder){
 /**
  * Created by JetBrains WebStorm.
  * User: Denis
@@ -5,10 +6,10 @@
  * Time: 11:12
  * To change this template use File | Settings | File Templates.
  */
-var mongoose = require('mongoose');
-var redisFactory  = require('../init/redisFactory.js')();
-var staticClient = redisFactory.CreateClient();
-
-exports.redisClient = staticClient;
-exports.mongoose = mongoose;
-exports.redisKeyBuilder = require('./redisKeyBuilder.js')
+    var staticClient = redisFactory().CreateClient();
+    return {
+          redisClient :staticClient,
+         mongoose: mongoose,
+        redisKeyBuilder :new redisKeyBuilder()
+};
+});

@@ -1,114 +1,124 @@
-var fs = require('fs');
+define(['fs','resources/commonControllersResources','module','path'],function(fs,common,module,path){
 
-var common = require('./commonControllersResources.js');
+    function arenaController(){
+        var arena = common.mongoose.model('Arena');
 
-var arena = common.mongoose.model('Arena');
+        function hasWhiteSpace(s) {
+            return /\s/g.test(s);
+        };
 
-exports.index = function (req, res) {
-    arena.find({}, function (err, docs) {
-        res.send(docs);
-    })
-};
+        var __filename = module.uri;
+        var __dirname = path.dirname(__filename);
 
-exports.show = function (req, res) {
-    arena.findOne({name:req.params.name}, function (err, doc) {
-        res.render('showArena', doc);
-    })
-};
+        function deleteArena (arena){
+            if (arena) {
+                fs.unlink(__dirname + '/../public' + arena.imagePath, function (err) {
 
-exports.get = function (req, res) {
-    arena.findOne({name:req.params.name}, function (err, doc) {
-        res.send(doc);
-    })
-};
+                    arena.remove();
+                });
+            }
+        };
 
-exports.new = function (req, res) {
-    res.render('createArena');
-};
+        function getRandomArena(callback){
+            arena.count(function(err,countOfArena){
+                var arenaNumber = Math.floor((Math.random()*countOfArena));
+                arena.find({}).skip(arenaNumber).limit(1).exec(function (err, doc) {
+                    callback(doc[0]);
+                });
+            })
+        };
 
-var hasWhiteSpace = function hasWhiteSpace(s) {
-    return /\s/g.test(s);
-};
+        arenaController.prototype.index = function (req, res) {
+            arena.find({}, function (err, docs) {
+                res.send(docs);
+            })
+        };
 
-exports.create = function (req, res) {
-    var body = JSON.parse(req.body.data);
-    //Save image
-    var newArena = new arena();
-    newArena.name = body.name;
-    if(hasWhiteSpace(newArena.name)){
-        res.send('invalid name, name shouldn\'t contain any spaces');
-    }
-    newArena.imagePath = req.files.image.path;
-    newArena.save();
+        arenaController.prototype.show = function (req, res) {
+            arena.findOne({name:req.params.name}, function (err, doc) {
+                res.render('showArena', doc);
+            })
+        };
 
-    var newPath = '/img/arenas/' + newArena._id;
+        arenaController.prototype.get = function (req, res) {
+            arena.findOne({name:req.params.name}, function (err, doc) {
+                res.send(doc);
+            })
+        };
 
-    newArena.save();
+        arenaController.prototype.new = function (req, res) {
+            res.render('createArena');
+        };
 
-    fs.rename(req.files.image.path, __dirname + '/../public' + newPath, function (err) {
-        if (err) {
-            throw err;
-        }
 
-        fs.unlink(req.files.image.path, function (err) {
+        arenaController.prototype.create = function (req, res) {
+            var body = JSON.parse(req.body.data);
+            //Save image
+            var newArena = new arena();
+            newArena.name = body.name;
+            if(hasWhiteSpace(newArena.name)){
+                res.send('invalid name, name shouldn\'t contain any spaces');
+            }
+            newArena.imagePath = req.files.image.path;
+            newArena.save();
 
-            newArena.imagePath = newPath;
-
-            body.boundingBoxes.forEach(function (b) {
-                if (b.r) {
-                    newArena.circleBoundingBoxes.push(b);
-                } else {
-                    newArena.rectangleBoundingBoxes.push(b);
-                }
-            });
+            var newPath = '/img/arenas/' + newArena._id;
 
             newArena.save();
 
-            res.send(200);  //res.render('showArena', newArena);
-        });
+            fs.rename(req.files.image.path, __dirname + '/../public' + newPath, function (err) {
+                if (err) {
+                    throw err;
+                }
 
-    });
+                fs.unlink(req.files.image.path, function (err) {
 
-};
-var deleteArena = function(arena){
-    if (arena) {
-        fs.unlink(__dirname + '/../public' + arena.imagePath, function (err) {
+                    newArena.imagePath = newPath;
 
-            arena.remove();
-        });
-    }
-};
-exports.delete = function (req, res) {
-    arena.findOne({_id:req.params.id}, function (err, arena) {
-        deleteArena(arena);
+                    body.boundingBoxes.forEach(function (b) {
+                        if (b.r) {
+                            newArena.circleBoundingBoxes.push(b);
+                        } else {
+                            newArena.rectangleBoundingBoxes.push(b);
+                        }
+                    });
 
-        res.send(200);
-    });
-};
+                    newArena.save();
 
-exports.deleteAll = function (req, res) {
-    arena.find({},function(err,arenas){
-        arenas.forEach(function(arena){
-            deleteArena(arena);
-            arena.remove();
-        });
-        res.send(200);
-    });
-};
+                    res.send(200);  //res.render('showArena', newArena);
+                });
 
-var getRandomArena = function(callback){
-    arena.count(function(err,countOfArena){
-        var arenaNumber = Math.floor((Math.random()*countOfArena));
-        arena.find({}).skip(arenaNumber).limit(1).exec(function (err, doc) {
-            callback(doc[0]);
-        });
-    })
-};
+            });
 
-exports.getRandomArena = getRandomArena;
+        };
 
-exports.getRandom = function(req,res){
-    getRandomArena(function(arena){
-        res.send(arena);
-    })
-};
+        arenaController.prototype.delete = function (req, res) {
+            arena.findOne({_id:req.params.id}, function (err, arena) {
+                deleteArena(arena);
+
+                res.send(200);
+            });
+        };
+
+        arenaController.prototype.deleteAll = function (req, res) {
+            arena.find({},function(err,arenas){
+                arenas.forEach(function(arena){
+                    deleteArena(arena);
+                    arena.remove();
+                });
+                res.send(200);
+            });
+        };
+
+
+        arenaController.prototype.getRandomArena = getRandomArena;
+
+        arenaController.prototype.getRandom = function(req,res){
+            getRandomArena(function(arena){
+                res.send(arena);
+            })
+        };
+
+    };
+    return arenaController;
+});

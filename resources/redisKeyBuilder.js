@@ -1,19 +1,25 @@
-exports.charStatus = function(charId){
-    return "CharStatus_"+charId;
-};
+define(function(){
+    return function()
+    {
+        this.charStatus = function(charId){
+            return "CharStatus_"+charId;
+        };
 
-exports.charGameId = function(charId){
-    return  "Char_"+charId;
-};
+        this.charGameId = function(charId){
+            return  "Char_"+charId;
+        };
 
-exports.games = function(){
-    return "Games";
-};
+        this.games = function(){
+            return "Games";
+        };
 
-exports.playersInGame = function(gameId){
-    return  "Game_"+gameId;
-};
+        this.playersInGame = function(gameId){
+            return  "Game_"+gameId;
+        };
 
-exports.arenaForGame = function(gameId){
-    return  "Arena_"+gameId;
-};
+        this.arenaForGame = function(gameId){
+            return  "Arena_"+gameId;
+        };
+    }
+});
+

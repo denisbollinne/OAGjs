@@ -1,77 +1,113 @@
-var express = require('express'),
-    stylus = require('stylus'),
-    connectTimeout = require('connect-timeout'),
-    redisFactory = require('./redisFactory.js')(),
-    sessionStore
-    ;
+define(['express','stylus','connect-timeout','./redisFactory.js','module','path','everyauth'],
+       function(express,stylus,connectTimeout,redisProvider,module,path,everyauth){
 
-module.exports = function(app, validateAuthenticated){
+    return function(app){
+        var __filename = module.uri;
+        var __dirname = path.dirname(__filename);
 
-    var debug = function(app){
-        app.use(express.errorHandler({ dump: true, stack: true }));
-        app.set('debug',true);
-    };
+        var  redisFactory = redisProvider(),
+            sessionStore = redisFactory.CreateSessionStore();
 
-    app.configure('development', function() {
-        app.set('db-uri', 'mongodb://localhost:27017/oagjs');
-        app.set('port',3000);
-        app.set('view options', {
-            pretty: true
+        var debug = function(app){
+            app.use(express.errorHandler({ dump: true, stack: true }));
+            app.set('debug',true);
+        };
+
+        app.configure('development', function() {
+            app.set('db-uri', 'mongodb://localhost:27017/oagjs');
+            app.set('port',3000);
+            app.set('view options', {
+                pretty: true
+            });
+            app.set('host','http://localhost:3000');
+
+            debug(app);
         });
-        app.set('host','http://localhost:3000');
 
-        debug(app);
-    });
+        app.configure('test', function() {
+            app.set('db-uri', 'localhost:27017/oagjs-Test');
+            app.set('port',3000);
+            app.set('view options', {
+                pretty: true
+            });
+            app.set('host','http://localhost:3000');
 
-    app.configure('test', function() {
-        app.set('db-uri', 'localhost:27017/oagjs-Test');
-        app.set('port',3000);
-        app.set('view options', {
-            pretty: true
+            debug(app);
+      });
+
+        app.configure('production', function() {
+            app.set('db-uri', process.env.MONGOHQ_URL);
+            app.set('port',process.env.PORT);
+            app.set('debug',true);
+            app.set('host','http://ourawesomegamejs.herokuapp.com')
+       });
+
+
+        app.configure('joyent', function() {
+            app.set('db-uri', 'mongodb://127.0.0.1:27017/oagjs');
+            app.set('port',80);
+            app.set('debug',true);
+            app.set('host','http://dev.itense.be');
+
+            debug(app);
+
         });
-        app.set('host','http://localhost:3000');
 
-        debug(app);
+        function preEveryauthMiddlewareHack() {
+            return function (req, res, next) {
+                var sess = req.session
+                    , auth = sess.auth
+                    , ea = { loggedIn: !!(auth && auth.loggedIn) };
+
+                // Copy the session.auth properties over
+                for (var k in auth) {
+                    ea[k] = auth[k];
+                }
+
+                if (everyauth.enabled.password) {
+                    // Add in access to loginFormFieldName() + passwordFormFieldName()
+                    ea.password || (ea.password = {});
+                    ea.password.loginFormFieldName = everyauth.password.loginFormFieldName();
+                    ea.password.passwordFormFieldName = everyauth.password.passwordFormFieldName();
+                }
+
+                res.locals.everyauth = ea;
+
+                next();
+            }
+        };
+
+        function postEveryauthMiddlewareHack() {
+            var userAlias = everyauth.expressHelperUserAlias || 'user';
+            return function( req, res, next) {
+                res.locals.everyauth.user = req.user;
+                res.locals[userAlias] = req.user;
+                next();
+            };
+        };
+        app.configure(function() {
+            app.set('cookieName','M&DSessionKey');
+            app.set('views', __dirname + '/../views');
+            app.set('view engine', 'jade');
+            app.use(express.favicon());
+            app.use(preEveryauthMiddlewareHack());
+            app.use(everyauth.middleware());
+            app.use(postEveryauthMiddlewareHack());
+            app.use(express.bodyParser({uploadDir:'./tmpUploads'}));
+            app.use(express.cookieParser());
+            app.use(connectTimeout({ time: 10000 }));
+            app.use(express.session({ store: sessionStore, secret:'M&DSessionSecret'}));
+        //    app.use(express.logger({ format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }))
+            app.use(express.methodOverride());
+            app.use(stylus.middleware({ src: __dirname + '/../public' }));
+            app.use(express.static(__dirname + '/../public'));
+            app.set('mailOptions', {
+                host: 'localhost',
+                port: '25',
+                from: 'nodepad@example.com'
+            });
+        });
+
+        return sessionStore;
+      }
   });
-
-    app.configure('production', function() {
-        app.set('db-uri', process.env.MONGOHQ_URL);
-        app.set('port',process.env.PORT);
-        app.set('debug',true);
-        app.set('host','http://ourawesomegamejs.herokuapp.com')
-   });
-
-
-    app.configure('joyent', function() {
-        app.set('db-uri', 'mongodb://127.0.0.1:27017/oagjs');
-        app.set('port',80);
-        app.set('debug',true);
-        app.set('host','http://dev.itense.be');
-
-        debug(app);
-
-    });
-
-
-    app.configure(function() {
-        app.set('cookieName','M&DSessionKey');
-        app.set('views', __dirname + '/../views');
-        app.set('view engine', 'jade');
-        app.use(express.favicon());
-        app.use(express.bodyParser({uploadDir:'./tmpUploads'}));
-        app.use(express.cookieParser());
-        app.use(connectTimeout({ time: 10000 }));
-        app.use(express.session({ store: sessionStore = redisFactory.CreateSessionStore(), secret:'M&DSessionSecret'}));
-    //    app.use(express.logger({ format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }))
-        app.use(express.methodOverride());
-        app.use(stylus.middleware({ src: __dirname + '/../public' }));
-        app.use(express.static(__dirname + '/../public'));
-        app.set('mailOptions', {
-            host: 'localhost',
-            port: '25',
-            from: 'nodepad@example.com'
-        });
-    });
-
-    return sessionStore;
-}
