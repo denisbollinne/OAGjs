@@ -117,9 +117,9 @@ define(['resources/commonControllersResources'],function(common){
         };
 
         characterController.prototype.index = function(req, res){
-            character.find({user:req.user._id}).run(function(err,docs){
+            character.find({user:req.user._id},function(err,docs){
                 res.render('partials/character',{characters : docs});
-            })
+            });
         };
     };
     return characterController;
