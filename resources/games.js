@@ -54,7 +54,7 @@ define(['resources/commonControllersResources','async','resources/arena'],functi
                     foundGame = game.gameId;
                 }
                 client.smembers(keyBuilder.games(),function(err,allGames){
-                    res.partial('partials/games',{games:allGames, currentGame:foundGame});
+                    res.render('partials/games',{games:allGames, currentGame:foundGame});
                 });
 
             });
