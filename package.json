@@ -28,6 +28,9 @@
     "requirejs" : "latest"
 
   },
+   "devDependencies":{
+       "bcrypt" : "latest"
+   },
     "engines": {
         "node": "0.8.7",
         "npm":  "1.1.49"
