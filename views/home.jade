@@ -1,24 +1,27 @@
-- if (!everyauth.loggedIn)
-  h2 Not Authenticated
-  #register
-    a(href='/register') Register
-  #password-login
-    a(href='/login', style='border: 0px') Login
-- else
-  h2 Authenticated
-  #user-id Logged in with `user.id` #{user.id} - aka `everyauth.user.id` #{everyauth.user.id}
-  - if (everyauth.facebook)
-    h3 Facebook User Data
-    p= JSON.stringify(everyauth.facebook.user)
-  - if (everyauth.google)
-    h3 Google User Data
-    p= JSON.stringify(everyauth.google.user)
+extends layout
 
-  h3
-     a(href="/start") Go to start
+block content
+    - if (!everyauth.loggedIn)
+      h2 Not Authenticated
+      #register
+        a(href='/register') Register
+      #password-login
+        a(href='/login', style='border: 0px') Login
+    - else
+      h2 Authenticated
+      #user-id Logged in with `user.id` #{user.id} - aka `everyauth.user.id` #{everyauth.user.id}
+      - if (everyauth.facebook)
+        h3 Facebook User Data
+        p= JSON.stringify(everyauth.facebook.user)
+      - if (everyauth.google)
+        h3 Google User Data
+        p= JSON.stringify(everyauth.google.user)
 
-  h3
-    a(href='/logout') Logout
+      h3
+         a(href="/start") Go to start
 
-  h3
-    a(href='/game.html') Game (manual)
+      h3
+        a(href='/logout') Logout
+
+      h3
+        a(href='/game.html') Game (manual)

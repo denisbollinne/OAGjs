@@ -1,17 +1,23 @@
-h2 Lobby
- #games
-  ul(id='list')
+extends layout
 
-  #currentGame
- p
-  ul(id='charactersInGame')
+block head
+     script(type='text/javascript', src='js/jade/lobby.js')
 
- #join
-  button(id='createGame') Create
-  input(id='gameName')
- #start
-  button(id='startGame') Start currently joined game
- script(type='text/javascript', src='js/jade/lobby.js')
+block content
+    h2 Lobby
+     #games
+      ul(id='list')
+
+      #currentGame
+     p
+      ul(id='charactersInGame')
+
+     #join
+      button(id='createGame') Create
+      input(id='gameName')
+     #start
+      button(id='startGame') Start currently joined game
+
 
 
 

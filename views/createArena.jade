@@ -1,31 +1,34 @@
-script(type='text/javascript', src='../lib/statemachine.js')
-script(type='text/javascript', src='../lib/jsgamesoup.js')
-script(type='text/javascript', src='../lib/jquery.js')
-script(type='text/javascript', src='../lib/hammer.js')
-script(type='text/javascript', src='../lib/jquery.ui.widget.js')
-script(type='text/javascript', src='../lib/jquery.iframe-transport.js')
-script(type='text/javascript', src='../lib/jquery.fileupload.js')
+extends layout
 
+block head
+    script(type='text/javascript', src='../lib/statemachine.js')
+    script(type='text/javascript', src='../lib/jsgamesoup.js')
+    script(type='text/javascript', src='../lib/jquery.js')
+    script(type='text/javascript', src='../lib/hammer.js')
+    script(type='text/javascript', src='../lib/jquery.ui.widget.js')
+    script(type='text/javascript', src='../lib/jquery.iframe-transport.js')
+    script(type='text/javascript', src='../lib/jquery.fileupload.js')
+    script(type='text/javascript', src='../js/jade/createArena.js')
 
+block content
 
-table
-    tr
-        td
-            label Select a file:
-                input(type='file' ,id='fileSelect', name='image')
-        td
-            label Arena name:
-                input(id='labelArenaName', value='new arena', name='name')
-        td
-            button(id='btnSave')
-                label Upload arena
-    tr
-        td
-            div(id='resultDiv')
-    tr
-        td
-            div(id='surface', style="width:1024px; height: 786px; margin-left: auto; margin-right: auto;border-width:1px;border-style:solid;")
-        td
-            ul(id='boudingBoxesList')
+    table
+        tr
+            td
+                label Select a file:
+                    input(type='file' ,id='fileSelect', name='image')
+            td
+                label Arena name:
+                    input(id='labelArenaName', value='new arena', name='name')
+            td
+                button(id='btnSave')
+                    label Upload arena
+        tr
+            td
+                div(id='resultDiv')
+        tr
+            td
+                div(id='surface', style="width:1024px; height: 786px; margin-left: auto; margin-right: auto;border-width:1px;border-style:solid;")
+            td
+                ul(id='boudingBoxesList')
 
-script(type='text/javascript', src='../js/jade/createArena.js')

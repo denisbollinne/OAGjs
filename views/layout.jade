@@ -4,8 +4,9 @@ html
     title mongoose-auth example
     script(src='http://static.ak.fbcdn.net/connect/en_US/core.js')
     script(src="/lib/jquery.js", type="application/javascript")
+    block head
   body
     h1 Our awesome game
     #main
-      != body
+      block content
 

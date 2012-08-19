@@ -1,12 +1,15 @@
-h2 My characters
- #characters
-  ul(id='list')
+extends layout
+block head
+    script(type='text/javascript', src='js/jade/characters.js')
 
- #new
-    a(href='/newChar') Create new
- #delete
-    a(id='delete' ,href='#')
-        p Delete all
+block content
+    h2 My characters
+     #characters
+      ul(id='list')
 
+     #new
+        a(href='/newChar') Create new
+     #delete
+        a(id='delete' ,href='#')
+            p Delete all
 
-script(type='text/javascript', src='js/jade/characters.js')

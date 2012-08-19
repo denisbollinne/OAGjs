@@ -1,15 +1,21 @@
-h2 New character
+extends layout
 
-h3 Class: Warrior
+block head
+     script(type='text/javascript', src='js/jade/newCharacter.js')
 
-h3 Name:
-    input(id='name')
+block content
+    h2 New character
 
-#button
-    button(id='create') Create
+    h3 Class: Warrior
 
-#back
-    a(href="/start" )
-        p Back to character selection screen
+    h3 Name:
+        input(id='name')
 
-script(type='text/javascript', src='js/jade/newCharacter.js')
+    #button
+        button(id='create') Create
+
+    #back
+        a(href="/start" )
+            p Back to character selection screen
+
+
