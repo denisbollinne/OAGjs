@@ -4,7 +4,7 @@ define(['socket.io','connect','http'],function(sioModule,connect,http){
 
    return function(app,callback){
        var redisFactory = require('init/redisFactory')() ;
-       var server = http.createServer(app);       
+       var server = http.createServer(app);
        var sio =  sioModule.listen(server);
        var sessionStore = redisFactory.CreateSessionStore();
 

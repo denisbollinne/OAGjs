@@ -53,46 +53,12 @@ define(['express','stylus','connect-timeout','./redisFactory.js','module','path'
 
         });
 
-        function preEveryauthMiddlewareHack() {
-            return function (req, res, next) {
-                var sess = req.session
-                    , auth = sess.auth
-                    , ea = { loggedIn: !!(auth && auth.loggedIn) };
-
-                // Copy the session.auth properties over
-                for (var k in auth) {
-                    ea[k] = auth[k];
-                }
-
-                if (everyauth.enabled.password) {
-                    // Add in access to loginFormFieldName() + passwordFormFieldName()
-                    ea.password || (ea.password = {});
-                    ea.password.loginFormFieldName = everyauth.password.loginFormFieldName();
-                    ea.password.passwordFormFieldName = everyauth.password.passwordFormFieldName();
-                }
-
-                res.locals.everyauth = ea;
-
-                next();
-            }
-        };
-
-        function postEveryauthMiddlewareHack() {
-            var userAlias = everyauth.expressHelperUserAlias || 'user';
-            return function( req, res, next) {
-                res.locals.everyauth.user = req.user;
-                res.locals[userAlias] = req.user;
-                next();
-            };
-        };
         app.configure(function() {
             app.set('cookieName','M&DSessionKey');
             app.set('views', __dirname + '/../views');
             app.set('view engine', 'jade');
             app.use(express.favicon());
-            app.use(preEveryauthMiddlewareHack());
             app.use(everyauth.middleware());
-            app.use(postEveryauthMiddlewareHack());
             app.use(express.bodyParser({uploadDir:'./tmpUploads'}));
             app.use(express.cookieParser());
             app.use(connectTimeout({ time: 10000 }));
