@@ -13,8 +13,6 @@ define(['require','url','stylus','init/routes','init/config','init/everyauth',
 
         app.use(mongooseAuth.middleware());
 
-        mongooseAuth.helpExpress(app);
-
         routes(app,validateAuthenticated);
 
         socketIoConfig(app,function(socketIo){
