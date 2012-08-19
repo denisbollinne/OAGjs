@@ -1,10 +1,11 @@
-define(['socket.io','connect'],function(sioModule,connect){
+define(['socket.io','connect','http'],function(sioModule,connect,http){
     var parseCookie = connect.utils.parseCookie,
         redisIoStore =  sioModule.RedisStore;
 
    return function(app,callback){
        var redisFactory = require('init/redisFactory')() ;
-       var sio =  sioModule.listen(app);
+       var server = http.createServer(app);       
+       var sio =  sioModule.listen(server);
        var sessionStore = redisFactory.CreateSessionStore();
 
         sio.configure('production', function(){
