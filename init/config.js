@@ -58,7 +58,7 @@ define(['express','stylus','connect-timeout','./redisFactory.js','module','path'
             app.set('views', __dirname + '/../views');
             app.set('view engine', 'jade');
             app.use(express.favicon());
-            app.use(everyauth.middleware());
+            app.use(everyauth.middleware(app));
             app.use(express.bodyParser({uploadDir:'./tmpUploads'}));
             app.use(express.cookieParser());
             app.use(connectTimeout({ time: 10000 }));
