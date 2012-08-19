@@ -1,6 +1,6 @@
 define(['require','url','stylus','init/routes','init/config','init/everyauth',
            'init/mongoose'
-           ,'init/socketIoConfig','init/socketIoRoutes','init/shutdown','lib/mongoose-auth-ported/index']
+           ,'init/socketIoConfig','init/socketIoRoutes','init/shutdown','lib/mongoose-authModule/index.js']
     ,function(require,url,stylus,routes,configure,everyauth
     , mongoose , socketIoConfig  , socketIoRoutes , onShutDown,mongooseAuth){
 
