@@ -1,7 +1,7 @@
 define(['mongoose','./authKeys.js'],function(mongoose,conf){
 
     return function (app, mongooseAuth) {
-        var Schema = mongoose.Schema , ObjectId = mongoose.SchemaTypes.ObjectId;
+        var Schema = mongoose.Schema , ObjectId = mongoose.Schema.Types.ObjectId;
 
         var UserSchema = new Schema({
                                         characters:[
