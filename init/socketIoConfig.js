@@ -1,10 +1,9 @@
-define(['socket.io','connect','http'],function(sioModule,connect,http){
-    var parseCookie = connect.utils.parseCookie,
+define(['socket.io','cookie'],function(sioModule,cookie){
+  //  var parseCookie = connect.utils.parseCookie,
         redisIoStore =  sioModule.RedisStore;
 
-   return function(app,callback){
+   return function(server,callback){
        var redisFactory = require('init/redisFactory')() ;
-       var server = http.createServer(app);
        var sio =  sioModule.listen(server);
        var sessionStore = redisFactory.CreateSessionStore();
 
@@ -69,7 +68,7 @@ define(['socket.io','connect','http'],function(sioModule,connect,http){
             if (!data.headers.cookie)
                 return accept('No cookie transmitted.', false);
 
-            data.cookie = parseCookie(data.headers.cookie);
+            data.cookie = cookie.parse(data.headers.cookie);
             data.sessionID = data.cookie['connect.sid'];
 
             sessionStore.load(data.sessionID, function (err, session) {

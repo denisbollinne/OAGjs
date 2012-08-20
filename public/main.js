@@ -9,11 +9,11 @@ requirejs.config({
                      baseUrl:'lib',
                      paths:{
                          js:'../js',
-                         socketIo:'/socket.io/socket.io.js'
+                         socketIo:'/socket.io/socket.io'
                      }
                  });
 //GAME.framerate = 50;
-requirejs(["js/settings", "js/animationsFactory", "js/collisionDetection", "js/player", "js/Arena",  "js/Hud", "js/framework/preload", "jquery","hammer","jsgamesoup","socketIo",],
+requirejs(["js/settings", "js/animationsFactory", "js/collisionDetection", "js/player", "js/Arena",  "js/Hud", "js/framework/preload", "jquery","hammer","jsgamesoup","socketIo"],
           function (settings, animationFactory, collisionDetectorClass, playerClass, arenaUi, hudClass, imgPreload, jQuery) {
               //    if (window.isMobile) {
               //        GAME.framerate = 10;

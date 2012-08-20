@@ -7,7 +7,7 @@ define(['resources/commonControllersResources'],function(common){
         var keyBuilder = common.redisKeyBuilder;
 
         characterController.prototype.all = function(req, res){
-            character.find({}).populate('position').run(function(err,docs){
+            character.find({}).populate('position',function(err,docs){
                 res.send(docs);
             })
         };
@@ -45,7 +45,7 @@ define(['resources/commonControllersResources'],function(common){
         };
         //SHOULD BE A POST
         characterController.prototype.destroy = function(req, res){
-            character.findOne({user:req.user._id, _id:req.param.id}).populate('position').run(function(err,docs){
+            character.findOne({user:req.user._id, _id:req.param.id}).populate('position',function(err,docs){
                 docs.remove();
                 res.send('destroy character ' + req.params.id);
             });
@@ -73,7 +73,7 @@ define(['resources/commonControllersResources'],function(common){
 
         characterController.prototype.current = function(req,res){
             if(req.session.selectedChar){
-                character.findOne({user:req.user._id, _id:req.session.selectedChar._id}).run(function(err,char){
+                character.findOne({user:req.user._id, _id:req.session.selectedChar._id},function(err,char){
                 if(!err){
                     client.HGETALL(keyBuilder.charStatus(char._id),function(err,status){
                         if(err){

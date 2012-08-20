@@ -13,8 +13,9 @@ requirejs.config({
                      //  ,    packages: ["lib"]
 });
 
-requirejs(['./app.js'],function(app){
+requirejs(['./app.js','init/bootstartSocketIo'],function(app,sioBootstrap){
     console.log('Server running at http://127.0.0.1:'+app.set('port')+'/');
 
-    app.listen(app.set('port'));
+   var server =  app.listen(app.set('port'));
+    sioBootstrap(server);
 });
