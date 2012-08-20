@@ -13,7 +13,7 @@ requirejs.config({
                      }
                  });
 //GAME.framerate = 50;
-requirejs(["js/settings", "js/animationsFactory", "js/collisionDetection", "js/player", "js/Arena",  "js/Hud", "js/framework/preload", "jquery","hammer","jsgamesoup","socketIo"],
+requirejs(["js/settings", "js/animationsFactory", "js/collisionDetection", "js/player", "js/arena",  "js/hud", "js/framework/preload", "jquery","hammer","jsgamesoup","socketIo"],
           function (settings, animationFactory, collisionDetectorClass, playerClass, arenaUi, hudClass, imgPreload, jQuery) {
               //    if (window.isMobile) {
               //        GAME.framerate = 10;
