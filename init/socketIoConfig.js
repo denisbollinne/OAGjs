@@ -70,6 +70,11 @@ define(['socket.io','cookie'],function(sioModule,cookie){
 
             data.cookie = cookie.parse(data.headers.cookie);
             data.sessionID = data.cookie['connect.sid'];
+            if(!data.sessionID) {
+                return accept('No session Id',false);
+            }
+             data.sessionID = data.sessionID.split('.')[0];
+            data.sessionID = data.sessionID.split(':')[1];
 
             sessionStore.load(data.sessionID, function (err, session) {
                 if (err || !session || !session.auth.loggedIn)

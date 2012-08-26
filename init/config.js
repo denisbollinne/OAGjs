@@ -59,7 +59,7 @@ define(['express','stylus','connect-timeout','./redisFactory.js','module','path'
             app.set('view engine', 'jade');
             app.use(express.favicon());
             app.use(express.bodyParser({uploadDir:'./tmpUploads'}));
-            app.use(express.cookieParser());
+            app.use(express.cookieParser('M&DSessionSecret'));
             app.use(connectTimeout({ time: 10000 }));
             app.use(express.session({ store: sessionStore, secret:'M&DSessionSecret'}));
         //    app.use(express.logger({ format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }))
